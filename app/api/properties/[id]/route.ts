@@ -91,12 +91,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
     const body = updatePropertySchema.parse(await req.json());
     if (body.agentId && session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Only admins can reassign a listing" }, { status: 403 });
+      return NextResponse.json({ error: "Only the RA team can reassign a listing" }, { status: 403 });
     }
     if (body.agentId) {
       const targetAgent = await prisma.user.findUnique({ where: { id: body.agentId }, select: { role: true } });
       if (!targetAgent || (targetAgent.role !== "AGENT" && targetAgent.role !== "ADMIN")) {
-        return NextResponse.json({ error: "Listings must be assigned to an active agent or admin" }, { status: 400 });
+        return NextResponse.json({ error: "Listings must be assigned to an active agent or RA team member" }, { status: 400 });
       }
     }
     const property = await prisma.property.update({
@@ -147,7 +147,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: "Property not found" }, { status: 404 });
     }
     if (session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Only admins can delete listings" }, { status: 403 });
+      return NextResponse.json({ error: "Only the RA team can delete listings" }, { status: 403 });
     }
 
     await prisma.property.delete({ where: { id: params.id } });

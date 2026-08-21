@@ -54,9 +54,9 @@ export const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "unset";
+    document.body.style.overflowY = isMobileMenuOpen ? "hidden" : "";
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflowY = "";
     };
   }, [isMobileMenuOpen]);
 
@@ -75,6 +75,12 @@ export const Navbar = () => {
       setSearchQuery("");
       setIsMobileMenuOpen(false);
     }
+  };
+
+  const handleSignOut = async () => {
+    setIsMobileMenuOpen(false);
+    await signOut({ redirect: false });
+    window.location.assign("/");
   };
 
   return (
@@ -157,7 +163,7 @@ export const Navbar = () => {
                   <User className="w-5 h-5" />
                 </Link>
                 <button
-                  onClick={() => signOut({ callbackUrl: "/" })}
+                  onClick={handleSignOut}
                   className="text-xs font-mono uppercase tracking-widest text-ink/60 hover:text-clay transition-colors"
                 >
                   Sign Out
@@ -314,10 +320,7 @@ export const Navbar = () => {
                         <User className="w-3.5 h-3.5" /> Profile
                       </Link>
                       <button
-                        onClick={() => {
-                          setIsMobileMenuOpen(false);
-                          signOut({ callbackUrl: "/" });
-                        }}
+                        onClick={handleSignOut}
                         aria-label="Sign out"
                         className="flex h-[42px] w-[42px] shrink-0 items-center justify-center border border-line text-ink/50 hover:border-clay-dark hover:text-clay-dark transition-colors"
                       >

@@ -51,7 +51,7 @@ export const SubmissionStatusControl = ({
           </button>
         </div>
       ) : (
-        <span className="text-xs text-ink/40">Awaiting admin review</span>
+        <span className="text-xs text-ink/40">Awaiting RA review</span>
       )}
 
       {isAdmin && status === "APPROVED" && (

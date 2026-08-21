@@ -43,7 +43,7 @@ export default async function ActivityPage() {
       <p className="font-mono text-xs uppercase tracking-widest text-clay">Dashboard</p>
       <h1 className="mt-2 font-display text-4xl">Activity</h1>
       <p className="mt-3 text-ink/60 max-w-xl">
-        Every price change, status change, and listing created or deleted by any agent — admin-only.
+        Every price change, status change, and listing created or deleted by any agent — RA only.
       </p>
 
       <div className="mt-10 border border-line bg-surface">

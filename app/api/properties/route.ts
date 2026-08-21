@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
       select: { id: true, role: true },
     });
     if (!listingAgent || (listingAgent.role !== "AGENT" && listingAgent.role !== "ADMIN")) {
-      return NextResponse.json({ error: "Listings must be assigned to an active agent or admin" }, { status: 400 });
+      return NextResponse.json({ error: "Listings must be assigned to an active agent or RA team member" }, { status: 400 });
     }
 
     const count = await prisma.property.count();

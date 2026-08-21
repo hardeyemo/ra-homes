@@ -33,7 +33,7 @@ export const Hero = () => {
 
   return (
     <section className="px-3 pt-3 md:px-5 md:pt-5">
-      <div className="relative min-h-[620px] overflow-hidden rounded-2xl md:min-h-[680px]">
+      <div className="relative overflow-hidden rounded-2xl">
         <div className="absolute inset-0">
           <img
             ref={imageRef}
@@ -44,7 +44,7 @@ export const Hero = () => {
           <div className="absolute inset-0 bg-ink/45" />
         </div>
 
-        <div className="relative z-10 flex min-h-[620px] items-center justify-center px-5 text-center md:min-h-[680px]">
+        <div className="relative z-10 flex min-h-[440px] items-center justify-center px-5 text-center md:min-h-[680px]">
           <div className="w-full max-w-xl">
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
@@ -69,7 +69,7 @@ export const Hero = () => {
               </div>
 
               <div className="flex overflow-hidden rounded-lg bg-surface shadow-xl">
-                <div className="relative flex-1">
+                <div className="relative min-w-0 flex-1">
                   <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-ink/45" />
                   <input
                     type="text"
@@ -79,7 +79,7 @@ export const Hero = () => {
                     className="h-[60px] w-full bg-transparent py-4 pl-12 pr-3 text-ink outline-none"
                   />
                 </div>
-                <Button type="submit" size="lg" className="rounded-lg bg-clay px-6 text-ink hover:bg-clay-dark hover:text-parchment" aria-label="Search properties">
+                <Button type="submit" size="lg" className="shrink-0 rounded-lg bg-clay px-6 text-ink hover:bg-clay-dark hover:text-parchment" aria-label="Search properties">
                   <Search className="h-5 w-5" />
                 </Button>
               </div>
@@ -91,7 +91,7 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.45, ease: "easeOut" }}
-          className="absolute inset-x-4 bottom-4 z-10 sm:inset-x-7 sm:bottom-7"
+          className="relative z-10 mx-4 mt-4 pb-4 sm:mx-7 sm:pb-7 md:absolute md:inset-x-7 md:bottom-7 md:mx-0 md:mt-0 md:pb-0"
         >
           <div className="mx-auto grid max-w-6xl overflow-hidden rounded-2xl border border-parchment/25 bg-ink/70 text-left shadow-2xl backdrop-blur-md md:grid-cols-[1.25fr_1fr_1fr_auto]">
             <div className="flex items-center gap-3 border-b border-parchment/15 px-5 py-4 md:border-b-0 md:border-r sm:px-6">

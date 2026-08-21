@@ -86,28 +86,13 @@ export const IntroAnimation = () => {
               transition={{ duration: SPIN_SECONDS, ease: [0.22, 0.8, 0.25, 1] }}
             />
             <motion.div
-              className="relative flex h-20 w-20 items-center justify-center rounded-2xl border border-gold bg-parchment text-ink shadow-[0_0_0_8px_hsl(var(--ink)),0_0_0_9px_hsl(var(--gold)/0.3)] sm:h-24 sm:w-24"
+              className="relative flex h-20 w-20 items-center justify-center rounded-full border border-gold bg-parchment text-ink shadow-[0_0_0_8px_hsl(var(--ink)),0_0_0_9px_hsl(var(--gold)/0.3)] sm:h-24 sm:w-24"
               initial={{ rotate: -45, scale: 0.72 }}
               animate={{ rotate: 360, scale: 1 }}
               transition={{ duration: SPIN_SECONDS, ease: [0.22, 0.8, 0.25, 1] }}
             >
               <span className="font-display text-3xl leading-none tracking-[-0.12em] sm:text-4xl">RA</span>
             </motion.div>
-            <motion.div
-              className="mt-8 text-center"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.32 }}
-            >
-              <p className="font-sans text-xl font-extrabold tracking-[-0.065em] text-gold sm:text-2xl">rahomes</p>
-              <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.34em] text-parchment/55 sm:text-[10px]">Every address, accounted for</p>
-            </motion.div>
-            <motion.div
-              className="mt-7 h-px w-28 origin-left bg-gold/80"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 0.5, delay: 0.42, ease: "easeOut" }}
-            />
           </motion.div>
         </motion.div>
       )}

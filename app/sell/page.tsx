@@ -124,7 +124,13 @@ export default function SellPage() {
         <>
           <p className="mt-6 text-xs text-ink/50">
             Signed in as {session?.user?.email} ·{" "}
-            <button onClick={() => signOut({ callbackUrl: "/sell" })} className="underline hover:text-clay">
+            <button
+              onClick={async () => {
+                await signOut({ redirect: false });
+                window.location.assign("/sell");
+              }}
+              className="underline hover:text-clay"
+            >
               Sign out
             </button>
           </p>

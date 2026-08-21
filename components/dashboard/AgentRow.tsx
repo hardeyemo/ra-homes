@@ -83,7 +83,7 @@ export const AgentRow = ({
   };
 
   const confirmDelete = () => {
-    if (window.confirm(`Revoke ${agent.name}'s agent/admin access? Their account stays active as a regular user.`)) {
+    if (window.confirm(`Revoke ${agent.name}'s dashboard access? Their account stays active as a regular user.`)) {
       handleDelete();
     }
   };
@@ -142,7 +142,7 @@ export const AgentRow = ({
               className="h-11 border border-line bg-surface px-3 text-sm disabled:opacity-50"
             >
               <option value="AGENT">Agent</option>
-              <option value="ADMIN">Admin</option>
+              <option value="ADMIN">RA</option>
             </select>
           </div>
           {isSelf && <p className="mt-2 text-xs text-ink/40">You can't change your own role.</p>}
@@ -174,7 +174,7 @@ export const AgentRow = ({
       </td>
       <td className="p-4">{agent.email}</td>
       <td className="p-4">
-        <Badge variant={agent.role === "ADMIN" ? "clay" : "outline"}>{agent.role}</Badge>
+        <Badge variant={agent.role === "ADMIN" ? "clay" : "outline"}>{agent.role === "ADMIN" ? "RA" : agent.role}</Badge>
       </td>
       <td className="p-4 text-right">
         <div className="flex items-center justify-end gap-2">

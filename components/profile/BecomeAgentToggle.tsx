@@ -49,7 +49,7 @@ export const BecomeAgentToggle = ({
       <div className="rounded-xl border border-line bg-surface p-6 md:p-8">
         <p className="text-xl font-bold tracking-tight">Agent status</p>
         <p className="mt-2 text-sm text-ink/60">
-          You already have {role === "ADMIN" ? "admin" : "agent"} access to the dashboard.
+          You already have {role === "ADMIN" ? "RA" : "agent"} access to the dashboard.
         </p>
       </div>
     );
@@ -63,7 +63,7 @@ export const BecomeAgentToggle = ({
           <p className="mt-1 text-sm text-ink/60">
             {status === "REJECTED"
               ? "Your last request was declined. You can request again."
-              : "Request access to list and manage properties on the dashboard. An admin reviews every request."}
+              : "Request access to list and manage properties on the dashboard. The RA team reviews every request."}
           </p>
         </div>
 
@@ -123,7 +123,7 @@ export const BecomeAgentToggle = ({
 
       <div className="mt-4">
         {status === "PENDING" && (
-          <span className="text-xs font-mono uppercase tracking-widest text-clay">Pending admin review</span>
+          <span className="text-xs font-mono uppercase tracking-widest text-clay">Pending RA review</span>
         )}
         {status === "REJECTED" && (
           <span className="text-xs font-mono uppercase tracking-widest text-ink/50">Request declined</span>

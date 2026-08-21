@@ -47,7 +47,7 @@ export const ImageUploader = ({ images, onChange, maxImages = 12, label = "Photo
   if (!CLOUDINARY_CONFIGURED) {
     return (
       <div className="border border-dashed border-line bg-parchment/40 p-4 text-xs text-ink/50">
-        Image upload isn't configured yet — an admin needs to set
+        Image upload isn't configured yet — the RA team needs to set
         <code> NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME</code> and <code>NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET</code>.
       </div>
     );

@@ -35,7 +35,7 @@ export default async function AgentsPage() {
       <p className="font-mono text-xs uppercase tracking-widest text-clay">Dashboard</p>
       <h1 className="mt-2 font-display text-4xl">Agents</h1>
       <p className="mt-3 text-ink/60 max-w-xl">
-        Manage who has access to the RA Homes dashboard. Admins can see and manage every listing; agents
+        Manage who has access to the RA Homes dashboard. The RA team can see and manage every listing; agents
         only see their own. Revoking an agent with active listings will ask you to reassign those listings
         to someone else first.
       </p>

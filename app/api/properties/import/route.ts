@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
   }
   const agent = await prisma.user.findUnique({ where: { id: session.user.id } });
   if (!agent || agent.role !== "ADMIN") {
-    return NextResponse.json({ error: "Only admins can import listings" }, { status: 403 });
+    return NextResponse.json({ error: "Only the RA team can import listings" }, { status: 403 });
   }
 
   try {
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
 
     const listingAgent = await prisma.user.findUnique({ where: { id: agentId }, select: { role: true } });
     if (!listingAgent || (listingAgent.role !== "AGENT" && listingAgent.role !== "ADMIN")) {
-      return NextResponse.json({ error: "Listings must be assigned to an active agent or admin" }, { status: 400 });
+      return NextResponse.json({ error: "Listings must be assigned to an active agent or RA team member" }, { status: 400 });
     }
 
     if (rows.length === 0) {

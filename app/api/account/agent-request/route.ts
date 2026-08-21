@@ -15,7 +15,7 @@ export async function POST() {
   if (!user) return NextResponse.json({ error: "Account not found" }, { status: 404 });
 
   if (user.role !== "USER") {
-    return NextResponse.json({ error: "You already have agent or admin access." }, { status: 400 });
+    return NextResponse.json({ error: "You already have agent or RA access." }, { status: 400 });
   }
   if (user.agentRequestStatus === "PENDING") {
     return NextResponse.json({ error: "Your request is already pending review." }, { status: 400 });

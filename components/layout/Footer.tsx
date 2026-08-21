@@ -9,15 +9,15 @@ import {
 } from "@/lib/constants";
 
 export const Footer = () => (
-  <footer className="bg-ink text-parchment mt-12">
-    <div className="container py-6 grid grid-cols-1 md:grid-cols-[1.4fr_1fr_auto] gap-6 md:items-start">
+  <footer className="mt-8 bg-ink text-parchment md:mt-12">
+    <div className="container grid grid-cols-1 gap-5 py-5 md:grid-cols-[1.4fr_1fr_auto] md:items-start md:gap-6 md:py-6">
       <div>
         <span className="font-display text-xl">RA Homes</span>
-        <p className="mt-1.5 text-sm text-parchment/60 max-w-md">
+        <p className="mt-1.5 hidden max-w-md text-sm text-parchment/60 sm:block">
           Every address, accounted for. A boutique brokerage for buyers, renters,
           and sellers who want the full record.
         </p>
-        <p className="mt-2 flex items-start gap-2 text-xs text-parchment/70">
+        <p className="mt-1 flex items-start gap-2 text-xs text-parchment/70 sm:mt-2">
           <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-gold" />
           <span>
             {AGENCY_OFFICE.line1}, {AGENCY_OFFICE.city}, {AGENCY_OFFICE.state}
@@ -30,8 +30,8 @@ export const Footer = () => (
         <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm text-parchment/70">
           <li><Link href="/properties?listingType=SALE" className="hover:text-parchment">Homes for Sale</Link></li>
           <li><Link href="/properties?listingType=RENT" className="hover:text-parchment">Homes for Rent</Link></li>
-          <li><Link href="/sell" className="hover:text-parchment">List Your Property</Link></li>
-          <li><Link href="/property-management" className="hover:text-parchment">Property Management</Link></li>
+          <li className="hidden sm:list-item"><Link href="/sell" className="hover:text-parchment">List Your Property</Link></li>
+          <li className="hidden sm:list-item"><Link href="/property-management" className="hover:text-parchment">Property Management</Link></li>
         </ul>
       </div>
 
@@ -53,7 +53,7 @@ export const Footer = () => (
               <MessageCircle className="w-4 h-4 text-gold" /> WhatsApp Us
             </a>
           </li>
-          <li>
+          <li className="hidden sm:list-item">
             <a href={`mailto:${AGENCY_EMAIL}`} className="flex items-center gap-2 hover:text-parchment">
               <Mail className="w-4 h-4 text-gold" /> {AGENCY_EMAIL}
             </a>
@@ -62,9 +62,9 @@ export const Footer = () => (
       </div>
     </div>
     <div className="border-t border-parchment/10">
-      <div className="container py-3 flex flex-col sm:flex-row justify-between text-[11px] font-mono text-parchment/40 gap-1.5">
+      <div className="container flex flex-col justify-between gap-1.5 py-3 text-[11px] font-mono text-parchment/40 sm:flex-row">
         <span>© {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</span>
-        <span>Real Estate in Ilorin, Kwara State</span>
+        <span className="hidden sm:inline">Real Estate in Ilorin, Kwara State</span>
       </div>
     </div>
   </footer>

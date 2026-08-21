@@ -9,7 +9,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   if (session.user.role !== "ADMIN") {
-    return NextResponse.json({ error: "Only admins can approve or reject submissions" }, { status: 403 });
+    return NextResponse.json({ error: "Only the RA team can approve or reject submissions" }, { status: 403 });
   }
 
   try {
