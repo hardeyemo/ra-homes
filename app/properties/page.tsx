@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, KeyRound, SlidersHorizontal, Sparkles, X } from "lucide-react";
+import { ArrowRight, KeyRound, MapPin, Search, SlidersHorizontal, X } from "lucide-react";
 import { PropertyCard } from "@/components/property/PropertyCard";
 import { PropertyFilters } from "@/components/property/PropertyFilters";
 import type { Property, PropertyFilters as FiltersType } from "@/types/property";
@@ -94,34 +94,28 @@ export default function PropertiesPage() {
       : "Browse homes, apartments, land, and commercial spaces across Ilorin.";
 
   return (
-    <div className="container py-8 md:py-12">
-      <section className="relative overflow-hidden rounded-3xl border border-ink bg-ink px-6 py-9 text-parchment sm:px-10 md:py-12">
-        <div className="pointer-events-none absolute -right-20 -top-28 h-72 w-72 rounded-full border border-gold/25" />
-        <div className="pointer-events-none absolute -right-4 -top-10 h-44 w-44 rounded-full border border-gold/20" />
-        <div className="relative max-w-2xl">
-          <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-gold">
-            <Sparkles className="h-3.5 w-3.5" /> RA property collection
-          </p>
-          <h1 className="mt-4 font-display text-4xl leading-tight sm:text-5xl">{pageTitle}</h1>
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-parchment/70 sm:text-base">{pageDescription}</p>
+    <div className="container py-8 md:py-10">
+      <section className="border-b border-line pb-8 md:pb-10">
+        <p className="font-mono text-xs uppercase tracking-[0.18em] text-clay">RA Homes marketplace</p>
+        <div className="mt-3 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h1 className="font-sans text-3xl font-bold tracking-tight sm:text-4xl">{pageTitle}</h1>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink/60 sm:text-base">{pageDescription}</p>
+          </div>
+          <div className="flex w-fit rounded-lg border border-line bg-surface p-1">
+            <Link href="/properties?listingType=SALE" className={`inline-flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold transition-colors ${isSale ? "bg-ink text-parchment" : "text-ink/65 hover:bg-parchment"}`}><KeyRound className="h-4 w-4" /> Buy</Link>
+            <Link href="/properties?listingType=RENT" className={`inline-flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold transition-colors ${isRent ? "bg-ink text-parchment" : "text-ink/65 hover:bg-parchment"}`}><KeyRound className="h-4 w-4" /> Rent</Link>
+          </div>
+        </div>
 
-          <div className="mt-7 inline-flex rounded-xl border border-parchment/20 bg-parchment/10 p-1.5 backdrop-blur-sm">
-            <Link
-              href="/properties?listingType=SALE"
-              className={`inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-xs font-mono uppercase tracking-widest transition-colors ${
-                isSale ? "bg-parchment text-ink shadow-sm" : "text-parchment/70 hover:bg-parchment/10 hover:text-parchment"
-              }`}
-            >
-              <KeyRound className="h-3.5 w-3.5" /> Buy
-            </Link>
-            <Link
-              href="/properties?listingType=RENT"
-              className={`inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-xs font-mono uppercase tracking-widest transition-colors ${
-                isRent ? "bg-parchment text-ink shadow-sm" : "text-parchment/70 hover:bg-parchment/10 hover:text-parchment"
-              }`}
-            >
-              <KeyRound className="h-3.5 w-3.5" /> Rent
-            </Link>
+        <div className="mt-7 flex flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-sm sm:flex-row">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-ink/40" />
+            <input value={filters.search} onChange={(event) => setFilters({ ...filters, search: event.target.value })} placeholder="City, neighbourhood, address, or RA reference" className="h-14 w-full bg-transparent pl-12 pr-4 text-sm outline-none placeholder:text-ink/40" />
+          </div>
+          <div className="flex items-center border-t border-line sm:border-l sm:border-t-0">
+            <MapPin className="ml-4 h-4 w-4 text-clay" />
+            <select value={filters.neighborhood || ""} onChange={(event) => setFilters({ ...filters, neighborhood: event.target.value || undefined })} className="h-14 min-w-48 flex-1 bg-transparent px-3 text-sm outline-none"><option value="">All Ilorin areas</option><option value="GRA">GRA</option><option value="Tanke">Tanke</option><option value="GRA Extension">GRA Extension</option><option value="Fate">Fate</option><option value="Adewole">Adewole</option><option value="Taiwo Road">Taiwo Road</option></select>
           </div>
         </div>
       </section>
@@ -148,7 +142,7 @@ export default function PropertiesPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[280px_1fr]">
         {/* Mobile: collapsible, flows normally (not sticky) so it never
             covers the property grid. Desktop: always visible, sticky. */}
         <div className={`${mobileFiltersOpen ? "block" : "hidden"} lg:block mb-2 lg:mb-0`}>
@@ -162,13 +156,13 @@ export default function PropertiesPage() {
 
         <div>
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="aspect-[4/3] bg-line/40 animate-pulse" />
               ))}
             </div>
           ) : properties.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
               {properties.map((property) => (
                 <PropertyCard key={property.id} property={property} />
               ))}

@@ -1,12 +1,10 @@
 import Link from "next/link";
+import { ArrowRight, MapPin, Search } from "lucide-react";
 import { Hero } from "@/components/property/Hero";
 import { PropertyCard } from "@/components/property/PropertyCard";
-import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
 import type { Property } from "@/types/property";
 
-// Cache this page for 60s so most visits are served instantly instead of
-// re-querying MongoDB on every request.
 export const revalidate = 60;
 
 async function getFeaturedProperties(): Promise<Property[]> {
@@ -30,44 +28,48 @@ export default async function HomePage() {
     <>
       <Hero />
 
-      <section className="container py-20">
-        <div className="mb-10 text-center">
-          <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-clay">Explore RA Homes</p>
-            <h2 className="mt-2 font-sans text-3xl font-bold tracking-tight md:text-4xl">Find a home that feels right.</h2>
-          </div>
-          <Link href="/properties" className="mt-4 inline-block text-sm font-medium underline underline-offset-4 hover:text-clay">
-            View all listings
-          </Link>
-        </div>
-
-        {featured.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featured.map((property) => (
-              <PropertyCard key={property.id} property={property} />
-            ))}
-          </div>
-        ) : (
-          <div className="border border-line bg-surface p-12 text-center text-ink/60">
-            <p>No featured listings yet. Connect a database and seed some properties to see them here.</p>
-          </div>
-        )}
-
-        <div className="mt-8 md:hidden">
-          <Button asChild variant="outline" className="w-full">
-            <Link href="/properties">View all listings</Link>
-          </Button>
+      <section className="container py-16 md:py-20">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-clay">Explore RA Homes</p>
+          <h2 className="mt-3 font-sans text-3xl font-bold tracking-tight md:text-4xl">Find a home that feels right.</h2>
+          <p className="mt-4 text-sm leading-relaxed text-ink/60 md:text-base">Browse carefully selected homes, rentals, and land across Ilorin with the details you need in one place.</p>
         </div>
       </section>
 
-      <section className="container py-12 text-center">
-        <h2 className="font-display text-3xl max-w-xl mx-auto">Thinking of selling?</h2>
-        <p className="mt-3 text-ink/60 max-w-md mx-auto">
-          Submit your property and an agent will follow up with a market valuation within one business day.
-        </p>
-        <Button asChild className="mt-5">
-          <Link href="/sell">Submit Your Property</Link>
-        </Button>
+      <section className="border-y border-line bg-surface/60 py-16 md:py-20">
+        <div className="container">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-clay">Featured this week</p>
+              <h2 className="mt-2 font-display text-3xl md:text-4xl">Explore homes in Ilorin</h2>
+            </div>
+            <Link href="/properties" className="group inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-clay">View all listings <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></Link>
+          </div>
+
+          {featured.length > 0 ? (
+            <div className="mt-9 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {featured.map((property) => <PropertyCard key={property.id} property={property} />)}
+            </div>
+          ) : (
+            <div className="mt-9 rounded-2xl border border-line bg-parchment p-12 text-center text-ink/60">No featured homes are available right now.</div>
+          )}
+        </div>
+      </section>
+
+      <section className="container py-16 md:py-24">
+        <div className="grid overflow-hidden rounded-3xl border border-line bg-ink text-parchment lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="p-8 sm:p-12">
+            <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-gold"><MapPin className="h-3.5 w-3.5" /> Local, considered, connected</p>
+            <h2 className="mt-4 max-w-md font-display text-3xl leading-tight sm:text-4xl">A better way to find your next address.</h2>
+            <p className="mt-4 max-w-lg text-sm leading-relaxed text-parchment/65">Search by neighbourhood, compare the details, save the homes you love, and speak directly with RA Homes when you are ready.</p>
+            <Link href="/properties" className="mt-7 inline-flex h-11 items-center gap-2 rounded-lg bg-gold px-5 text-xs font-mono uppercase tracking-widest text-ink transition-colors hover:bg-parchment"><Search className="h-4 w-4" /> Start exploring</Link>
+          </div>
+          <div className="border-t border-parchment/10 bg-parchment/5 p-8 sm:p-12 lg:border-l lg:border-t-0">
+            <p className="font-display text-2xl">Ready to sell?</p>
+            <p className="mt-3 text-sm leading-relaxed text-parchment/65">Share your property details and our team will help you take the next step.</p>
+            <Link href="/sell" className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-gold hover:text-parchment">List your property <ArrowRight className="h-4 w-4" /></Link>
+          </div>
+        </div>
       </section>
     </>
   );
