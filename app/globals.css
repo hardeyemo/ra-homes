@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light mode — deep emerald green + gold + warm cream. A more
+       distinctive luxury pairing than black/gold, which reads as a
+       common real-estate template at this point. */
+    --ink: 30 8% 7%;
+    --parchment: 40 33% 96%;
+    --surface: 40 25% 99%;
+    --line: 35 20% 86%;
+
+    --gold: 43 74% 47%;       /* rich antique gold — unchanged, pairs well with emerald */
+    --gold-light: 40 58% 72%;
+    --gold-dark: 35 62% 31%;
+    --gold: 40 62% 49%;
+
+    --sage: 30 10% 46%;
+    --sage-light: 40 20% 91%;
+    --sage-dark: 30 14% 25%;
+  }
+
+  .dark {
+    /* Dark mode — same emerald identity, inverted */
+    --ink: 40 28% 95%;
+    --parchment: 30 8% 7%;
+    --surface: 30 7% 11%;
+    --line: 30 8% 21%;
+
+    --gold: 40 68% 57%;
+    --gold-light: 40 38% 27%;
+    --gold-dark: 40 72% 75%;
+
+    --sage: 30 12% 60%;
+    --sage-light: 30 8% 15%;
+    --sage-dark: 30 14% 72%;
+  }
+
+  * {
+    @apply border-line;
+  }
+  body {
+    @apply bg-parchment text-ink transition-colors duration-300;
+  }
+  button {
+    @apply rounded-lg transition-[color,background-color,border-color,box-shadow,transform] duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-parchment;
+  }
+  button:not(:disabled):active {
+    transform: translateY(1px);
+  }
+  button:disabled {
+    @apply cursor-not-allowed;
+  }
+  ::selection {
+    @apply bg-clay text-parchment;
+  }
+}
+
+@layer utilities {
+  .container {
+    @apply mx-auto px-6 max-w-[1320px];
+  }
+  .hairline {
+    @apply border-t border-line;
+  }
+  .stat-strip {
+    @apply font-mono text-[11px] uppercase tracking-widest text-ink/60;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

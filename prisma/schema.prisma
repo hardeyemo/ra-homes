@@ -1,0 +1,283 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum PropertyStatus {
+  DRAFT
+  ACTIVE
+  PENDING
+  SOLD
+  RENTED
+  ARCHIVED
+}
+
+enum ListingType {
+  SALE
+  RENT
+}
+
+enum PropertyType {
+  HOUSE
+  APARTMENT
+  CONDO
+  TOWNHOUSE
+  LAND
+  COMMERCIAL
+  MULTI_FAMILY
+}
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  CLOSED
+}
+
+enum ViewingStatus {
+  REQUESTED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ContactStatus {
+  NEW
+  CONTACTED
+  CLOSED
+}
+
+enum PreferredContact {
+  PHONE
+  WHATSAPP
+  EMAIL
+}
+
+// USER: default for everyone who signs up. AGENT/ADMIN: dashboard access.
+enum Role {
+  USER
+  AGENT
+  ADMIN
+}
+
+// Tracks a USER's request to become an AGENT — the toggle in their
+// profile flips this to PENDING; an admin approves/rejects it from the
+// dashboard. NONE = never asked. REJECTED users may request again.
+enum AgentRequestStatus {
+  NONE
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// Single account type for the whole site — the public, agents, and admins
+// all sign in through the same route. role decides dashboard access;
+// agentRequestStatus tracks the "become an agent" request flow.
+// passwordHash is optional because a Google/Facebook account has no
+// password of its own — provider tracks how the account was created.
+model User {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  email        String    @unique
+  passwordHash String?
+  image        String?
+  provider     String    @default("credentials") // "credentials" | "google" | "facebook"
+  phone        String?
+  title        String?
+  bio          String?
+
+  role               Role                @default(USER)
+  agentRequestStatus AgentRequestStatus  @default(NONE)
+  agentRequestedAt   DateTime?
+  agentDecidedAt     DateTime?
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  properties Property[]
+  viewings   ViewingRequest[]
+  savedProperties SavedProperty[]
+
+  @@index([role])
+  @@index([agentRequestStatus])
+}
+
+model Property {
+  id          String         @id @default(auto()) @map("_id") @db.ObjectId
+  reference   String         @unique // e.g. RA-014
+  title       String
+  slug        String         @unique
+  description String
+  status      PropertyStatus @default(DRAFT)
+  listingType ListingType
+  propertyType PropertyType
+
+  price       Float
+  priceLabel  String? // e.g. "/mo" for rentals
+
+  address     String
+  city        String
+  neighborhood String? // e.g. GRA, Tanke, GRA Extension — powers /locations/[slug]
+  state       String
+  zip         String
+  country     String  @default("Nigeria")
+  lat         Float?
+  lng         Float?
+
+  bedrooms    Int
+  bathrooms   Float
+  sqft        Int
+  lotSqft     Int?
+  yearBuilt   Int?
+  parkingSpaces Int?
+
+  amenities   String[]
+  images      String[]
+
+  featured    Boolean  @default(false)
+  newListing  Boolean  @default(true)
+  views       Int      @default(0)
+
+  agentId     String   @db.ObjectId
+  agent       User     @relation(fields: [agentId], references: [id])
+
+  inquiries       Inquiry[]
+  viewingRequests ViewingRequest[]
+  savedBy         SavedProperty[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, listingType])
+  @@index([city, state])
+  @@index([neighborhood])
+}
+
+model Inquiry {
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  propertyId String        @db.ObjectId
+  property   Property      @relation(fields: [propertyId], references: [id])
+
+  name       String
+  email      String
+  phone      String?
+  message    String
+  status     InquiryStatus @default(NEW)
+
+  createdAt  DateTime      @default(now())
+}
+
+// A private saved/liked listing for one account. A property can be saved by
+// many people, but each user can only save the same property once.
+model SavedProperty {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String   @db.ObjectId
+  propertyId String   @db.ObjectId
+  user       User     @relation(fields: [userId], references: [id])
+  property   Property @relation(fields: [propertyId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, propertyId])
+  @@index([propertyId])
+}
+
+model ViewingRequest {
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  propertyId String        @db.ObjectId
+  property   Property      @relation(fields: [propertyId], references: [id])
+  agentId    String?       @db.ObjectId
+  agent      User?         @relation(fields: [agentId], references: [id])
+
+  name       String
+  email      String
+  phone      String
+  preferredDate DateTime
+  alternateDate DateTime?
+  notes      String?
+  status     ViewingStatus @default(REQUESTED)
+
+  createdAt  DateTime      @default(now())
+}
+
+// Public "submit your property" leads, before they become a full Property listing
+model PropertySubmission {
+  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  ownerName   String
+  email       String
+  phone       String
+  address     String
+  city        String
+  state       String
+  propertyType PropertyType
+  listingType ListingType
+  askingPrice Float?
+  bedrooms    Int?
+  bathrooms   Float?
+  sqft        Int?
+  notes       String?
+  images      String[]
+  preferredContact PreferredContact @default(PHONE)
+  status      SubmissionStatus @default(PENDING)
+
+  createdAt   DateTime @default(now())
+}
+
+// General site inquiries not tied to a specific property (e.g. the Contact page)
+model Contact {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  status    ContactStatus @default(NEW)
+  createdAt DateTime      @default(now())
+}
+
+// Audit trail of listing changes, surfaced to admins as a notification feed.
+// Currently logs property create/update/delete/status-change/price-change —
+// visible only in the admin dashboard, not to the agent who made the change.
+model ActivityLog {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  agentId      String   @db.ObjectId
+  agentName    String
+  action       String // "created" | "updated" | "status_changed" | "price_changed" | "deleted"
+  propertyId   String?
+  propertyRef  String?
+  propertyTitle String?
+  summary      String // human-readable description, e.g. "Price changed from ₦45,000,000 to ₦50,000,000"
+  createdAt    DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+// Internal messaging: DMs between admin and a specific agent, plus
+// admin broadcasts to every agent. `threadAgentId` always identifies the
+// AGENT side of a DM conversation — whichever of the two people (the
+// agent, or an admin) sent a given message, it carries the same
+// threadAgentId, so the whole conversation is fetched with one query.
+// Broadcasts have threadAgentId = null and isBroadcast = true.
+model Message {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  senderId      String    @db.ObjectId
+  senderName    String
+  senderRole    Role
+  threadAgentId String?   @db.ObjectId
+  isBroadcast   Boolean   @default(false)
+  body          String
+  readBy        String[]  // user ids who have read this message
+
+  createdAt     DateTime  @default(now())
+
+  @@index([threadAgentId])
+  @@index([isBroadcast])
+}
