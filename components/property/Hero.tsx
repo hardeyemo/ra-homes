@@ -44,7 +44,7 @@ export const Hero = () => {
           <div className="absolute inset-0 bg-ink/45" />
         </div>
 
-        <div className="relative z-10 flex min-h-[440px] items-center justify-center px-5 text-center md:min-h-[680px]">
+        <div className="relative z-10 flex min-h-[340px] items-center justify-center px-5 text-center md:min-h-[680px]">
           <div className="w-full max-w-xl">
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
@@ -62,10 +62,10 @@ export const Hero = () => {
               onSubmit={handleSearch}
               className="mt-10"
             >
-              <div className="mb-2 inline-flex rounded-lg bg-ink/70 p-1 text-sm font-semibold text-white backdrop-blur-sm">
-                <button type="button" onClick={() => setListingType("SALE")} className={`rounded-md px-6 py-2 transition-colors ${listingType === "SALE" ? "bg-surface text-ink" : "hover:bg-white/10"}`}>Buy</button>
-                <button type="button" onClick={() => setListingType("RENT")} className={`rounded-md px-6 py-2 transition-colors ${listingType === "RENT" ? "bg-surface text-ink" : "hover:bg-white/10"}`}>Rent</button>
-                <button type="button" onClick={() => router.push("/sell")} className="rounded-md px-6 py-2 transition-colors hover:bg-white/10">Sell</button>
+              <div className="mb-2 inline-flex rounded-lg border border-parchment/70 bg-parchment/95 p-1 text-sm font-semibold text-ink shadow-lg backdrop-blur-sm">
+                <button type="button" onClick={() => setListingType("SALE")} className={`rounded-md px-6 py-2 transition-colors ${listingType === "SALE" ? "bg-ink text-parchment" : "hover:bg-gold/25"}`}>Buy</button>
+                <button type="button" onClick={() => setListingType("RENT")} className={`rounded-md px-6 py-2 transition-colors ${listingType === "RENT" ? "bg-ink text-parchment" : "hover:bg-gold/25"}`}>Rent</button>
+                <button type="button" onClick={() => router.push("/sell")} className="rounded-md px-6 py-2 transition-colors hover:bg-gold/25">Sell</button>
               </div>
 
               <div className="flex overflow-hidden rounded-lg bg-surface shadow-xl">
@@ -91,10 +91,10 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.45, ease: "easeOut" }}
-          className="relative z-10 mx-4 mt-4 pb-4 sm:mx-7 sm:pb-7 md:absolute md:inset-x-7 md:bottom-7 md:mx-0 md:mt-0 md:pb-0"
+          className="relative z-10 mx-4 mt-2 pb-4 sm:mx-7 sm:pb-7 md:absolute md:inset-x-7 md:bottom-7 md:mx-0 md:mt-0 md:pb-0"
         >
-          <div className="mx-auto grid max-w-6xl overflow-hidden rounded-2xl border border-parchment/25 bg-ink/70 text-left shadow-2xl backdrop-blur-md md:grid-cols-[1.25fr_1fr_1fr_auto]">
-            <div className="flex items-center gap-3 border-b border-parchment/15 px-5 py-4 md:border-b-0 md:border-r sm:px-6">
+          <div className="mx-auto grid max-w-6xl grid-cols-2 overflow-hidden rounded-2xl border border-parchment/25 bg-ink/70 text-left shadow-2xl backdrop-blur-md md:grid-cols-[1.25fr_1fr_1fr_auto]">
+            <div className="col-span-2 flex items-center gap-3 border-b border-parchment/15 px-4 py-3 md:col-span-1 md:border-b-0 md:border-r md:px-6 md:py-4">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold text-ink">
                 <MapPin className="h-5 w-5" />
               </span>
@@ -104,26 +104,26 @@ export const Hero = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-3 border-b border-parchment/15 px-5 py-4 md:border-b-0 md:border-r sm:px-6">
+            <div className="flex items-center gap-3 border-b border-r border-parchment/15 px-4 py-3 md:border-b-0 md:px-6 md:py-4">
               <ShieldCheck className="h-5 w-5 shrink-0 text-gold" />
               <div>
                 <p className="text-sm font-medium text-parchment">Clear listing details</p>
-                <p className="mt-0.5 text-xs text-parchment/60">Every address, accounted for.</p>
+                <p className="mt-0.5 hidden text-xs text-parchment/60 md:block">Every address, accounted for.</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 border-b border-parchment/15 px-5 py-4 md:border-b-0 sm:px-6">
+            <div className="flex items-center gap-3 border-b border-parchment/15 px-4 py-3 md:border-b-0 md:px-6 md:py-4">
               <MessageCircle className="h-5 w-5 shrink-0 text-gold" />
               <div>
                 <p className="text-sm font-medium text-parchment">Speak to a real agent</p>
-                <p className="mt-0.5 text-xs text-parchment/60">Direct support via WhatsApp or phone.</p>
+                <p className="mt-0.5 hidden text-xs text-parchment/60 md:block">Direct support via WhatsApp or phone.</p>
               </div>
             </div>
 
             <button
               type="button"
               onClick={() => router.push(`/properties?listingType=${listingType}`)}
-              className="group flex items-center justify-center gap-2 bg-parchment px-6 py-4 text-xs font-mono uppercase tracking-widest text-ink transition-colors hover:bg-gold"
+              className="col-span-2 group flex items-center justify-center gap-2 bg-parchment px-4 py-3 text-xs font-mono uppercase tracking-widest text-ink transition-colors hover:bg-gold md:col-span-1 md:px-6 md:py-4"
             >
               Explore homes <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </button>
