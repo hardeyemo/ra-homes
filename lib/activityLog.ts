@@ -23,8 +23,8 @@ export async function logActivity(input: LogActivityInput) {
 // Compares old vs new property data and returns a plain-English summary of
 // what changed, focused on the fields admins care most about (price, status).
 export function summarizeChanges(
-  before: { price: number; status: string; title: string; featured: boolean },
-  after: { price?: number; status?: string; featured?: boolean }
+  before: { price: number; status: string; title: string },
+  after: { price?: number; status?: string }
 ): { summary: string; action: "updated" | "status_changed" | "price_changed" } | null {
   const parts: string[] = [];
   let action: "updated" | "status_changed" | "price_changed" = "updated";
@@ -36,9 +36,6 @@ export function summarizeChanges(
   if (after.status !== undefined && after.status !== before.status) {
     parts.push(`status changed from ${before.status} to ${after.status}`);
     if (action !== "price_changed") action = "status_changed";
-  }
-  if (after.featured !== undefined && after.featured !== before.featured) {
-    parts.push(after.featured ? "marked as featured" : "removed from featured");
   }
 
   if (parts.length === 0) return null;

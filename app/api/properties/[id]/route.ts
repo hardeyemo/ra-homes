@@ -7,6 +7,7 @@ import { isValidObjectId } from "@/lib/utils";
 import { logActivity, summarizeChanges } from "@/lib/activityLog";
 import { PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
 import { z } from "zod";
+import { textOnlyPattern } from "@/lib/inputValidation";
 
 const updatePropertySchema = z.object({
   title: z.string().min(3).optional(),
@@ -17,9 +18,9 @@ const updatePropertySchema = z.object({
   priceLabel: z.string().nullable().optional(),
   address: z.string().min(3).optional(),
   neighborhood: z.string().nullable().optional(),
-  city: z.string().min(2).optional(),
-  state: z.string().min(2).optional(),
-  zip: z.string().min(3).optional(),
+  city: z.string().trim().min(2).regex(textOnlyPattern, "City can only contain letters and punctuation").optional(),
+  state: z.string().trim().min(2).regex(textOnlyPattern, "State can only contain letters and punctuation").optional(),
+  zip: z.string().regex(/^\d{3,}$/, "ZIP must contain numbers only").optional(),
   bedrooms: z.number().int().min(0).optional(),
   bathrooms: z.number().min(0).optional(),
   sqft: z.number().int().positive().optional(),
@@ -29,8 +30,6 @@ const updatePropertySchema = z.object({
   amenities: z.array(z.string()).optional(),
   images: z.array(z.string()).min(1).optional(),
   status: z.enum(["DRAFT", "ACTIVE", "PENDING", "SOLD", "RENTED", "ARCHIVED"]).optional(),
-  featured: z.boolean().optional(),
-  newListing: z.boolean().optional(),
   agentId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid agent ID").optional(),
 });
 
@@ -57,7 +56,6 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
           { status: { in: [...PUBLIC_PROPERTY_STATUSES] } },
         ],
       },
-      include: { agent: { select: { id: true, name: true, email: true, phone: true, image: true, title: true } } },
     });
 
     if (!property) {
@@ -104,12 +102,11 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       data: body,
     });
 
-    // Log price/status/featured changes for the admin notification feed.
+    // Log price and status changes for the admin notification feed.
     const agent = await prisma.user.findUnique({ where: { id: session.user.id } });
     const change = summarizeChanges(existing, {
       price: body.price,
       status: body.status,
-      featured: body.featured,
     });
     if (change && agent) {
       await logActivity({

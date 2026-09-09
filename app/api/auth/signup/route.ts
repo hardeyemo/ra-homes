@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { textOnlyPattern } from "@/lib/inputValidation";
 
 const signupSchema = z.object({
-  name: z.string().min(2),
+  name: z.string().trim().min(2).regex(textOnlyPattern, "Name can only contain letters, spaces, apostrophes, periods, and hyphens"),
   email: z.string().email(),
   password: z.string().min(8),
 });

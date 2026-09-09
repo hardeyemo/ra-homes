@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { PROPERTY_TYPES, LISTING_TYPES, AMENITIES } from "@/lib/constants";
 import { ImageUploader } from "@/components/shared/ImageUploader";
 import type { Property } from "@/types/property";
+import { numericOnly, textOnly } from "@/lib/inputValidation";
 
 interface Props {
   agentId: string;
@@ -39,7 +40,6 @@ export const PropertyForm = ({ agentId, initialData, propertyId }: Props) => {
     parkingSpaces: initialData?.parkingSpaces?.toString() || "",
     images: initialData?.images || ([] as string[]),
     amenities: initialData?.amenities || ([] as string[]),
-    featured: initialData?.featured || false,
   });
 
   const toggleAmenity = (a: string) => {
@@ -132,7 +132,7 @@ export const PropertyForm = ({ agentId, initialData, propertyId }: Props) => {
 
       <div>
         <Label htmlFor="price">Price {form.listingType === "RENT" ? "(per month)" : ""}</Label>
-        <Input id="price" type="number" min="1" required className="mt-1.5" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
+        <Input id="price" type="number" inputMode="numeric" min="1" required className="mt-1.5" value={form.price} onChange={(e) => setForm({ ...form, price: numericOnly(e.target.value) })} />
       </div>
 
       <div>
@@ -142,48 +142,48 @@ export const PropertyForm = ({ agentId, initialData, propertyId }: Props) => {
 
       <div>
         <Label htmlFor="neighborhood">Neighborhood / Area (optional)</Label>
-        <Input id="neighborhood" placeholder="e.g. GRA, Tanke, GRA Extension" className="mt-1.5" value={form.neighborhood} onChange={(e) => setForm({ ...form, neighborhood: e.target.value })} />
+        <Input id="neighborhood" placeholder="e.g. GRA, Tanke, GRA Extension" className="mt-1.5" value={form.neighborhood} onChange={(e) => setForm({ ...form, neighborhood: textOnly(e.target.value) })} />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div>
           <Label htmlFor="city">City</Label>
-          <Input id="city" required className="mt-1.5" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+          <Input id="city" required className="mt-1.5" value={form.city} onChange={(e) => setForm({ ...form, city: textOnly(e.target.value) })} />
         </div>
         <div>
           <Label htmlFor="state">State</Label>
-          <Input id="state" required className="mt-1.5" value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value })} />
+          <Input id="state" required className="mt-1.5" value={form.state} onChange={(e) => setForm({ ...form, state: textOnly(e.target.value) })} />
         </div>
         <div>
           <Label htmlFor="zip">Zip</Label>
-          <Input id="zip" required className="mt-1.5" value={form.zip} onChange={(e) => setForm({ ...form, zip: e.target.value })} />
+          <Input id="zip" inputMode="numeric" pattern="[0-9]*" required className="mt-1.5" value={form.zip} onChange={(e) => setForm({ ...form, zip: numericOnly(e.target.value) })} />
         </div>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
         <div>
           <Label htmlFor="bedrooms">Beds</Label>
-          <Input id="bedrooms" type="number" required className="mt-1.5" value={form.bedrooms} onChange={(e) => setForm({ ...form, bedrooms: e.target.value })} />
+          <Input id="bedrooms" type="number" inputMode="numeric" min="0" step="1" required className="mt-1.5" value={form.bedrooms} onChange={(e) => setForm({ ...form, bedrooms: numericOnly(e.target.value) })} />
         </div>
         <div>
           <Label htmlFor="bathrooms">Baths</Label>
-          <Input id="bathrooms" type="number" step="0.5" required className="mt-1.5" value={form.bathrooms} onChange={(e) => setForm({ ...form, bathrooms: e.target.value })} />
+          <Input id="bathrooms" type="number" inputMode="decimal" min="0" step="0.5" required className="mt-1.5" value={form.bathrooms} onChange={(e) => setForm({ ...form, bathrooms: numericOnly(e.target.value, true) })} />
         </div>
         <div>
           <Label htmlFor="sqft">Sqft</Label>
-          <Input id="sqft" type="number" min="1" required className="mt-1.5" value={form.sqft} onChange={(e) => setForm({ ...form, sqft: e.target.value })} />
+          <Input id="sqft" type="number" inputMode="numeric" min="1" required className="mt-1.5" value={form.sqft} onChange={(e) => setForm({ ...form, sqft: numericOnly(e.target.value) })} />
         </div>
         <div>
           <Label htmlFor="lotSqft">Land size (sqft)</Label>
-          <Input id="lotSqft" type="number" className="mt-1.5" placeholder="If applicable" value={form.lotSqft} onChange={(e) => setForm({ ...form, lotSqft: e.target.value })} />
+          <Input id="lotSqft" type="number" inputMode="numeric" min="0" className="mt-1.5" placeholder="If applicable" value={form.lotSqft} onChange={(e) => setForm({ ...form, lotSqft: numericOnly(e.target.value) })} />
         </div>
         <div>
           <Label htmlFor="yearBuilt">Year built</Label>
-          <Input id="yearBuilt" type="number" className="mt-1.5" value={form.yearBuilt} onChange={(e) => setForm({ ...form, yearBuilt: e.target.value })} />
+          <Input id="yearBuilt" type="number" inputMode="numeric" min="1800" max={new Date().getFullYear()} className="mt-1.5" value={form.yearBuilt} onChange={(e) => setForm({ ...form, yearBuilt: numericOnly(e.target.value) })} />
         </div>
         <div>
           <Label htmlFor="parkingSpaces">Parking</Label>
-          <Input id="parkingSpaces" type="number" className="mt-1.5" value={form.parkingSpaces} onChange={(e) => setForm({ ...form, parkingSpaces: e.target.value })} />
+          <Input id="parkingSpaces" type="number" inputMode="numeric" min="0" step="1" className="mt-1.5" value={form.parkingSpaces} onChange={(e) => setForm({ ...form, parkingSpaces: numericOnly(e.target.value) })} />
         </div>
       </div>
 
@@ -214,11 +214,6 @@ export const PropertyForm = ({ agentId, initialData, propertyId }: Props) => {
           ))}
         </div>
       </div>
-
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" className="accent-clay" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} />
-        Feature on homepage
-      </label>
 
       <Button type="submit" disabled={status === "saving"} className="w-full">
         {status === "saving" ? "Saving..." : propertyId ? "Save Changes" : "Create Listing"}

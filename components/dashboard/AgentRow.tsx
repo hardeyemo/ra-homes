@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Pencil, Trash2, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { textOnly } from "@/lib/inputValidation";
 
 interface AgentSummary {
   id: string;
@@ -132,7 +133,7 @@ export const AgentRow = ({
       <tr className="border-b border-line last:border-0 bg-parchment/40">
         <td className="p-4" colSpan={4}>
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-            <Input placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <Input placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: textOnly(e.target.value) })} />
             <Input placeholder="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             <Input placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
             <select

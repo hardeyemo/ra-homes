@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { textOnly } from "@/lib/inputValidation";
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
@@ -73,7 +74,7 @@ export default function ContactPage() {
         <form onSubmit={handleSubmit} className="border border-line bg-surface p-8 space-y-4 h-fit">
           <div>
             <Label htmlFor="name">Name</Label>
-            <Input id="name" required className="mt-1.5" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <Input id="name" required className="mt-1.5" value={form.name} onChange={(e) => setForm({ ...form, name: textOnly(e.target.value) })} />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>

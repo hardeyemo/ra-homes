@@ -8,8 +8,8 @@ const LINKS = [
   { label: "Overview", href: "/dashboard" },
   { label: "Messages", href: "/dashboard/messages" },
   { label: "Inquiries & Viewings", href: "/dashboard/inquiries" },
-  { label: "Submissions", href: "/dashboard/submissions" },
-  { label: "Import Listings", href: "/dashboard/import" },
+  { label: "Submissions", href: "/dashboard/submissions", adminOnly: true },
+  { label: "Import Listings", href: "/dashboard/import", adminOnly: true },
   { label: "Agents", href: "/dashboard/agents", adminOnly: true },
   { label: "Activity", href: "/dashboard/activity", adminOnly: true },
 ];

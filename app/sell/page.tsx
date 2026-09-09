@@ -10,6 +10,7 @@ import { PROPERTY_TYPES, LISTING_TYPES, PREFERRED_CONTACT_METHODS } from "@/lib/
 import Link from "next/link";
 import { ImageUploader } from "@/components/shared/ImageUploader";
 import { CheckCircle2, ShieldCheck, Users } from "lucide-react";
+import { textOnly } from "@/lib/inputValidation";
 
 const initialForm = {
   ownerName: "",
@@ -138,7 +139,7 @@ export default function SellPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Label htmlFor="ownerName">Your name</Label>
-              <Input id="ownerName" required className="mt-1.5" value={form.ownerName} onChange={(e) => setForm({ ...form, ownerName: e.target.value })} />
+              <Input id="ownerName" required className="mt-1.5" value={form.ownerName} onChange={(e) => setForm({ ...form, ownerName: textOnly(e.target.value) })} />
             </div>
             <div>
               <Label htmlFor="email">Email</Label>
@@ -159,11 +160,11 @@ export default function SellPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Label htmlFor="city">City</Label>
-              <Input id="city" required className="mt-1.5" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+              <Input id="city" required className="mt-1.5" value={form.city} onChange={(e) => setForm({ ...form, city: textOnly(e.target.value) })} />
             </div>
             <div>
               <Label htmlFor="state">State</Label>
-              <Input id="state" required className="mt-1.5" value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value })} />
+              <Input id="state" required className="mt-1.5" value={form.state} onChange={(e) => setForm({ ...form, state: textOnly(e.target.value) })} />
             </div>
           </div>
 

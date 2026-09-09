@@ -26,13 +26,13 @@ export const PropertyContactActions = ({
         rel="noopener noreferrer"
         className="flex items-center justify-center gap-2 h-12 bg-[#25D366] text-white text-sm font-medium hover:opacity-90 transition-opacity"
       >
-        <MessageCircle className="w-4 h-4" /> WhatsApp
+        <MessageCircle className="w-4 h-4" /> WhatsApp RA Homes
       </a>
       <a
         href={`tel:+${AGENCY_PHONE_INTL}`}
         className="flex items-center justify-center gap-2 h-12 bg-ink text-parchment text-sm font-medium hover:bg-clay transition-colors"
       >
-        <Phone className="w-4 h-4" /> Call Now
+        <Phone className="w-4 h-4" /> Call RA Homes
       </a>
       {onScheduleClick ? (
         <button

@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { z } from "zod";
+import { textOnlyPattern } from "@/lib/inputValidation";
+
+const agentUpdateSchema = z.object({
+  name: z.string().trim().min(2).regex(textOnlyPattern, "Name can only contain letters, spaces, apostrophes, periods, and hyphens").optional(),
+  phone: z.string().optional(),
+  title: z.string().trim().max(100).optional(),
+  role: z.enum(["AGENT", "ADMIN"]).optional(),
+});
 
 // PATCH /api/agents/[id] — admin edits an agent's details, or promotes/
 // demotes between AGENT and ADMIN. (Promotion from USER to AGENT happens
@@ -13,7 +22,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 
   try {
-    const body = await req.json();
+    const body = agentUpdateSchema.parse(await req.json());
 
     // The dashboard UI disables the role field when editing yourself, but
     // that's client-side only — enforce it here too, the same way DELETE
@@ -35,6 +44,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     });
     return NextResponse.json({ agent });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: error.errors.map((item) => item.message).join("; ") }, { status: 400 });
+    }
     console.error(error);
     return NextResponse.json({ error: "Failed to update agent" }, { status: 500 });
   }

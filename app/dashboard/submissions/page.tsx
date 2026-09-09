@@ -12,12 +12,13 @@ export default async function SubmissionsPage() {
 
   const agent = await prisma.user.findUnique({ where: { id: session.user.id } });
   if (!agent) redirect("/login");
+  if (agent.role !== "ADMIN") redirect("/dashboard");
 
   const submissions = await prisma.propertySubmission.findMany({ orderBy: { createdAt: "desc" } });
 
   return (
     <div className="container py-12">
-      <DashboardNav isAdmin={agent.role === "ADMIN"} />
+      <DashboardNav isAdmin />
 
       <p className="font-mono text-xs uppercase tracking-widest text-clay">Dashboard</p>
       <h1 className="mt-2 font-display text-4xl">Property Submissions</h1>

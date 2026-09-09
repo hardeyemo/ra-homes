@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { textOnly } from "@/lib/inputValidation";
 
 export const InquiryForm = ({ propertyId, propertyTitle }: { propertyId: string; propertyTitle: string }) => {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -51,7 +52,7 @@ export const InquiryForm = ({ propertyId, propertyTitle }: { propertyId: string;
           id="name"
           required
           value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          onChange={(e) => setForm({ ...form, name: textOnly(e.target.value) })}
           className="mt-1.5"
         />
       </div>

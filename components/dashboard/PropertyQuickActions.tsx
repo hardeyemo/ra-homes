@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Star, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 const AGENT_STATUS_OPTIONS = ["DRAFT", "ACTIVE", "PENDING", "SOLD", "RENTED"];
 const ADMIN_STATUS_OPTIONS = [...AGENT_STATUS_OPTIONS, "ARCHIVED"];
@@ -11,18 +11,15 @@ export const PropertyQuickActions = ({
   propertyId,
   title,
   status,
-  featured,
   isAdmin,
 }: {
   propertyId: string;
   title: string;
   status: string;
-  featured: boolean;
   isAdmin: boolean;
 }) => {
   const router = useRouter();
   const [localStatus, setLocalStatus] = useState(status);
-  const [localFeatured, setLocalFeatured] = useState(featured);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -49,7 +46,6 @@ export const PropertyQuickActions = ({
     } catch {
       // revert on failure
       setLocalStatus(status);
-      setLocalFeatured(featured);
     } finally {
       setSaving(false);
     }
@@ -83,21 +79,6 @@ export const PropertyQuickActions = ({
           <option key={s} value={s}>{s}</option>
         ))}
       </select>
-      <button
-        type="button"
-        disabled={saving || deleting}
-        onClick={() => {
-          const next = !localFeatured;
-          setLocalFeatured(next);
-          patch({ featured: next });
-        }}
-        aria-label={localFeatured ? "Remove from featured" : "Mark as featured"}
-        className={`h-8 w-8 flex items-center justify-center border ${
-          localFeatured ? "bg-clay text-parchment border-clay" : "border-line text-ink/50"
-        }`}
-      >
-        <Star className={`w-3.5 h-3.5 ${localFeatured ? "fill-current" : ""}`} />
-      </button>
       {isAdmin && (
         <button
           type="button"

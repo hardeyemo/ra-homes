@@ -17,7 +17,6 @@ export const IMPORT_COLUMNS = [
   "amenities",
   "images",
   "status",
-  "featured",
 ] as const;
 
 export const IMPORT_TEMPLATE_ROW = {
@@ -39,8 +38,15 @@ export const IMPORT_TEMPLATE_ROW = {
   amenities: "Borehole / Water Supply|Fenced & Gated|Generator / Power Backup",
   images: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&h=800&fit=crop",
   status: "DRAFT",
-  featured: "false",
 };
+
+export const LAND_IMAGE_SERIES = [
+  "https://images.unsplash.com/photo-1785300550133-710824418437?w=1200&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1777268209440-296c2bb6facf?w=1200&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1557007045-86f670c2dd14?w=1200&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=800&fit=crop",
+];
 
 export function buildCsvTemplate(): string {
   const header = IMPORT_COLUMNS.join(",");

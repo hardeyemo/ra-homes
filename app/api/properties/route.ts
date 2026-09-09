@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { slugify, toReference } from "@/lib/utils";
 import { logActivity } from "@/lib/activityLog";
 import { PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
+import { textOnlyPattern } from "@/lib/inputValidation";
 
 // GET /api/properties?search=&listingType=&propertyType=&city=&minPrice=&maxPrice=&minBedrooms=&status=
 export async function GET(req: NextRequest) {
@@ -21,14 +22,23 @@ export async function GET(req: NextRequest) {
   const minBedrooms = params.get("minBedrooms") ? Number(params.get("minBedrooms")) : undefined;
   const minBathrooms = params.get("minBathrooms") ? Number(params.get("minBathrooms")) : undefined;
   const neighborhood = params.get("neighborhood") || undefined;
-  const featured = params.get("featured") === "true" ? true : undefined;
   const requestedStatus = params.get("status");
   if (requestedStatus && !PUBLIC_PROPERTY_STATUSES.includes(requestedStatus as (typeof PUBLIC_PROPERTY_STATUSES)[number])) {
     return NextResponse.json({ error: "That listing status is not publicly available" }, { status: 400 });
   }
   const status = requestedStatus || "ACTIVE";
-  const limit = params.get("limit") ? Number(params.get("limit")) : 24;
-  const page = params.get("page") ? Number(params.get("page")) : 1;
+  // Keep public listing queries bounded. The client only needs one page at a
+  // time, and a capped limit prevents accidental "load everything" requests.
+  const requestedLimit = Number(params.get("limit") || 12);
+  const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(Math.floor(requestedLimit), 1), 48) : 12;
+  const requestedPage = Number(params.get("page") || 1);
+  const page = Number.isFinite(requestedPage) ? Math.max(Math.floor(requestedPage), 1) : 1;
+  const sort = params.get("sort") || "newest";
+  const orderBy = sort === "price-asc"
+    ? { price: "asc" as const }
+    : sort === "price-desc"
+      ? { price: "desc" as const }
+      : { createdAt: "desc" as const };
 
   const where: any = { status };
   if (listingType) where.listingType = listingType;
@@ -37,7 +47,6 @@ export async function GET(req: NextRequest) {
   if (minBedrooms) where.bedrooms = { gte: minBedrooms };
   if (minBathrooms) where.bathrooms = { gte: minBathrooms };
   if (neighborhood) where.neighborhood = { equals: neighborhood, mode: "insensitive" };
-  if (featured) where.featured = true;
   if (minPrice || maxPrice) {
     where.price = {};
     if (minPrice) where.price.gte = minPrice;
@@ -56,15 +65,20 @@ export async function GET(req: NextRequest) {
     const [properties, total] = await Promise.all([
       prisma.property.findMany({
         where,
-        include: { agent: { select: { id: true, name: true, email: true, phone: true, image: true, title: true } } },
-        orderBy: { createdAt: "desc" },
+        orderBy,
         take: limit,
         skip: (page - 1) * limit,
       }),
       prisma.property.count({ where }),
     ]);
 
-    return NextResponse.json({ properties, total, page, limit });
+    return NextResponse.json({
+      properties,
+      total,
+      page,
+      limit,
+      totalPages: Math.max(1, Math.ceil(total / limit)),
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Failed to fetch properties" }, { status: 500 });
@@ -80,9 +94,9 @@ const createPropertySchema = z.object({
   priceLabel: z.string().optional(),
   address: z.string().min(3),
   neighborhood: z.string().optional(),
-  city: z.string().min(2),
-  state: z.string().min(2),
-  zip: z.string().min(3),
+  city: z.string().trim().min(2).regex(textOnlyPattern, "City can only contain letters and punctuation"),
+  state: z.string().trim().min(2).regex(textOnlyPattern, "State can only contain letters and punctuation"),
+  zip: z.string().regex(/^\d{3,}$/, "ZIP must contain numbers only"),
   bedrooms: z.number().int().min(0),
   bathrooms: z.number().min(0),
   sqft: z.number().int().positive(),
@@ -93,7 +107,6 @@ const createPropertySchema = z.object({
   images: z.array(z.string()).min(1),
   agentId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid agent ID"),
   status: z.enum(["DRAFT", "ACTIVE", "PENDING", "SOLD", "RENTED", "ARCHIVED"]).default("DRAFT"),
-  featured: z.boolean().optional(),
 });
 
 // POST /api/properties — agent creates a new listing

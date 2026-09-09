@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { textOnlyPattern } from "@/lib/inputValidation";
 
 // GET /api/account — the signed-in user's own profile.
 export async function GET() {
@@ -24,7 +25,7 @@ export async function GET() {
 }
 
 const updateSchema = z.object({
-  name: z.string().min(2).optional(),
+  name: z.string().trim().min(2).regex(textOnlyPattern, "Name can only contain letters, spaces, apostrophes, periods, and hyphens").optional(),
   phone: z.string().optional(),
   title: z.string().optional(),
   bio: z.string().optional(),

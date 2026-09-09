@@ -30,7 +30,7 @@ export default async function DashboardInquiriesPage() {
       take: 50,
     }),
     // General contact-form messages aren't tied to an agent/property — visible to everyone signed in.
-    prisma.contact.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
+    isAdmin ? prisma.contact.findMany({ orderBy: { createdAt: "desc" }, take: 50 }) : Promise.resolve([]),
   ]);
 
   return (
@@ -119,7 +119,7 @@ export default async function DashboardInquiriesPage() {
           )}
         </div>
 
-        <div className="border border-line bg-surface">
+        {isAdmin && <div className="border border-line bg-surface">
           <div className="p-6 hairline border-b">
             <h2 className="font-display text-xl">General Contact Messages</h2>
           </div>
@@ -155,7 +155,7 @@ export default async function DashboardInquiriesPage() {
               </table>
             </div>
           )}
-        </div>
+        </div>}
       </div>
     </div>
   );

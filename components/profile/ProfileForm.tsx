@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ImageUploader } from "@/components/shared/ImageUploader";
+import { textOnly } from "@/lib/inputValidation";
 
 interface Props {
   initial: { name: string; phone: string; title: string; bio: string; image: string };
@@ -47,7 +48,7 @@ export const ProfileForm = ({ initial }: Props) => {
       <div className="grid gap-5 sm:grid-cols-2">
       <div>
         <Label htmlFor="p-name">Full name</Label>
-        <Input id="p-name" required className="mt-1.5" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+        <Input id="p-name" required className="mt-1.5" value={form.name} onChange={(e) => setForm({ ...form, name: textOnly(e.target.value) })} />
       </div>
       <div>
         <Label htmlFor="p-phone">Phone</Label>

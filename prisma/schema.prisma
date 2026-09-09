@@ -143,8 +143,6 @@ model Property {
   amenities   String[]
   images      String[]
 
-  featured    Boolean  @default(false)
-  newListing  Boolean  @default(true)
   views       Int      @default(0)
 
   agentId     String   @db.ObjectId

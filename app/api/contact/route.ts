@@ -4,9 +4,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendContactNotification, sendContactConfirmation } from "@/lib/resend";
+import { textOnlyPattern } from "@/lib/inputValidation";
 
 const contactSchema = z.object({
-  name: z.string().min(2),
+  name: z.string().trim().min(2).regex(textOnlyPattern, "Name can only contain letters, spaces, apostrophes, periods, and hyphens"),
   email: z.string().email(),
   phone: z.string().optional(),
   subject: z.string().optional(),
@@ -33,10 +34,10 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/contact — dashboard list, any signed-in agent/admin can view general inquiries
+// GET /api/contact — agency-wide messages are visible to admins only.
 export async function GET() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id || (session.user.role !== "AGENT" && session.user.role !== "ADMIN")) {
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

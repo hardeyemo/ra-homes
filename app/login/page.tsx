@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/layout/Logo";
 import { AGENCY_OFFICE, SERVICE_AREAS } from "@/lib/constants";
+import { textOnly } from "@/lib/inputValidation";
 
 const LEDGER: { no: string; label: string; value: string }[] = [
   { no: "01", label: "Neighborhoods on record", value: `${SERVICE_AREAS.length} across Ilorin` },
@@ -229,7 +230,7 @@ function LoginForm() {
                       required
                       className="pl-10"
                       value={form.name}
-                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      onChange={(e) => setForm({ ...form, name: textOnly(e.target.value) })}
                     />
                   </div>
                 </motion.div>

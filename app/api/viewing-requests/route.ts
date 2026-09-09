@@ -4,11 +4,12 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendViewingConfirmation, sendViewingAgentNotification } from "@/lib/resend";
-import { PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
+import { textOnlyPattern } from "@/lib/inputValidation";
+import { AGENCY_EMAIL, PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
 
 const viewingSchema = z.object({
   propertyId: z.string(),
-  name: z.string().min(2),
+  name: z.string().trim().min(2).regex(textOnlyPattern, "Name can only contain letters, spaces, apostrophes, periods, and hyphens"),
   email: z.string().email(),
   phone: z.string().min(7),
   preferredDate: z.string(),
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const data = viewingSchema.parse(body);
 
-    const property = await prisma.property.findUnique({ where: { id: data.propertyId }, include: { agent: true } });
+    const property = await prisma.property.findUnique({ where: { id: data.propertyId } });
     if (!property || !PUBLIC_PROPERTY_STATUSES.includes(property.status as (typeof PUBLIC_PROPERTY_STATUSES)[number])) {
       return NextResponse.json({ error: "Property not found" }, { status: 404 });
     }
@@ -43,7 +44,9 @@ export async function POST(req: NextRequest) {
     }).catch((err) => console.error("Email failed:", err));
 
     sendViewingAgentNotification({
-      agentEmail: property.agent.email,
+      // Viewing requests use the default RA admin inbox; an individual
+      // listing agent's personal contact information is never used publicly.
+      agentEmail: process.env.AGENCY_INBOX_EMAIL || AGENCY_EMAIL,
       propertyTitle: property.title,
       propertyReference: property.reference,
       name: data.name,

@@ -44,7 +44,6 @@ export default async function NewPropertyPage({
         images: submission.images,
         amenities: [],
         status: "DRAFT",
-        featured: false,
       };
     }
   }

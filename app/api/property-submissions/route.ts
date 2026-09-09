@@ -4,14 +4,15 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendSubmissionNotification, sendSubmissionConfirmation } from "@/lib/resend";
+import { textOnlyPattern } from "@/lib/inputValidation";
 
 const submissionSchema = z.object({
-  ownerName: z.string().min(2),
+  ownerName: z.string().trim().min(2).regex(textOnlyPattern, "Name can only contain letters, spaces, apostrophes, periods, and hyphens"),
   email: z.string().email(),
   phone: z.string().min(7),
   address: z.string().min(3),
-  city: z.string().min(2),
-  state: z.string().min(2),
+  city: z.string().trim().min(2).regex(textOnlyPattern, "City can only contain letters and punctuation"),
+  state: z.string().trim().min(2).regex(textOnlyPattern, "State can only contain letters and punctuation"),
   propertyType: z.enum(["HOUSE", "APARTMENT", "CONDO", "TOWNHOUSE", "LAND", "COMMERCIAL", "MULTI_FAMILY"]),
   listingType: z.enum(["SALE", "RENT"]),
   askingPrice: z.number().optional(),
@@ -57,12 +58,10 @@ export async function POST(req: NextRequest) {
 }
 
 // GET /api/property-submissions — agency-wide leads (names, contact info,
-// asking prices for every submitted property), restricted to AGENT/ADMIN.
-// Everyone now shares one login, so this can no longer rely on "signed in"
-// alone the way it could when only agents had accounts.
+// asking prices for every submitted property), restricted to ADMIN.
 export async function GET() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id || (session.user.role !== "AGENT" && session.user.role !== "ADMIN")) {
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

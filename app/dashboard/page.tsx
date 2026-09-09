@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { PropertyQuickActions } from "@/components/dashboard/PropertyQuickActions";
 import { formatPrice } from "@/lib/utils";
-import { Building2, CalendarDays, ClipboardList, MessageSquare } from "lucide-react";
+import { ArrowLeft, ArrowRight, Building2, CalendarDays, ClipboardList, MessageSquare } from "lucide-react";
 
-async function getCurrentAgentAndListings() {
+const PAGE_SIZE = 10;
+
+async function getCurrentAgentAndListings(page: number) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return { agent: null, properties: [], stats: null };
 
@@ -18,31 +20,41 @@ async function getCurrentAgentAndListings() {
   // Admins see every listing; agents see only their own.
   const propertyWhere = agent.role === "ADMIN" ? {} : { agentId: agent.id };
 
-  const properties = await prisma.property.findMany({
-    where: propertyWhere,
-    orderBy: { createdAt: "desc" },
-  });
-
-  const [inquiryCount, viewingCount, submissionCount] = await Promise.all([
+  const [totalProperties, activeCount, inquiryCount, viewingCount, submissionCount] = await Promise.all([
+    prisma.property.count({ where: propertyWhere }),
+    prisma.property.count({ where: { ...propertyWhere, status: "ACTIVE" } }),
     prisma.inquiry.count({ where: { property: propertyWhere } }),
     prisma.viewingRequest.count({ where: agent.role === "ADMIN" ? {} : { agentId: agent.id } }),
     agent.role === "ADMIN" ? prisma.propertySubmission.count({ where: { status: "PENDING" } }) : Promise.resolve(0),
   ]);
+  const totalPages = Math.max(1, Math.ceil(totalProperties / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const properties = await prisma.property.findMany({
+    where: propertyWhere,
+    orderBy: { createdAt: "desc" },
+    skip: (currentPage - 1) * PAGE_SIZE,
+    take: PAGE_SIZE,
+  });
 
   return {
     agent,
     properties: JSON.parse(JSON.stringify(properties)),
+    totalProperties,
+    totalPages,
+    currentPage,
     stats: {
       inquiryCount,
       viewingCount,
       submissionCount,
-      active: properties.filter((p) => p.status === "ACTIVE").length,
+      active: activeCount,
     },
   };
 }
 
-export default async function DashboardPage() {
-  const { agent, properties, stats } = await getCurrentAgentAndListings();
+export default async function DashboardPage({ searchParams }: { searchParams: { page?: string } }) {
+  const requestedPage = Number(searchParams.page || 1);
+  const page = Number.isFinite(requestedPage) ? Math.max(1, Math.floor(requestedPage)) : 1;
+  const { agent, properties, stats, totalProperties = 0, totalPages = 1, currentPage = 1 } = await getCurrentAgentAndListings(page);
 
   if (!agent) {
     return (
@@ -98,7 +110,7 @@ export default async function DashboardPage() {
         <div className="flex items-center justify-between border-b border-line p-5 md:p-6">
           <div>
             <h2 className="text-xl font-bold tracking-tight">{isAdmin ? "All listings" : "Your listings"}</h2>
-            <p className="mt-1 text-sm text-ink/55">Manage your latest property listings.</p>
+            <p className="mt-1 text-sm text-ink/55">{totalProperties} listing{totalProperties === 1 ? "" : "s"} in total.</p>
           </div>
           <Link href="/properties" className="hidden text-sm font-medium text-clay hover:underline sm:block">View public listings</Link>
         </div>
@@ -122,7 +134,7 @@ export default async function DashboardPage() {
                     <td className="whitespace-nowrap px-6 py-4 font-mono text-xs text-ink/55">{p.reference}</td>
                     <td className="whitespace-nowrap px-6 py-4 font-medium">{p.title}</td>
                     <td className="px-6 py-4">
-                      <PropertyQuickActions propertyId={p.id} title={p.title} status={p.status} featured={p.featured} isAdmin={isAdmin} />
+                      <PropertyQuickActions propertyId={p.id} title={p.title} status={p.status} isAdmin={isAdmin} />
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 font-medium">{formatPrice(p.price, p.listingType)}</td>
                     <td className="whitespace-nowrap px-6 py-4 text-right">
@@ -135,6 +147,13 @@ export default async function DashboardPage() {
               </tbody>
             </table>
           </div>
+        )}
+        {totalPages > 1 && (
+          <nav aria-label="Dashboard listing pages" className="flex flex-wrap items-center justify-center gap-2 border-t border-line p-4 sm:justify-between">
+            <Link href={`/dashboard?page=${Math.max(1, currentPage - 1)}`} aria-disabled={currentPage === 1} className={`inline-flex h-10 items-center gap-2 rounded-lg border border-line px-3 text-sm font-medium ${currentPage === 1 ? "pointer-events-none opacity-45" : "hover:bg-parchment"}`}><ArrowLeft className="h-4 w-4" /><span className="hidden sm:inline">Previous</span></Link>
+            <div className="flex items-center gap-1">{Array.from({ length: totalPages }, (_, index) => index + 1).filter((number) => totalPages <= 5 || number === 1 || number === totalPages || Math.abs(number - currentPage) <= 1).map((number, index, pages) => <span key={number} className="contents">{index > 0 && number - pages[index - 1] > 1 && <span className="px-1 text-ink/45">…</span>}<Link href={`/dashboard?page=${number}`} aria-current={currentPage === number ? "page" : undefined} className={`grid h-10 min-w-10 place-items-center rounded-lg px-2 text-sm font-semibold ${currentPage === number ? "bg-ink text-parchment" : "border border-line hover:bg-parchment"}`}>{number}</Link></span>)}</div>
+            <Link href={`/dashboard?page=${Math.min(totalPages, currentPage + 1)}`} aria-disabled={currentPage === totalPages} className={`inline-flex h-10 items-center gap-2 rounded-lg border border-line px-3 text-sm font-medium ${currentPage === totalPages ? "pointer-events-none opacity-45" : "hover:bg-parchment"}`}><span className="hidden sm:inline">Next</span><ArrowRight className="h-4 w-4" /></Link>
+          </nav>
         )}
       </div>
     </div>

@@ -49,6 +49,7 @@ export const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -85,6 +86,7 @@ export const Navbar = () => {
 
   return (
     <>
+      <header className="fixed inset-x-0 top-0 z-50">
       <div className="hidden border-b border-parchment/10 bg-ink text-parchment lg:block">
         <div className="container flex items-center justify-between py-2 text-[10px] font-mono uppercase tracking-[0.16em]">
           <div className="flex items-center gap-4">
@@ -103,7 +105,7 @@ export const Navbar = () => {
       </div>
 
       <nav
-        className={`sticky top-0 z-50 border-b border-line/80 bg-surface/90 backdrop-blur-xl transition-all duration-300 ${
+        className={`border-b border-line/80 bg-surface/90 backdrop-blur-xl transition-all duration-300 ${
           isScrolled ? "shadow-lg shadow-ink/5" : ""
         }`}
       >
@@ -190,6 +192,7 @@ export const Navbar = () => {
           </button>
         </div>
       </nav>
+      </header>
 
       <AnimatePresence>
         {isMobileMenuOpen && (

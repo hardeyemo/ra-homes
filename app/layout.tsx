@@ -51,7 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             }}
           />
           <Navbar />
-          <main className="flex-grow">{children}</main>
+          <main className="flex-grow pt-[76px] lg:pt-[108px]">{children}</main>
           <Footer />
           <FloatingWhatsApp />
         </Providers>

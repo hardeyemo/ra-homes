@@ -7,11 +7,10 @@ import type { Property } from "@/types/property";
 
 export const revalidate = 60;
 
-async function getFeaturedProperties(): Promise<Property[]> {
+async function getRecentProperties(): Promise<Property[]> {
   try {
     const properties = await prisma.property.findMany({
-      where: { status: "ACTIVE", featured: true },
-      include: { agent: { select: { id: true, name: true, email: true, phone: true, image: true, title: true } } },
+      where: { status: "ACTIVE" },
       orderBy: { createdAt: "desc" },
       take: 6,
     });
@@ -22,7 +21,7 @@ async function getFeaturedProperties(): Promise<Property[]> {
 }
 
 export default async function HomePage() {
-  const featured = await getFeaturedProperties();
+  const recentProperties = await getRecentProperties();
 
   return (
     <>
@@ -40,18 +39,18 @@ export default async function HomePage() {
         <div className="container">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="font-mono text-xs uppercase tracking-[0.18em] text-clay">Featured this week</p>
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-clay">Recently added</p>
               <h2 className="mt-2 font-display text-3xl md:text-4xl">Explore homes in Ilorin</h2>
             </div>
             <Link href="/properties" className="group inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-clay">View all listings <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></Link>
           </div>
 
-          {featured.length > 0 ? (
+          {recentProperties.length > 0 ? (
             <div className="mt-9 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {featured.map((property) => <PropertyCard key={property.id} property={property} />)}
+              {recentProperties.map((property) => <PropertyCard key={property.id} property={property} />)}
             </div>
           ) : (
-            <div className="mt-9 rounded-2xl border border-line bg-parchment p-12 text-center text-ink/60">No featured homes are available right now.</div>
+            <div className="mt-9 rounded-2xl border border-line bg-parchment p-12 text-center text-ink/60">No recent listings are available right now.</div>
           )}
         </div>
       </section>

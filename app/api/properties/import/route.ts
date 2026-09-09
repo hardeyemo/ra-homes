@@ -24,7 +24,6 @@ const importRowSchema = z.object({
   amenities: z.string().optional().default(""), // pipe-separated in the CSV
   images: z.string().min(1), // pipe-separated URLs in the CSV
   status: z.enum(["DRAFT", "ACTIVE", "PENDING", "SOLD", "RENTED", "ARCHIVED"]).default("DRAFT"),
-  featured: z.coerce.boolean().optional().default(false),
 });
 
 // POST /api/properties/import — bulk create from validated CSV rows. Admin only.
@@ -96,7 +95,6 @@ export async function POST(req: NextRequest) {
             amenities: data.amenities ? data.amenities.split("|").map((s) => s.trim()).filter(Boolean) : [],
             images: data.images.split("|").map((s) => s.trim()).filter(Boolean),
             status: data.status,
-            featured: data.featured,
             agentId,
             reference,
             slug,
