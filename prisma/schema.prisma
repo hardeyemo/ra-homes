@@ -137,6 +137,7 @@ model Property {
   bathrooms   Float
   sqft        Int
   lotSqft     Int?
+  landSize    String? // e.g. "2 Plots" or "5,000 SQFT"
   yearBuilt   Int?
   parkingSpaces Int?
 

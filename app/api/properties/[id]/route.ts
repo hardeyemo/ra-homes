@@ -9,6 +9,8 @@ import { PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
 import { z } from "zod";
 import { textOnlyPattern } from "@/lib/inputValidation";
 
+const landSizePattern = /^\d[\d,]*(?:\.\d+)?\s*(?:sq\.?\s*ft\.?|sqft|plots?)$/i;
+
 const updatePropertySchema = z.object({
   title: z.string().min(3).optional(),
   description: z.string().min(10).optional(),
@@ -23,8 +25,9 @@ const updatePropertySchema = z.object({
   zip: z.string().regex(/^\d{3,}$/, "ZIP must contain numbers only").optional(),
   bedrooms: z.number().int().min(0).optional(),
   bathrooms: z.number().min(0).optional(),
-  sqft: z.number().int().positive().optional(),
+  sqft: z.number().int().min(0).optional(),
   lotSqft: z.number().int().nullable().optional(),
+  landSize: z.string().trim().max(50).regex(landSizePattern, "Land size must be like '2 Plots' or '5,000 SQFT'").nullable().optional(),
   yearBuilt: z.number().int().nullable().optional(),
   parkingSpaces: z.number().int().nullable().optional(),
   amenities: z.array(z.string()).optional(),

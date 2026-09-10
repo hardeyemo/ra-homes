@@ -56,22 +56,71 @@ export const SERVICE_AREAS = [
   { slug: "gra-extension", name: "GRA Extension", description: "Properties in GRA Extension, Ilorin." },
 ] as const;
 
-export const AMENITIES = [
-  "Air Conditioning",
-  "In-Unit Laundry",
-  "Garage",
-  "Pool",
-  "Fireplace",
-  "Hardwood Floors",
-  "Walk-in Closet",
-  "Balcony",
-  "Pet Friendly",
-  "Gym",
-  "Elevator",
-  "Waterfront",
-  "Borehole / Water Supply",
-  "Prepaid Meter",
-  "Fenced & Gated",
-  "CCTV / Security",
-  "Generator / Power Backup",
-];
+// The grouped catalog keeps the listing form easy to scan. Each value appears
+// once, even where a feature is commonly described in more than one way.
+export const AMENITY_GROUPS = [
+  {
+    label: "Interior & Living",
+    items: [
+      "Fully Tiled Floors",
+      "POP Ceiling Throughout",
+      "Existing Fittings & Fixtures",
+      "Hardwood Floors",
+      "Fireplace",
+      "Air Conditioning",
+      "In-Unit Laundry",
+      "Walk-in Closet",
+      "Wardrobes",
+      "Water Heater",
+    ],
+  },
+  {
+    label: "Kitchen & Layout",
+    items: [
+      "Fitted Kitchen",
+      "Modern Kitchen",
+      "Kitchen Cabinets",
+      "En-suite Bedrooms",
+      "Guest Toilet",
+      "Family Lounge",
+      "Dining Area",
+      "Store Room",
+      "Boys' Quarters (BQ)",
+      "Servant Quarters",
+    ],
+  },
+  {
+    label: "Outdoor & Parking",
+    items: [
+      "Spacious Compound",
+      "Ample Outdoor Space",
+      "Fully Tiled Compound",
+      "Interlocked Compound",
+      "Balcony",
+      "Garage",
+      "Car Park",
+      "Pool",
+      "Waterfront",
+      "Pet Friendly",
+    ],
+  },
+  {
+    label: "Utilities & Security",
+    items: [
+      "Borehole / Water Supply",
+      "Water Tank",
+      "Prepaid Meter",
+      "Generator / Power Backup",
+      "Fenced & Gated",
+      "Perimeter Fencing",
+      "Security Gate",
+      "CCTV / Security",
+    ],
+  },
+  {
+    label: "Building Amenities",
+    items: ["Gym", "Elevator"],
+  },
+] as const;
+
+export const AMENITIES = AMENITY_GROUPS.flatMap((group) => group.items);

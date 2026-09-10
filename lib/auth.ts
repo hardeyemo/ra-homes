@@ -97,21 +97,24 @@ export const authOptions: AuthOptions = {
       return true;
     },
 
-    async jwt({ token, user, trigger }) {
+    async jwt({ token, user }) {
       if (user) {
         const u = user as any;
         token.userId = u.id;
         token.role = u.role;
         token.agentRequestStatus = u.agentRequestStatus;
       }
-      // Re-read from the DB on every session check so a role change or
-      // agent-request decision (made in another tab, e.g. by an admin)
-      // shows up without forcing the user to log out and back in.
-      if (trigger === "update" && token.userId) {
+      // Authorize against the current database role, not only the role
+      // present when the JWT was issued. Approvals and revocations then take
+      // effect on the next authenticated request.
+      if (token.userId) {
         const fresh = await prisma.user.findUnique({ where: { id: token.userId as string } });
         if (fresh) {
           token.role = fresh.role;
           token.agentRequestStatus = fresh.agentRequestStatus;
+        } else {
+          token.role = "USER";
+          token.agentRequestStatus = "NONE";
         }
       }
       return token;

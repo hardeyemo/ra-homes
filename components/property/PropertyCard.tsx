@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { Heart, Bed, Bath, Square, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { useSavedPropertiesStore } from "@/store/savedPropertiesStore";
-import { formatNewListingLabel, formatPrice, formatNumber } from "@/lib/utils";
+import { formatNewListingLabel, formatPrice, formatNumber, formatPropertyLocation } from "@/lib/utils";
 import type { Property } from "@/types/property";
 
 export const PropertyCard = ({ property }: { property: Property }) => {
@@ -15,8 +15,9 @@ export const PropertyCard = ({ property }: { property: Property }) => {
   const { data: session } = useSession();
   const isSaved = useSavedPropertiesStore((s) => s.isSaved(property.id));
   const setSaved = useSavedPropertiesStore((s) => s.setSaved);
-  const location = property.neighborhood ? `${property.neighborhood}, ${property.city}` : property.city;
+  const location = formatPropertyLocation(property);
   const isLand = property.propertyType === "LAND";
+  const landSize = property.landSize || (property.lotSqft ? `${formatNumber(property.lotSqft)} sqft` : null);
   const newListingLabel = formatNewListingLabel(property.createdAt);
 
   const toggleSaved = async () => {
@@ -81,11 +82,11 @@ export const PropertyCard = ({ property }: { property: Property }) => {
         </h3>
         <p className="mt-1.5 flex items-start gap-1.5 text-sm leading-relaxed text-ink/60">
           <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-clay" />
-          <span>{property.address}, {location}, {property.state}</span>
+          <span>{location}</span>
         </p>
 
         <div className="hairline mt-4 flex items-center gap-4 pt-4 text-xs font-medium text-ink/55">
-          {isLand ? <span className="flex items-center gap-1.5"><Square className="h-3.5 w-3.5 text-clay" /> {property.lotSqft ? `${formatNumber(property.lotSqft)} sqft` : "Plot size on request"}</span> : <><span className="flex items-center gap-1.5"><Bed className="h-3.5 w-3.5 text-clay" /> Bedrooms: {property.bedrooms}</span><span className="flex items-center gap-1.5"><Bath className="h-3.5 w-3.5 text-clay" /> Bathrooms: {property.bathrooms}</span><span className="flex items-center gap-1.5"><Square className="h-3.5 w-3.5 text-clay" /> {formatNumber(property.sqft)} sqft</span></>}
+          {isLand ? <span className="flex items-center gap-1.5"><Square className="h-3.5 w-3.5 text-clay" /> {landSize || "Plot size on request"}</span> : <><span className="flex items-center gap-1.5"><Bed className="h-3.5 w-3.5 text-clay" /> Bedrooms: {property.bedrooms}</span><span className="flex items-center gap-1.5"><Bath className="h-3.5 w-3.5 text-clay" /> Bathrooms: {property.bathrooms}</span><span className="flex items-center gap-1.5"><Square className="h-3.5 w-3.5 text-clay" /> {formatNumber(property.sqft)} sqft</span></>}
         </div>
         </div>
       </Link>

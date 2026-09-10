@@ -85,7 +85,7 @@ Both are optional — the buttons on `/sell` show as disabled until configured, 
 **Google:**
 1. [Google Cloud Console](https://console.cloud.google.com) → create a project → **APIs & Services → Credentials**
 2. **Create Credentials → OAuth client ID** → Application type: **Web application**
-3. Authorized redirect URI: `<your-domain>/api/auth/callback/google` (e.g. `http://localhost:3000/api/auth/callback/google` for local dev)
+3. Authorized redirect URI: `<your-domain>/api/auth/callback/google` (e.g. `http://localhost:3000/api/auth/callback/google` for local dev). `NEXTAUTH_URL` must use the same domain with no trailing slash.
 4. Copy the Client ID and Client Secret into `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` in `.env`
 
 **Facebook:**

@@ -18,6 +18,42 @@ export function formatNumber(n: number) {
   return new Intl.NumberFormat("en-US").format(n);
 }
 
+type PropertyLocation = {
+  address?: string | null;
+  neighborhood?: string | null;
+  city?: string | null;
+  state?: string | null;
+};
+
+const normalizeLocationPart = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/**
+ * Formats a listing address without repeating an area, city, or state that
+ * was already typed into its address field. This is common in imported
+ * listings, e.g. "Agric Estate, Ilorin Kwara State" + matching fields.
+ */
+export function formatPropertyLocation({ address, neighborhood, city, state }: PropertyLocation) {
+  const locationParts = [neighborhood, city, state].filter((value): value is string => Boolean(value?.trim()));
+  const termsToStrip = [...locationParts].flatMap((part) => {
+    const trimmed = part.trim();
+    return /\bstate$/i.test(trimmed) ? [trimmed] : [trimmed, `${trimmed} State`];
+  }).sort((a, b) => b.length - a.length);
+
+  let streetAddress = address?.trim() || "";
+  for (const term of termsToStrip) {
+    streetAddress = streetAddress.replace(new RegExp(`\\b${escapeRegExp(term)}\\b`, "gi"), " ");
+  }
+  streetAddress = streetAddress.replace(/\s*,\s*/g, ", ").replace(/(?:,\s*){2,}/g, ", ").replace(/^,\s*|,\s*$/g, "").replace(/\s{2,}/g, " ").trim();
+
+  const parts = [streetAddress, ...locationParts].filter(Boolean);
+  const uniqueParts = parts.filter((part, index) =>
+    parts.findIndex((candidate) => normalizeLocationPart(candidate) === normalizeLocationPart(part)) === index
+  );
+
+  return uniqueParts.join(", ");
+}
+
 const NEW_LISTING_WINDOW_MS = 14 * 24 * 60 * 60 * 1000;
 
 /** A quiet, date-derived label for listings added in the last two weeks. */

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { PROPERTY_TYPES, LISTING_TYPES, AMENITIES } from "@/lib/constants";
+import { PROPERTY_TYPES, LISTING_TYPES, AMENITY_GROUPS } from "@/lib/constants";
 import { ImageUploader } from "@/components/shared/ImageUploader";
 import type { Property } from "@/types/property";
 import { numericOnly, textOnly } from "@/lib/inputValidation";
@@ -35,7 +35,7 @@ export const PropertyForm = ({ agentId, initialData, propertyId }: Props) => {
     bedrooms: initialData?.bedrooms?.toString() || "",
     bathrooms: initialData?.bathrooms?.toString() || "",
     sqft: initialData?.sqft?.toString() || "",
-    lotSqft: initialData?.lotSqft?.toString() || "",
+    landSize: initialData?.landSize || (initialData?.lotSqft ? `${initialData.lotSqft.toLocaleString()} SQFT` : ""),
     yearBuilt: initialData?.yearBuilt?.toString() || "",
     parkingSpaces: initialData?.parkingSpaces?.toString() || "",
     images: initialData?.images || ([] as string[]),
@@ -66,9 +66,10 @@ export const PropertyForm = ({ agentId, initialData, propertyId }: Props) => {
       agentId,
       price: Number(form.price),
       bedrooms: Number(form.bedrooms),
-      bathrooms: Number(form.bathrooms),
-      sqft: Number(form.sqft),
-      lotSqft: form.lotSqft ? Number(form.lotSqft) : undefined,
+      bathrooms: form.bathrooms ? Number(form.bathrooms) : 0,
+      sqft: form.sqft ? Number(form.sqft) : 0,
+      zip: form.zip || "000000",
+      landSize: form.landSize.trim() || undefined,
       yearBuilt: form.yearBuilt ? Number(form.yearBuilt) : undefined,
       parkingSpaces: form.parkingSpaces ? Number(form.parkingSpaces) : undefined,
       images: form.images,
@@ -155,8 +156,8 @@ export const PropertyForm = ({ agentId, initialData, propertyId }: Props) => {
           <Input id="state" required className="mt-1.5" value={form.state} onChange={(e) => setForm({ ...form, state: textOnly(e.target.value) })} />
         </div>
         <div>
-          <Label htmlFor="zip">Zip</Label>
-          <Input id="zip" inputMode="numeric" pattern="[0-9]*" required className="mt-1.5" value={form.zip} onChange={(e) => setForm({ ...form, zip: numericOnly(e.target.value) })} />
+          <Label htmlFor="zip">Zip (optional)</Label>
+          <Input id="zip" inputMode="numeric" pattern="[0-9]*" className="mt-1.5" value={form.zip} onChange={(e) => setForm({ ...form, zip: numericOnly(e.target.value) })} />
         </div>
       </div>
 
@@ -166,23 +167,23 @@ export const PropertyForm = ({ agentId, initialData, propertyId }: Props) => {
           <Input id="bedrooms" type="number" inputMode="numeric" min="0" step="1" required className="mt-1.5" value={form.bedrooms} onChange={(e) => setForm({ ...form, bedrooms: numericOnly(e.target.value) })} />
         </div>
         <div>
-          <Label htmlFor="bathrooms">Baths</Label>
-          <Input id="bathrooms" type="number" inputMode="decimal" min="0" step="0.5" required className="mt-1.5" value={form.bathrooms} onChange={(e) => setForm({ ...form, bathrooms: numericOnly(e.target.value, true) })} />
+          <Label htmlFor="bathrooms">Baths (optional)</Label>
+          <Input id="bathrooms" type="number" inputMode="decimal" min="0" step="0.5" className="mt-1.5" value={form.bathrooms} onChange={(e) => setForm({ ...form, bathrooms: numericOnly(e.target.value, true) })} />
         </div>
         <div>
-          <Label htmlFor="sqft">Sqft</Label>
-          <Input id="sqft" type="number" inputMode="numeric" min="1" required className="mt-1.5" value={form.sqft} onChange={(e) => setForm({ ...form, sqft: numericOnly(e.target.value) })} />
+          <Label htmlFor="sqft">Sqft (optional)</Label>
+          <Input id="sqft" type="number" inputMode="numeric" min="0" className="mt-1.5" value={form.sqft} onChange={(e) => setForm({ ...form, sqft: numericOnly(e.target.value) })} />
         </div>
         <div>
-          <Label htmlFor="lotSqft">Land size (sqft)</Label>
-          <Input id="lotSqft" type="number" inputMode="numeric" min="0" className="mt-1.5" placeholder="If applicable" value={form.lotSqft} onChange={(e) => setForm({ ...form, lotSqft: numericOnly(e.target.value) })} />
+          <Label htmlFor="landSize">LAND SIZE (SQFT / PLOTS) (optional)</Label>
+          <Input id="landSize" type="text" className="mt-1.5" placeholder="e.g. 2 Plots or 5,000 SQFT" value={form.landSize} onChange={(e) => setForm({ ...form, landSize: e.target.value })} />
         </div>
         <div>
-          <Label htmlFor="yearBuilt">Year built</Label>
+          <Label htmlFor="yearBuilt">Year built (optional)</Label>
           <Input id="yearBuilt" type="number" inputMode="numeric" min="1800" max={new Date().getFullYear()} className="mt-1.5" value={form.yearBuilt} onChange={(e) => setForm({ ...form, yearBuilt: numericOnly(e.target.value) })} />
         </div>
         <div>
-          <Label htmlFor="parkingSpaces">Parking</Label>
+          <Label htmlFor="parkingSpaces">Parking (optional)</Label>
           <Input id="parkingSpaces" type="number" inputMode="numeric" min="0" step="1" className="mt-1.5" value={form.parkingSpaces} onChange={(e) => setForm({ ...form, parkingSpaces: numericOnly(e.target.value) })} />
         </div>
       </div>
@@ -199,18 +200,27 @@ export const PropertyForm = ({ agentId, initialData, propertyId }: Props) => {
 
       <div>
         <Label>Amenities</Label>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {AMENITIES.map((a) => (
-            <button
-              type="button"
-              key={a}
-              onClick={() => toggleAmenity(a)}
-              className={`px-3 py-1.5 text-xs border ${
-                form.amenities.includes(a) ? "bg-ink text-parchment border-ink" : "border-line text-ink/70"
-              }`}
-            >
-              {a}
-            </button>
+        <p className="mt-1 text-xs text-ink/55">Select every feature that applies to this property.</p>
+        <div className="mt-4 space-y-4">
+          {AMENITY_GROUPS.map((group) => (
+            <section key={group.label}>
+              <h3 className="font-mono text-[11px] uppercase tracking-widest text-clay">{group.label}</h3>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {group.items.map((amenity) => (
+                  <button
+                    type="button"
+                    key={amenity}
+                    aria-pressed={form.amenities.includes(amenity)}
+                    onClick={() => toggleAmenity(amenity)}
+                    className={`px-3 py-1.5 text-xs border ${
+                      form.amenities.includes(amenity) ? "bg-ink text-parchment border-ink" : "border-line text-ink/70"
+                    }`}
+                  >
+                    {amenity}
+                  </button>
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       </div>

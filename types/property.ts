@@ -32,6 +32,7 @@ export interface Property {
   bathrooms: number;
   sqft: number;
   lotSqft?: number | null;
+  landSize?: string | null;
   yearBuilt?: number | null;
   parkingSpaces?: number | null;
   amenities: string[];

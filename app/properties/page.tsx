@@ -3,13 +3,19 @@
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, KeyRound, Search, SlidersHorizontal, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowLeft, ArrowRight, Check, ChevronDown, KeyRound, Search, SlidersHorizontal, X } from "lucide-react";
 import { PropertyCard } from "@/components/property/PropertyCard";
 import { PropertyFilters } from "@/components/property/PropertyFilters";
 import type { Property, PropertyFilters as FiltersType } from "@/types/property";
 
 const MAX_PRICE = 100_000_000;
 const PAGE_SIZE = 9;
+const SORT_OPTIONS = [
+  { value: "newest", label: "Newest listings" },
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+] as const;
 
 const DEFAULT_FILTERS: FiltersType = {
   search: "",
@@ -47,6 +53,7 @@ export default function PropertiesPage() {
   const [sort, setSort] = useState("newest");
   const [loading, setLoading] = useState(true);
   const [filtersPanelOpen, setFiltersPanelOpen] = useState(false);
+  const [sortOpen, setSortOpen] = useState(false);
 
   // Header search and the Buy/Rent links navigate to this same route with a
   // new query string. Sync those URL-owned filters so an existing page
@@ -59,6 +66,17 @@ export default function PropertiesPage() {
       neighborhood: startingNeighborhood,
     }));
   }, [startingListingType, startingNeighborhood, startingSearch]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setFiltersPanelOpen(false);
+        setSortOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   // A changed query always starts at the first matching result. Pagination
   // itself does not change filters, so moving between pages is unaffected.
@@ -109,6 +127,7 @@ export default function PropertiesPage() {
     : isSale
       ? "Thoughtfully selected homes and land across Ilorin, with every detail on record."
       : "Browse homes, apartments, land, and commercial spaces across Ilorin.";
+  const selectedSort = SORT_OPTIONS.find((option) => option.value === sort) || SORT_OPTIONS[0];
 
   return (
     <div className="container py-8 md:py-10">
@@ -144,7 +163,48 @@ export default function PropertiesPage() {
           <input value={filters.search} onChange={(event) => setFilters({ ...filters, search: event.target.value })} placeholder="Search city, neighbourhood, address, or RA reference" className="h-12 w-full rounded-xl border border-line bg-parchment/40 pl-12 pr-4 text-sm outline-none placeholder:text-ink/40 focus:border-gold" />
         </label>
         <button onClick={() => setFiltersPanelOpen(true)} className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-ink bg-surface px-4 text-sm font-semibold hover:bg-ink hover:text-parchment"><SlidersHorizontal className="h-4 w-4" /> Filter{activeCount > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-clay px-1 text-xs text-ink">{activeCount}</span>}</button>
-        <label className="flex h-12 items-center gap-2 rounded-xl border border-line bg-parchment/40 px-3 text-sm font-medium"><span className="text-ink/60">Sort</span><select value={sort} onChange={(event) => setSort(event.target.value)} className="min-w-32 bg-transparent text-sm font-semibold outline-none"><option value="newest">Newest</option><option value="price-asc">Price: Low to High</option><option value="price-desc">Price: High to Low</option></select></label>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setSortOpen((open) => !open)}
+            aria-expanded={sortOpen}
+            aria-haspopup="listbox"
+            className="flex h-12 min-w-[205px] items-center justify-between gap-3 rounded-xl border border-line bg-parchment/40 px-4 text-sm font-semibold hover:border-gold hover:bg-surface"
+          >
+            <span><span className="mr-2 font-medium text-ink/55">Sort</span>{selectedSort.label}</span>
+            <ChevronDown className={`h-4 w-4 text-ink/55 transition-transform ${sortOpen ? "rotate-180" : ""}`} />
+          </button>
+          <AnimatePresence>
+            {sortOpen && (
+              <>
+                <button type="button" aria-label="Close sort menu" onClick={() => setSortOpen(false)} className="fixed inset-0 z-10 cursor-default rounded-none" />
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                  transition={{ duration: 0.16, ease: "easeOut" }}
+                  role="listbox"
+                  aria-label="Sort listings"
+                  className="absolute right-0 z-20 mt-2 w-full min-w-[220px] overflow-hidden rounded-xl border border-line bg-surface p-1.5 shadow-xl shadow-ink/10"
+                >
+                  {SORT_OPTIONS.map((option) => (
+                    <button
+                      type="button"
+                      key={option.value}
+                      role="option"
+                      aria-selected={sort === option.value}
+                      onClick={() => { setSort(option.value); setSortOpen(false); }}
+                      className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm ${sort === option.value ? "bg-ink text-parchment" : "text-ink/70 hover:bg-parchment hover:text-ink"}`}
+                    >
+                      {option.label}
+                      {sort === option.value && <Check className="h-4 w-4" />}
+                    </button>
+                  ))}
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
       <div>
@@ -181,14 +241,16 @@ export default function PropertiesPage() {
           )}
       </div>
 
-      {filtersPanelOpen && <div className="fixed inset-0 z-[80] bg-ink/50 p-0 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Property filters">
-        <button aria-label="Close filters" onClick={() => setFiltersPanelOpen(false)} className="absolute inset-0 h-full w-full cursor-default" />
-        <section className="absolute inset-y-0 right-0 w-full max-w-md overflow-y-auto bg-parchment p-4 shadow-2xl sm:p-6">
+      <AnimatePresence>
+      {filtersPanelOpen && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 z-[80] bg-ink/50 p-0 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Property filters">
+        <button type="button" aria-label="Close filters" onClick={() => setFiltersPanelOpen(false)} className="absolute inset-0 h-full w-full cursor-default rounded-none" />
+        <motion.section initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ type: "spring", damping: 28, stiffness: 280 }} className="absolute inset-y-0 right-0 w-full max-w-md overflow-y-auto bg-parchment p-4 shadow-2xl sm:p-6">
           <div className="mb-5 flex items-center justify-between"><div><p className="font-mono text-xs uppercase tracking-widest text-clay">Refine results</p><h2 className="mt-1 font-display text-2xl">Filters</h2></div><button onClick={() => setFiltersPanelOpen(false)} className="grid h-10 w-10 place-items-center rounded-lg border border-line bg-surface hover:bg-ink hover:text-parchment" aria-label="Close filters"><X className="h-5 w-5" /></button></div>
           <PropertyFilters filters={filters} onChange={setFilters} onReset={() => setFilters({ ...DEFAULT_FILTERS, listingType: startingListingType })} resultCount={total} />
           <button onClick={() => setFiltersPanelOpen(false)} className="mt-5 h-12 w-full rounded-lg bg-ink text-sm font-semibold text-parchment hover:bg-clay hover:text-ink">Show {total} result{total === 1 ? "" : "s"}</button>
-        </section>
-      </div>}
+        </motion.section>
+      </motion.div>}
+      </AnimatePresence>
     </div>
   );
 }

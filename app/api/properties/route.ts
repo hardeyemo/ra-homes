@@ -9,6 +9,8 @@ import { logActivity } from "@/lib/activityLog";
 import { PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
 import { textOnlyPattern } from "@/lib/inputValidation";
 
+const landSizePattern = /^\d[\d,]*(?:\.\d+)?\s*(?:sq\.?\s*ft\.?|sqft|plots?)$/i;
+
 // GET /api/properties?search=&listingType=&propertyType=&city=&minPrice=&maxPrice=&minBedrooms=&status=
 export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;
@@ -96,11 +98,12 @@ const createPropertySchema = z.object({
   neighborhood: z.string().optional(),
   city: z.string().trim().min(2).regex(textOnlyPattern, "City can only contain letters and punctuation"),
   state: z.string().trim().min(2).regex(textOnlyPattern, "State can only contain letters and punctuation"),
-  zip: z.string().regex(/^\d{3,}$/, "ZIP must contain numbers only"),
+  zip: z.string().regex(/^\d{3,}$/, "ZIP must contain numbers only").optional(),
   bedrooms: z.number().int().min(0),
   bathrooms: z.number().min(0),
-  sqft: z.number().int().positive(),
+  sqft: z.number().int().min(0),
   lotSqft: z.number().int().optional(),
+  landSize: z.string().trim().max(50).regex(landSizePattern, "Land size must be like '2 Plots' or '5,000 SQFT'").optional(),
   yearBuilt: z.number().int().optional(),
   parkingSpaces: z.number().int().optional(),
   amenities: z.array(z.string()).default([]),
@@ -138,7 +141,7 @@ export async function POST(req: NextRequest) {
     const slug = `${slugify(data.title)}-${reference.toLowerCase()}`;
 
     const property = await prisma.property.create({
-      data: { ...data, reference, slug },
+      data: { ...data, zip: data.zip || "000000", reference, slug },
     });
 
     const agent = await prisma.user.findUnique({ where: { id: session.user.id } });

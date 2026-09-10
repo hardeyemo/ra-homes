@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { Heart, LayoutDashboard, UserRound } from "lucide-react";
 import { authOptions } from "@/lib/auth";
@@ -27,7 +28,7 @@ export default async function ProfilePage() {
           <aside className="h-fit rounded-xl border border-line bg-surface p-5">
             <div className="flex items-center gap-3 border-b border-line pb-5">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-ink text-base font-bold text-parchment">
-                {user.image ? <img src={user.image} alt="Your profile" className="h-full w-full object-cover" /> : initial}
+                {user.image ? <Image src={user.image} alt="Your profile" fill unoptimized sizes="44px" className="object-cover" /> : initial}
               </span>
               <div className="min-w-0">
                 <p className="truncate font-semibold text-ink">{user.name || "RA Homes member"}</p>

@@ -1,7 +1,15 @@
+import Image from "next/image";
 import { ShieldCheck, Users } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
 export const revalidate = 300;
+
+const PORTFOLIO_AGENT_PHOTOS = [
+  "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=480&h=480&fit=crop&crop=faces",
+  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=480&h=480&fit=crop&crop=faces",
+  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=480&h=480&fit=crop&crop=faces",
+  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=480&h=480&fit=crop&crop=faces",
+];
 
 async function getAgents() {
   try {
@@ -49,11 +57,17 @@ export default async function AgentsPage() {
             <div><p className="font-mono text-xs uppercase tracking-widest text-clay">Our specialists</p><h2 className="mt-2 font-display text-3xl">Meet the team</h2></div>
           </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {agents.map((agent) => (
+          {agents.map((agent, index) => (
             <article key={agent.id} className="group overflow-hidden rounded-2xl border border-line bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-xl hover:shadow-ink/10">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-sage-light font-display text-2xl">
-                  {agent.name.charAt(0).toUpperCase()}
+                  <Image
+                    src={PORTFOLIO_AGENT_PHOTOS[index % PORTFOLIO_AGENT_PHOTOS.length]}
+                    alt=""
+                    width={64}
+                    height={64}
+                    className="h-full w-full object-cover"
+                  />
                 </div>
                 <span className="rounded-full border border-line px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-ink/50">RA Homes</span>
               </div>

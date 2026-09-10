@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ArrowRight, MapPin, MessageCircle, Search, ShieldCheck } from "lucide-react";
@@ -35,10 +36,13 @@ export const Hero = () => {
     <section className="px-3 pt-3 md:px-5 md:pt-5">
       <div className="relative overflow-hidden rounded-2xl">
         <div className="absolute inset-0">
-          <img
+          <Image
             ref={imageRef}
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1800&h=1000&fit=crop"
             alt="A welcoming home exterior"
+            fill
+            priority
+            sizes="100vw"
             className="h-[110%] w-full object-cover"
           />
           <div className="absolute inset-0 bg-ink/45" />

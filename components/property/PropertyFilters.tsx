@@ -65,6 +65,7 @@ export const PropertyFilters = ({ filters, onChange, onReset, resultCount }: Pro
           {SERVICE_AREAS.filter((a) => a.slug !== "ilorin").map((area) => (
             <option key={area.slug} value={area.name}>{area.name}</option>
           ))}
+          <option value="Other">Other</option>
         </select>
       </div>
 

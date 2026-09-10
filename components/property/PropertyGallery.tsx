@@ -23,6 +23,7 @@ export const PropertyGallery = ({ images, title }: Props) => {
 
   if (!images.length) return null;
   const open = (index: number) => setActive(index);
+  const close = () => setActive(null);
 
   return (
     <>
@@ -46,11 +47,12 @@ export const PropertyGallery = ({ images, title }: Props) => {
       </section>
 
       {active !== null && <div role="dialog" aria-modal="true" aria-label={`${title} photo viewer`} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4 sm:p-8">
-        <div className="absolute left-4 top-4 text-sm font-semibold text-white sm:left-8 sm:top-8">{active + 1} / {images.length}</div>
-        <button onClick={() => setActive(null)} className="absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full bg-white/10 text-white hover:bg-white/20 sm:right-8 sm:top-8" aria-label="Close photo viewer"><X /></button>
-        {images.length > 1 && <button onClick={() => setActive((active - 1 + images.length) % images.length)} className="absolute left-3 z-10 grid h-12 w-12 place-items-center rounded-full bg-white/15 text-white hover:bg-white/25 sm:left-8" aria-label="Previous photo"><ChevronLeft /></button>}
-        <div className="relative h-full w-full max-w-6xl"><Image src={images[active]} alt={`${title}, photo ${active + 1}`} fill sizes="100vw" className="object-contain" priority /></div>
-        {images.length > 1 && <button onClick={() => setActive((active + 1) % images.length)} className="absolute right-3 z-10 grid h-12 w-12 place-items-center rounded-full bg-white/15 text-white hover:bg-white/25 sm:right-8" aria-label="Next photo"><ChevronRight /></button>}
+        <button type="button" onClick={close} className="absolute inset-0 cursor-default" aria-label="Close photo viewer" />
+        <div className="absolute left-4 top-4 z-20 text-sm font-semibold text-white sm:left-8 sm:top-8">{active + 1} / {images.length}</div>
+        <button type="button" onClick={close} className="absolute right-4 top-4 z-20 grid h-11 w-11 place-items-center rounded-full bg-white/10 text-white hover:bg-white/20 sm:right-8 sm:top-8" aria-label="Close photo viewer"><X /></button>
+        {images.length > 1 && <button type="button" onClick={() => setActive((active - 1 + images.length) % images.length)} className="absolute left-3 z-20 grid h-12 w-12 place-items-center rounded-full bg-white/15 text-white hover:bg-white/25 sm:left-8" aria-label="Previous photo"><ChevronLeft /></button>}
+        <div className="relative z-10 h-full w-full max-w-6xl"><Image src={images[active]} alt={`${title}, photo ${active + 1}`} fill sizes="100vw" className="object-contain" priority /></div>
+        {images.length > 1 && <button type="button" onClick={() => setActive((active + 1) % images.length)} className="absolute right-3 z-20 grid h-12 w-12 place-items-center rounded-full bg-white/15 text-white hover:bg-white/25 sm:right-8" aria-label="Next photo"><ChevronRight /></button>}
       </div>}
     </>
   );

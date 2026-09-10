@@ -26,6 +26,10 @@ function LoginForm() {
   const { data: session, status: sessionStatus } = useSession();
   const searchParams = useSearchParams();
   const explicitCallbackUrl = searchParams.get("callbackUrl");
+  const callbackUrl = explicitCallbackUrl?.startsWith("/") && !explicitCallbackUrl.startsWith("//")
+    ? explicitCallbackUrl
+    : null;
+  const oauthError = searchParams.get("error");
 
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -41,6 +45,19 @@ function LoginForm() {
       .catch(() => {});
   }, []);
 
+  useEffect(() => {
+    if (!oauthError) return;
+
+    const messages: Record<string, string> = {
+      OAuthSignin: "Google sign-in could not be started. Please try again.",
+      OAuthCallback: "Google could not return you to this site. Check the sign-in address and try again.",
+      OAuthAccountNotLinked: "This email is already connected to a different sign-in method.",
+      AccessDenied: "Google sign-in was cancelled or denied.",
+    };
+    setError(messages[oauthError] || "Google sign-in was not completed. Please try again.");
+    setStatus("error");
+  }, [oauthError]);
+
   // Route by role once we know who's signed in: an explicit callbackUrl
   // (e.g. from /sell) always wins; otherwise agents/admins land on the
   // dashboard and everyone else lands on their profile. Falling back to
@@ -48,13 +65,13 @@ function LoginForm() {
   // the middleware, so role has to be known before picking a default.
   useEffect(() => {
     if (sessionStatus !== "authenticated" || !session?.user) return;
-    if (explicitCallbackUrl) {
-      router.push(explicitCallbackUrl);
+    if (callbackUrl) {
+      router.push(callbackUrl);
       return;
     }
     const isDashboardUser = session.user.role === "AGENT" || session.user.role === "ADMIN";
     router.push(isDashboardUser ? "/dashboard" : "/profile");
-  }, [sessionStatus, session, explicitCallbackUrl, router]);
+  }, [sessionStatus, session, callbackUrl, router]);
 
   const googleReady = availableProviders.includes("google");
   const facebookReady = availableProviders.includes("facebook");
@@ -324,7 +341,7 @@ function LoginForm() {
                 type="button"
                 disabled={!googleReady}
                 title={googleReady ? undefined : "Google sign-in isn't configured yet"}
-                onClick={() => googleReady && signIn("google", { callbackUrl: explicitCallbackUrl || "/login" })}
+                onClick={() => googleReady && signIn("google", { callbackUrl: callbackUrl || "/login" })}
                 className="flex h-11 items-center justify-center gap-2 border border-line text-sm font-medium hover:border-ink hover:bg-surface transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-line disabled:hover:bg-transparent"
               >
                 <svg viewBox="0 0 18 18" className="h-4 w-4" aria-hidden>
@@ -339,7 +356,7 @@ function LoginForm() {
                 type="button"
                 disabled={!facebookReady}
                 title={facebookReady ? undefined : "Facebook sign-in isn't configured yet"}
-                onClick={() => facebookReady && signIn("facebook", { callbackUrl: explicitCallbackUrl || "/login" })}
+                onClick={() => facebookReady && signIn("facebook", { callbackUrl: callbackUrl || "/login" })}
                 className="flex h-11 items-center justify-center gap-2 border border-line text-sm font-medium hover:border-ink hover:bg-surface transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-line disabled:hover:bg-transparent"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="#1877F2" aria-hidden>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Loader2, UploadCloud, X } from "lucide-react";
 import { uploadImageToCloudinary, CLOUDINARY_CONFIGURED } from "@/lib/cloudinary";
 
@@ -86,8 +87,8 @@ export const ImageUploader = ({ images, onChange, maxImages = 12, label = "Photo
         <div className="mt-3 grid grid-cols-4 sm:grid-cols-6 gap-2">
           {images.map((src, i) => (
             <div key={src + i} className="relative aspect-square border border-line">
-              {/* Cloudinary URLs — plain img avoids next/image domain config churn */}
-              <img src={src} alt={`Upload ${i + 1}`} className="w-full h-full object-cover" />
+              {/* Upload sources can be external, so preview them without server optimization. */}
+              <Image src={src} alt={`Upload ${i + 1}`} fill unoptimized sizes="(max-width: 640px) 25vw, 16vw" className="object-cover" />
               <button
                 type="button"
                 onClick={() => removeImage(i)}
