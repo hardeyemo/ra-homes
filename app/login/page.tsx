@@ -165,8 +165,7 @@ function LoginForm() {
             accounted for.
           </h2>
           <p className="mt-5 text-parchment/60 max-w-sm leading-relaxed">
-            One account keeps your saved homes, your inquiries, and for agents —
-            the full listing record in one place.
+            One account keeps your saved homes, inquiries, and, for agents, your complete listing records all in one place.
           </p>
         </motion.div>
 
