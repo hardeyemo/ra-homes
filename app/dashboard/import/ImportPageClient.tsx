@@ -100,7 +100,7 @@ export default function ImportPage() {
       <p className="font-mono text-xs uppercase tracking-widest text-clay">Dashboard</p>
       <h1 className="mt-2 font-display text-4xl">Import Listings</h1>
       <p className="mt-3 text-ink/60 max-w-2xl">
-        Upload a CSV of properties — useful for RA's weekly batch of new listings. Preview and fix any
+        Upload a CSV of properties useful for RA's weekly batch of new listings. Preview and fix any
         validation errors before importing. New listings are created as <strong>Draft</strong> so you can
         review them before publishing. RA only.
       </p>

@@ -19,7 +19,6 @@ export const PropertyCard = ({ property }: { property: Property }) => {
   const isLand = property.propertyType === "LAND";
   const landSize = property.landSize || (property.lotSqft ? `${formatNumber(property.lotSqft)} sqft` : null);
   const newListingLabel = formatNewListingLabel(property.createdAt);
-
   const toggleSaved = async () => {
     if (!session?.user?.id) {
       toast.info("Sign in to save properties to your account.");
@@ -74,9 +73,6 @@ export const PropertyCard = ({ property }: { property: Property }) => {
           {formatPrice(property.price, property.priceLabel ? undefined : property.listingType)}
           {property.priceLabel && <span className="ml-1 text-sm font-medium text-ink/55">{property.priceLabel}</span>}
         </p>
-        <div className="mt-2 flex items-center gap-2 text-sm font-semibold text-ink">
-          {isLand ? <><span>{property.listingType === "SALE" ? "Land for sale" : "Land for rent"}</span>{property.lotSqft && <><span>•</span><span>{formatNumber(property.lotSqft)} sqft</span></>}</> : <><span>{property.bedrooms} bd</span><span>•</span><span>{property.bathrooms} ba</span><span>•</span><span>{formatNumber(property.sqft)} sqft</span></>}
-        </div>
         <h3 className="mt-3 font-display text-xl leading-snug text-ink transition-colors group-hover:text-clay">
           {property.title}
         </h3>
@@ -85,8 +81,20 @@ export const PropertyCard = ({ property }: { property: Property }) => {
           <span>{location}</span>
         </p>
 
-        <div className="hairline mt-4 flex items-center gap-4 pt-4 text-xs font-medium text-ink/55">
-          {isLand ? <span className="flex items-center gap-1.5"><Square className="h-3.5 w-3.5 text-clay" /> {landSize || "Plot size on request"}</span> : <><span className="flex items-center gap-1.5"><Bed className="h-3.5 w-3.5 text-clay" /> Bedrooms: {property.bedrooms}</span><span className="flex items-center gap-1.5"><Bath className="h-3.5 w-3.5 text-clay" /> Bathrooms: {property.bathrooms}</span><span className="flex items-center gap-1.5"><Square className="h-3.5 w-3.5 text-clay" /> {formatNumber(property.sqft)} sqft</span></>}
+        {(isLand ? landSize : property.bedrooms > 0 || property.bathrooms > 0 || property.sqft > 0) && (
+          <div className="hairline mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 pt-4 text-sm font-semibold text-ink/75">
+            {isLand ? (
+              landSize && <span className="flex items-center gap-1.5"><Square className="h-4 w-4 text-clay" />{landSize}</span>
+            ) : <>
+              {property.bedrooms > 0 && <span className="flex items-center gap-1.5"><Bed className="h-4 w-4 text-clay" />{property.bedrooms} bd</span>}
+              {property.bathrooms > 0 && <span className="flex items-center gap-1.5"><Bath className="h-4 w-4 text-clay" />{property.bathrooms} ba</span>}
+              {property.sqft > 0 && <span className="flex items-center gap-1.5"><Square className="h-4 w-4 text-clay" />{formatNumber(property.sqft)} sqft</span>}
+            </>}
+          </div>
+        )}
+        <div className="mt-5 flex h-11 w-full items-center justify-between rounded-lg bg-ink px-4 text-sm font-semibold text-parchment shadow-sm transition-all duration-300 group-hover:bg-clay group-hover:shadow-md group-hover:shadow-clay/20">
+          <span>View details</span>
+          <span className="text-lg font-normal leading-none transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&gt;</span>
         </div>
         </div>
       </Link>

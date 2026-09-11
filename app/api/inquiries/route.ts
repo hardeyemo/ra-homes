@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     sendInquiryNotification({
       // Public enquiries are always handled by the RA admin team, not by an
       // individual listing owner or agent.
-      agentEmail: process.env.AGENCY_INBOX_EMAIL || AGENCY_EMAIL,
+      agentEmail: AGENCY_EMAIL,
       propertyTitle: property.title,
       propertyReference: property.reference,
       name: data.name,

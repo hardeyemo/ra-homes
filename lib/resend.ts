@@ -159,7 +159,7 @@ export async function sendSubmissionNotification({
 }) {
   return resend.emails.send({
     from: FROM,
-    to: process.env.AGENCY_INBOX_EMAIL || AGENCY_EMAIL,
+    to: AGENCY_EMAIL,
     replyTo: email,
     subject: `New property submission — ${address}, ${city}`,
     html: wrap(`
@@ -211,7 +211,7 @@ export async function sendContactNotification({
 }) {
   return resend.emails.send({
     from: FROM,
-    to: process.env.AGENCY_INBOX_EMAIL || AGENCY_EMAIL,
+    to: AGENCY_EMAIL,
     replyTo: email,
     subject: `New contact message${subject ? `: ${subject}` : ""}`,
     html: wrap(`

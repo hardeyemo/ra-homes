@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     sendViewingAgentNotification({
       // Viewing requests use the default RA admin inbox; an individual
       // listing agent's personal contact information is never used publicly.
-      agentEmail: process.env.AGENCY_INBOX_EMAIL || AGENCY_EMAIL,
+      agentEmail: AGENCY_EMAIL,
       propertyTitle: property.title,
       propertyReference: property.reference,
       name: data.name,

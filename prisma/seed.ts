@@ -88,7 +88,7 @@ async function main() {
       name: "RA Admin",
       email: "admin@rahomesproperties.com",
       passwordHash: await bcrypt.hash(SEED_ADMIN_PASSWORD, 10),
-      phone: "0706 157 2699",
+      phone: "07061572699",
       title: "Brokerage Admin",
       role: "ADMIN",
       agentRequestStatus: "APPROVED",

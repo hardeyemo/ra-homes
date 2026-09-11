@@ -70,6 +70,7 @@ export const Hero = () => {
                 <button type="button" onClick={() => setListingType("SALE")} className={`rounded-md px-6 py-2 transition-colors ${listingType === "SALE" ? "bg-ink text-parchment" : "hover:bg-gold/25"}`}>Buy</button>
                 <button type="button" onClick={() => setListingType("RENT")} className={`rounded-md px-6 py-2 transition-colors ${listingType === "RENT" ? "bg-ink text-parchment" : "hover:bg-gold/25"}`}>Rent</button>
                 <button type="button" onClick={() => router.push("/sell")} className="rounded-md px-6 py-2 transition-colors hover:bg-gold/25">Sell</button>
+                <button type="button" onClick={() => router.push("/property-management")} className="rounded-md px-6 py-2 transition-colors hover:bg-gold/25">Manage</button>
               </div>
 
               <div className="flex overflow-hidden rounded-lg bg-surface shadow-xl">

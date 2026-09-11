@@ -49,12 +49,12 @@ function LoginForm() {
     if (!oauthError) return;
 
     const messages: Record<string, string> = {
-      OAuthSignin: "Google sign-in could not be started. Please try again.",
-      OAuthCallback: "Google could not return you to this site. Check the sign-in address and try again.",
+      OAuthSignin: "Social sign-in could not be started. Please try again.",
+      OAuthCallback: "Social sign-in could not return you to this site. Check the sign-in address and try again.",
       OAuthAccountNotLinked: "This email is already connected to a different sign-in method.",
-      AccessDenied: "Google sign-in was cancelled or denied.",
+      AccessDenied: "Social sign-in was cancelled or denied.",
     };
-    setError(messages[oauthError] || "Google sign-in was not completed. Please try again.");
+    setError(messages[oauthError] || "Social sign-in was not completed. Please try again.");
     setStatus("error");
   }, [oauthError]);
 
@@ -79,6 +79,17 @@ function LoginForm() {
   const switchMode = (next: "signin" | "signup") => {
     setMode(next);
     setError(null);
+  };
+
+  const startOAuth = async (provider: "google" | "facebook") => {
+    setStatus("loading");
+    setError(null);
+    try {
+      await signIn(provider, { callbackUrl: callbackUrl || "/login" });
+    } catch {
+      setError(`Couldn't start ${provider === "facebook" ? "Facebook" : "Google"} sign-in. Please try again.`);
+      setStatus("error");
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -154,7 +165,7 @@ function LoginForm() {
             accounted for.
           </h2>
           <p className="mt-5 text-parchment/60 max-w-sm leading-relaxed">
-            One account keeps your saved homes, your inquiries, and — for agents —
+            One account keeps your saved homes, your inquiries, and for agents —
             the full listing record in one place.
           </p>
         </motion.div>
@@ -339,9 +350,9 @@ function LoginForm() {
             <div className="mt-4 grid grid-cols-2 gap-3">
               <button
                 type="button"
-                disabled={!googleReady}
+                disabled={!googleReady || status === "loading"}
                 title={googleReady ? undefined : "Google sign-in isn't configured yet"}
-                onClick={() => googleReady && signIn("google", { callbackUrl: callbackUrl || "/login" })}
+                onClick={() => googleReady && void startOAuth("google")}
                 className="flex h-11 items-center justify-center gap-2 border border-line text-sm font-medium hover:border-ink hover:bg-surface transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-line disabled:hover:bg-transparent"
               >
                 <svg viewBox="0 0 18 18" className="h-4 w-4" aria-hidden>
@@ -354,9 +365,9 @@ function LoginForm() {
               </button>
               <button
                 type="button"
-                disabled={!facebookReady}
+                disabled={!facebookReady || status === "loading"}
                 title={facebookReady ? undefined : "Facebook sign-in isn't configured yet"}
-                onClick={() => facebookReady && signIn("facebook", { callbackUrl: callbackUrl || "/login" })}
+                onClick={() => facebookReady && void startOAuth("facebook")}
                 className="flex h-11 items-center justify-center gap-2 border border-line text-sm font-medium hover:border-ink hover:bg-surface transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-line disabled:hover:bg-transparent"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="#1877F2" aria-hidden>

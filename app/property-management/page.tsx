@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { ClipboardList, Wallet, Search, Wrench, Home, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowUpRight, ClipboardList, Wallet, Search, Wrench, Home, ShieldCheck } from "lucide-react";
 import { PropertyContactActions } from "@/components/property/PropertyContactActions";
 
 const SERVICES = [
@@ -39,25 +38,29 @@ const SERVICES = [
 export default function PropertyManagementPage() {
   return (
     <div>
-      <section className="bg-ink text-parchment py-24">
+      <section className="bg-ink py-20 text-parchment sm:py-24">
         <div className="container">
-          <p className="font-mono text-xs uppercase tracking-widest text-gold">Property Management</p>
-          <h1 className="mt-3 font-display text-5xl max-w-2xl">
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-gold">Property Management</p>
+          <h1 className="mt-4 max-w-2xl font-display text-4xl leading-tight sm:text-5xl">
             Hands-on management for landlords in Ilorin
           </h1>
-          <p className="mt-5 text-parchment/70 max-w-xl">
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-parchment/70">
             If you own rental property in Ilorin and don't want to manage it day-to-day yourself, RA
             Homes & Properties can take on tenant coordination, rent collection, inspections, and
-            maintenance — so your property stays occupied and well cared for.
+            maintenance so your property stays occupied and well cared for.
           </p>
         </div>
       </section>
 
-      <section className="container py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <section className="container py-16 sm:py-20">
+        <div className="mb-10 max-w-xl">
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-clay">What we handle</p>
+          <h2 className="mt-3 font-display text-3xl">Practical support, with clear accountability.</h2>
+        </div>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((s) => (
-            <div key={s.title} className="border border-line bg-surface p-6">
-              <s.icon className="w-6 h-6 text-clay" />
+            <div key={s.title} className="border border-line bg-surface p-6 transition-shadow hover:shadow-md">
+              <s.icon className="h-6 w-6 text-clay" />
               <h3 className="mt-4 font-display text-xl">{s.title}</h3>
               <p className="mt-2 text-sm text-ink/60 leading-relaxed">{s.body}</p>
             </div>
@@ -65,20 +68,25 @@ export default function PropertyManagementPage() {
         </div>
       </section>
 
-      <section className="container pb-24">
-        <div className="border border-line bg-surface p-10 text-center">
-          <h2 className="font-display text-3xl">Talk to us about your property</h2>
-          <p className="mt-3 text-ink/60 max-w-md mx-auto">
+      <section className="container pb-20 sm:pb-24">
+        <div className="overflow-hidden rounded-2xl bg-ink px-6 py-10 text-center text-parchment shadow-xl sm:px-10 sm:py-12">
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-gold">Start the conversation</p>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl">Talk to us about your property</h2>
+          <p className="mx-auto mt-4 max-w-md leading-relaxed text-parchment/70">
             Reach out to discuss your property and what management support would look like for it.
           </p>
           <PropertyContactActions
             propertyTitle="Property Management"
             propertyLocation="Ilorin"
-            className="mt-8 max-w-lg mx-auto"
+            variant="management"
+            scheduleLabel="Book a consultation"
+            className="mx-auto mt-8 max-w-2xl"
           />
-          <Button asChild variant="link" className="mt-4">
-            <Link href="/contact">Or send us a message</Link>
-          </Button>
+          <div className="mx-auto mt-8 max-w-2xl border-t border-parchment/20 pt-6">
+            <Link href="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-gold transition-colors hover:text-parchment hover:underline hover:underline-offset-4">
+              Prefer to write? Send us a message <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
     </div>

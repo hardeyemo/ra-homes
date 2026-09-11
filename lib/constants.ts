@@ -1,10 +1,11 @@
 export const SITE_NAME = "RA Homes & Properties";
 export const SITE_TAGLINE = "Every address, accounted for.";
 
-// Nigerian contact number, stored in local + international (WhatsApp) formats.
-export const AGENCY_PHONE_LOCAL = "0704 578 6141";
-export const AGENCY_PHONE_INTL = "2347045786141"; // no leading 0, no +, for wa.me links
-export const AGENCY_EMAIL = "adebiyiidris30@gmail.com";
+// RA Homes admin contact details. Keep the international number free of a
+// leading zero for tel: and wa.me links.
+export const AGENCY_PHONE_LOCAL = "07061572699";
+export const AGENCY_PHONE_INTL = "2347061572699";
+export const AGENCY_EMAIL = "admin@rahomesproperties.com";
 
 export const AGENCY_OFFICE = {
   line1: "Shop 12, City Plaza",
