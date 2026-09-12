@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { getServerSession } from "next-auth";
-import { Heart, LayoutDashboard, UserRound } from "lucide-react";
+import { Heart, KeyRound, LayoutDashboard, UserRound } from "lucide-react";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ProfileForm } from "@/components/profile/ProfileForm";
@@ -42,6 +42,9 @@ export default async function ProfilePage() {
               </Link>
               <Link href="/saved" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-ink/70 hover:bg-parchment hover:text-ink">
                 <Heart className="h-4 w-4" /> Saved homes
+              </Link>
+              <Link href="/change-password" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-ink/70 hover:bg-parchment hover:text-ink">
+                <KeyRound className="h-4 w-4" /> Change password
               </Link>
               {hasDashboard && (
                 <Link href="/dashboard" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-ink/70 hover:bg-parchment hover:text-ink">

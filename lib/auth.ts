@@ -50,7 +50,7 @@ export const authOptions: AuthOptions = {
         });
         // No passwordHash means this account was created via Google/Facebook —
         // there's nothing to compare against, so credentials login can't work for it.
-        if (!user || !user.passwordHash) return null;
+        if (!user || !user.passwordHash || (user.requiresEmailVerification && !user.emailVerified)) return null;
 
         const valid = await bcrypt.compare(credentials.password, user.passwordHash);
         if (!valid) return null;

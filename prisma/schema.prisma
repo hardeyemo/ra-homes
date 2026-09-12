@@ -91,6 +91,12 @@ model User {
   passwordHash String?
   image        String?
   provider     String    @default("credentials") // "credentials" | "google" | "facebook"
+  emailVerified DateTime?
+  requiresEmailVerification Boolean @default(false)
+  passwordResetToken String?
+  passwordResetExpires DateTime?
+  emailVerificationToken String?
+  emailVerificationExpires DateTime?
   phone        String?
   title        String?
   bio          String?

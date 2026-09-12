@@ -3,12 +3,12 @@ export const SITE_TAGLINE = "Every address, accounted for.";
 
 // RA Homes admin contact details. Keep the international number free of a
 // leading zero for tel: and wa.me links.
-export const AGENCY_PHONE_LOCAL = "07061572699";
-export const AGENCY_PHONE_INTL = "2347061572699";
-export const AGENCY_EMAIL = "admin@rahomesproperties.com";
+export const AGENCY_PHONE_LOCAL = "08118495138";
+export const AGENCY_PHONE_INTL = "2348118495138";
+export const AGENCY_EMAIL = "rahomesproperties@gmail.com";
 
 export const AGENCY_OFFICE = {
-  line1: "Shop 12, City Plaza",
+  line1: "Space 12, City Plaza",
   line2: "Beside Kosemani Hospital, Emirs Road",
   city: "Ilorin",
   state: "Kwara State",

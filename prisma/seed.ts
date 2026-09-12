@@ -82,13 +82,13 @@ const galleryImages = (propertyType: (typeof PROPERTY_TYPES)[number], index: num
 
 async function main() {
   const admin = await prisma.user.upsert({
-    where: { email: "admin@rahomesproperties.com" },
+    where: { email: "rahomesproperties@gmail.com" },
     update: {},
     create: {
       name: "RA Admin",
-      email: "admin@rahomesproperties.com",
+      email: "rahomesproperties@gmail.com",
       passwordHash: await bcrypt.hash(SEED_ADMIN_PASSWORD, 10),
-      phone: "07061572699",
+      phone: "08118495138",
       title: "Brokerage Admin",
       role: "ADMIN",
       agentRequestStatus: "APPROVED",
@@ -110,7 +110,7 @@ async function main() {
     },
   });
 
-  console.log(`Login as admin: admin@rahomesproperties.com / ${SEED_ADMIN_PASSWORD}`);
+  console.log(`Login as admin: rahomesproperties@gmail.com / ${SEED_ADMIN_PASSWORD}`);
   console.log(`Login as user (pending agent request): sam.visitor@example.com / ${SEED_USER_PASSWORD}`);
 
   for (let i = 0; i < 28; i++) {

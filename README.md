@@ -57,7 +57,7 @@ WhatsApp, a phone call, or a viewing request instead.
   per-row validation preview, then bulk create via `/api/properties/import` (listings land as
   `DRAFT` for review before publishing)
 - **Dark/light mode**: toggle in the Navbar (desktop + mobile), persisted via `next-themes`
-- **Office info**: Shop 12, City Plaza, beside Kosemani Hospital, Emirs Road, Ilorin, Kwara State —
+- **Office info**: Space 12, City Plaza, beside Kosemani Hospital, Emirs Road, Ilorin, Kwara State —
   in the Footer, Contact page, and About page
 
 ## Auth & access control
@@ -73,7 +73,7 @@ WhatsApp, a phone call, or a viewing request instead.
 - Agents see and manage only their own listings/inquiries/viewings; `ADMIN` users see everything
   and get access to Agents management and CSV import
 - Seeded accounts (change before deploying anywhere real):
-  - Admin: `admin@rahomesproperties.com` / `admin-demo-pass`
+  - Admin: `rahomesproperties@gmail.com` / `admin-demo-pass`
   - User with a pending agent request, for testing the approval flow: `sam.visitor@example.com` / `user-demo-pass`
 
 Google/Facebook sign-in is available to any account (not agent-specific) and is optional — the

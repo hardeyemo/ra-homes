@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Suspense, useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -11,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/layout/Logo";
 import { AGENCY_OFFICE, SERVICE_AREAS } from "@/lib/constants";
 import { textOnly } from "@/lib/inputValidation";
+import { PASSWORD_REQUIREMENTS } from "@/lib/passwordValidation";
 
 const LEDGER: { no: string; label: string; value: string }[] = [
   { no: "01", label: "Neighborhoods on record", value: `${SERVICE_AREAS.length} across Ilorin` },
@@ -30,12 +32,14 @@ function LoginForm() {
     ? explicitCallbackUrl
     : null;
   const oauthError = searchParams.get("error");
+  const resetComplete = searchParams.get("reset") === "success";
 
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
   const [availableProviders, setAvailableProviders] = useState<string[]>([]);
 
   useEffect(() => {
@@ -79,6 +83,7 @@ function LoginForm() {
   const switchMode = (next: "signin" | "signup") => {
     setMode(next);
     setError(null);
+    setVerificationSent(false);
   };
 
   const startOAuth = async (provider: "google" | "facebook") => {
@@ -110,6 +115,9 @@ function LoginForm() {
           setStatus("error");
           return;
         }
+        setVerificationSent(true);
+        setStatus("idle");
+        return;
       }
 
       const result = await signIn("credentials", {
@@ -305,7 +313,12 @@ function LoginForm() {
                 </button>
               </div>
               {mode === "signup" && (
-                <p className="mt-1.5 text-xs text-ink/40">At least 8 characters.</p>
+                <p className="mt-1.5 text-xs text-ink/40">{PASSWORD_REQUIREMENTS}</p>
+              )}
+              {mode === "signin" && (
+                <Link href="/forgot-password" className="mt-2 inline-block text-xs font-medium text-gold-dark hover:text-gold hover:underline hover:underline-offset-4">
+                  Forgot password?
+                </Link>
               )}
             </div>
 
@@ -322,6 +335,25 @@ function LoginForm() {
                     {error}
                   </p>
                 </motion.div>
+              )}
+            </AnimatePresence>
+
+            {resetComplete && !error && (
+              <p className="border-l-2 border-sage bg-sage-light/40 py-2 pl-3 text-xs text-ink/75">
+                Password reset complete. Sign in with your new password.
+              </p>
+            )}
+
+            <AnimatePresence>
+              {verificationSent && (
+                <motion.p
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden border-l-2 border-sage bg-sage-light/40 py-2 pl-3 text-xs text-ink/75"
+                >
+                  Check your email for a verification link before signing in.
+                </motion.p>
               )}
             </AnimatePresence>
 
