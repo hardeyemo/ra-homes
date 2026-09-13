@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useId, useState } from "react";
 import { Loader2, UploadCloud, X } from "lucide-react";
 import { uploadImageToCloudinary, CLOUDINARY_CONFIGURED } from "@/lib/cloudinary";
 
@@ -13,6 +12,7 @@ interface Props {
 }
 
 export const ImageUploader = ({ images, onChange, maxImages = 12, label = "Photos" }: Props) => {
+  const inputId = useId();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
@@ -57,7 +57,7 @@ export const ImageUploader = ({ images, onChange, maxImages = 12, label = "Photo
   return (
     <div>
       <label
-        htmlFor="image-uploader-input"
+        htmlFor={inputId}
         className={`flex flex-col items-center justify-center gap-2 border border-dashed border-line bg-parchment/40 h-28 text-ink/50 transition-colors ${
           images.length >= maxImages || uploading ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-clay hover:text-clay"
         }`}
@@ -72,7 +72,7 @@ export const ImageUploader = ({ images, onChange, maxImages = 12, label = "Photo
         </span>
       </label>
       <input
-        id="image-uploader-input"
+        id={inputId}
         type="file"
         accept="image/*"
         multiple
@@ -86,9 +86,17 @@ export const ImageUploader = ({ images, onChange, maxImages = 12, label = "Photo
       {images.length > 0 && (
         <div className="mt-3 grid grid-cols-4 sm:grid-cols-6 gap-2">
           {images.map((src, i) => (
-            <div key={src + i} className="relative aspect-square border border-line">
-              {/* Upload sources can be external, so preview them without server optimization. */}
-              <Image src={src} alt={`Upload ${i + 1}`} fill unoptimized sizes="(max-width: 640px) 25vw, 16vw" className="object-cover" />
+            <div key={src + i} className="relative aspect-square overflow-hidden border border-line bg-parchment">
+              {/^https?:\/\//i.test(src) ? (
+                <>
+                  {/* The selected profile image can come from any OAuth or upload host.
+                      A native image keeps it constrained to this preview frame. */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={src} alt={`Upload ${i + 1}`} className="h-full w-full object-cover" />
+                </>
+              ) : (
+                <span className="grid h-full place-items-center px-2 text-center text-[10px] text-ink/50">Image unavailable</span>
+              )}
               <button
                 type="button"
                 onClick={() => removeImage(i)}

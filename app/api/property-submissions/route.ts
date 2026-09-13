@@ -15,12 +15,12 @@ const submissionSchema = z.object({
   state: z.string().trim().min(2).regex(textOnlyPattern, "State can only contain letters and punctuation"),
   propertyType: z.enum(["HOUSE", "APARTMENT", "CONDO", "TOWNHOUSE", "LAND", "COMMERCIAL", "MULTI_FAMILY"]),
   listingType: z.enum(["SALE", "RENT"]),
-  askingPrice: z.number().optional(),
-  bedrooms: z.number().int().optional(),
-  bathrooms: z.number().optional(),
-  sqft: z.number().int().optional(),
-  notes: z.string().optional(),
-  images: z.array(z.string()).default([]),
+  askingPrice: z.number().finite().positive().optional(),
+  bedrooms: z.number().int().min(0).optional(),
+  bathrooms: z.number().finite().min(0).optional(),
+  sqft: z.number().int().positive().optional(),
+  notes: z.string().max(5000).optional(),
+  images: z.array(z.string().url()).max(8).default([]),
   preferredContact: z.enum(["PHONE", "WHATSAPP", "EMAIL"]).default("PHONE"),
 });
 

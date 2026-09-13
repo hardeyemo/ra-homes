@@ -95,6 +95,8 @@ model User {
   requiresEmailVerification Boolean @default(false)
   passwordResetToken String?
   passwordResetExpires DateTime?
+  // Lets password changes invalidate JWTs issued before the change.
+  passwordChangedAt DateTime?
   emailVerificationToken String?
   emailVerificationExpires DateTime?
   phone        String?

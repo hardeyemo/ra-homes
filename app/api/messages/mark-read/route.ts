@@ -14,8 +14,12 @@ export async function POST(req: NextRequest) {
 
   try {
     const { ids } = schema.parse(await req.json());
+    const isAdmin = session.user.role === "ADMIN";
     await prisma.message.updateMany({
-      where: { id: { in: ids } },
+      where: {
+        id: { in: ids },
+        ...(isAdmin ? {} : { OR: [{ threadAgentId: session.user.id }, { isBroadcast: true }] }),
+      },
       data: { readBy: { push: session.user.id } },
     });
     return NextResponse.json({ success: true });

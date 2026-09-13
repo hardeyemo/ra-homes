@@ -27,12 +27,10 @@ function LoginForm() {
   const router = useRouter();
   const { data: session, status: sessionStatus } = useSession();
   const searchParams = useSearchParams();
-  const explicitCallbackUrl = searchParams.get("callbackUrl");
-  const callbackUrl = explicitCallbackUrl?.startsWith("/") && !explicitCallbackUrl.startsWith("//")
-    ? explicitCallbackUrl
-    : null;
   const oauthError = searchParams.get("error");
   const resetComplete = searchParams.get("reset") === "success";
+  const passwordChanged = searchParams.get("password") === "changed";
+  const sessionExpired = searchParams.get("session") === "expired";
 
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -62,20 +60,12 @@ function LoginForm() {
     setStatus("error");
   }, [oauthError]);
 
-  // Route by role once we know who's signed in: an explicit callbackUrl
-  // (e.g. from /sell) always wins; otherwise agents/admins land on the
-  // dashboard and everyone else lands on their profile. Falling back to
-  // "/dashboard" for a plain USER would just bounce right back here via
-  // the middleware, so role has to be known before picking a default.
+  // Every successful sign-in begins at the public home page. Deliberately do
+  // not honor callbackUrl here: sign-in must never resume a prior route.
   useEffect(() => {
     if (sessionStatus !== "authenticated" || !session?.user) return;
-    if (callbackUrl) {
-      router.push(callbackUrl);
-      return;
-    }
-    const isDashboardUser = session.user.role === "AGENT" || session.user.role === "ADMIN";
-    router.push(isDashboardUser ? "/dashboard" : "/profile");
-  }, [sessionStatus, session, callbackUrl, router]);
+    router.replace("/");
+  }, [sessionStatus, session, router]);
 
   const googleReady = availableProviders.includes("google");
   const facebookReady = availableProviders.includes("facebook");
@@ -90,7 +80,7 @@ function LoginForm() {
     setStatus("loading");
     setError(null);
     try {
-      await signIn(provider, { callbackUrl: callbackUrl || "/login" });
+      await signIn(provider, { callbackUrl: "/" });
     } catch {
       setError(`Couldn't start ${provider === "facebook" ? "Facebook" : "Google"} sign-in. Please try again.`);
       setStatus("error");
@@ -126,8 +116,8 @@ function LoginForm() {
         redirect: false,
       });
 
-      if (result?.error) {
-        setError("Incorrect email or password.");
+      if (!result || result.error || !result.ok) {
+        setError(result?.error === "CredentialsSignin" ? "Incorrect email or password." : "Sign-in could not be completed. Please try again.");
         setStatus("error");
         return;
       }
@@ -341,6 +331,16 @@ function LoginForm() {
             {resetComplete && !error && (
               <p className="border-l-2 border-sage bg-sage-light/40 py-2 pl-3 text-xs text-ink/75">
                 Password reset complete. Sign in with your new password.
+              </p>
+            )}
+            {passwordChanged && !error && (
+              <p className="border-l-2 border-sage bg-sage-light/40 py-2 pl-3 text-xs text-ink/75">
+                Password changed. Please sign in with your new password.
+              </p>
+            )}
+            {sessionExpired && !error && (
+              <p className="border-l-2 border-clay bg-clay/10 py-2 pl-3 text-xs text-ink/75">
+                Your session ended after inactivity. Please sign in again.
               </p>
             )}
 

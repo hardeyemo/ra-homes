@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +21,12 @@ export function ChangePasswordForm() {
       const data = await response.json();
       setStatus(response.ok ? "success" : "error");
       setMessage(data.message || data.error || "We could not change your password.");
-      if (response.ok) setForm({ currentPassword: "", newPassword: "", confirmation: "" });
+      if (response.ok) {
+        setForm({ currentPassword: "", newPassword: "", confirmation: "" });
+        window.setTimeout(() => {
+          void signOut({ redirect: false }).finally(() => window.location.assign("/login?password=changed"));
+        }, 1200);
+      }
     } catch { setStatus("error"); setMessage("We could not change your password. Please try again."); }
   };
 

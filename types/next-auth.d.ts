@@ -14,6 +14,7 @@ declare module "next-auth" {
   interface User extends DefaultUser {
     role?: Role;
     agentRequestStatus?: AgentRequestStatus;
+    passwordChangedAt?: string | null;
   }
 }
 
@@ -22,5 +23,7 @@ declare module "next-auth/jwt" {
     userId?: string;
     role?: Role;
     agentRequestStatus?: AgentRequestStatus;
+    passwordChangedAt?: string | null;
+    sessionInvalidated?: boolean;
   }
 }

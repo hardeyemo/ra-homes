@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Bed, Bath, Square, Calendar, Car, MapPin, Ruler, ArrowLeft, Share2, Heart } from "lucide-react";
+import { Bed, Bath, Square, Calendar, Car, MapPin, Ruler, ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { PropertyGallery } from "@/components/property/PropertyGallery";
 import { PropertyContactActions } from "@/components/property/PropertyContactActions";
 import { InquiryForm } from "@/components/property/InquiryForm";
 import { ViewingRequestForm } from "@/components/property/ViewingRequestForm";
 import { HomeHighlights } from "@/components/property/HomeHighlights";
+import { PropertyDetailActions } from "@/components/property/PropertyDetailActions";
 import { prisma } from "@/lib/prisma";
 import { formatNewListingLabel, formatPrice, formatNumber, formatPropertyLocation, isValidObjectId } from "@/lib/utils";
 import { PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
@@ -46,7 +47,7 @@ export default async function PropertyDetailPage({ params }: { params: { id: str
     <div className="container py-5 sm:py-7">
       <div className="flex items-center justify-between gap-4 text-sm">
         <Link href="/properties" className="inline-flex items-center gap-2 font-medium text-ink/70 hover:text-clay"><ArrowLeft className="h-4 w-4" /> Back to properties</Link>
-        <div className="flex gap-2"><button className="inline-flex h-9 items-center gap-2 rounded-lg border border-line bg-surface px-3 text-sm font-medium hover:bg-parchment"><Share2 className="h-4 w-4" /> <span className="hidden sm:inline">Share</span></button><button className="grid h-9 w-9 place-items-center rounded-lg border border-line bg-surface hover:bg-parchment" aria-label="Save property"><Heart className="h-4 w-4" /></button></div>
+        <PropertyDetailActions propertyId={property.id} propertyTitle={property.title} />
       </div>
     </div>
     <div className="container"><PropertyGallery images={property.images} title={property.title} /></div>

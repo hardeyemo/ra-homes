@@ -15,7 +15,7 @@ export async function GET() {
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
     select: {
-      id: true, name: true, email: true, phone: true, title: true, bio: true, image: true,
+      id: true, name: true, email: true, phone: true, title: true, bio: true,
       role: true, agentRequestStatus: true, agentRequestedAt: true, createdAt: true,
     },
   });
@@ -26,10 +26,9 @@ export async function GET() {
 
 const updateSchema = z.object({
   name: z.string().trim().min(2).regex(textOnlyPattern, "Name can only contain letters, spaces, apostrophes, periods, and hyphens").optional(),
-  phone: z.string().optional(),
-  title: z.string().optional(),
-  bio: z.string().optional(),
-  image: z.string().url().nullable().optional(),
+  phone: z.string().trim().max(30).optional(),
+  title: z.string().trim().max(80).optional(),
+  bio: z.string().trim().max(500).optional(),
 });
 
 // PATCH /api/account — edit your own profile. Role and agent status are
@@ -45,7 +44,7 @@ export async function PATCH(req: NextRequest) {
     const user = await prisma.user.update({
       where: { id: session.user.id },
       data,
-      select: { id: true, name: true, email: true, phone: true, title: true, bio: true, image: true },
+      select: { id: true, name: true, email: true, phone: true, title: true, bio: true },
     });
     return NextResponse.json({ user });
   } catch (error) {

@@ -20,9 +20,10 @@ export async function POST(req: NextRequest) {
     const user = await prisma.user.findUnique({ where: { id: session.user.id } });
     if (!user?.passwordHash) return NextResponse.json({ error: "This account uses social sign-in and does not have a password to change." }, { status: 400 });
     if (!(await bcrypt.compare(currentPassword, user.passwordHash))) return NextResponse.json({ error: "Your current password is incorrect." }, { status: 400 });
+    if (await bcrypt.compare(newPassword, user.passwordHash)) return NextResponse.json({ error: "Choose a new password that is different from your current password." }, { status: 400 });
 
-    await prisma.user.update({ where: { id: user.id }, data: { passwordHash: await bcrypt.hash(newPassword, 12) } });
-    return NextResponse.json({ message: "Your password has been changed." });
+    await prisma.user.update({ where: { id: user.id }, data: { passwordHash: await bcrypt.hash(newPassword, 12), passwordChangedAt: new Date() } });
+    return NextResponse.json({ message: "Your password has been changed. Please sign in again." });
   } catch (error) {
     if (error instanceof z.ZodError) return NextResponse.json({ error: error.errors[0]?.message || "Enter a valid password." }, { status: 400 });
     console.error(error);

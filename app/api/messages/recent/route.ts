@@ -14,6 +14,9 @@ export async function GET(req: NextRequest) {
 
   const since = req.nextUrl.searchParams.get("since");
   const sinceDate = since ? new Date(since) : new Date(Date.now() - 60_000);
+  if (Number.isNaN(sinceDate.getTime())) {
+    return NextResponse.json({ error: "Invalid since timestamp" }, { status: 400 });
+  }
   const isAdmin = session.user.role === "ADMIN";
 
   try {

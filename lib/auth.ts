@@ -30,7 +30,9 @@ if (process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET) {
 }
 
 export const authOptions: AuthOptions = {
-  session: { strategy: "jwt" },
+  // SessionTimeout renews this on real user activity. If a browser goes idle,
+  // the JWT itself expires after 30 minutes and every server route rejects it.
+  session: { strategy: "jwt", maxAge: 30 * 60, updateAge: 60 },
   pages: {
     signIn: "/login",
   },
@@ -69,6 +71,10 @@ export const authOptions: AuthOptions = {
     ...oauthProviders,
   ],
   callbacks: {
+    async redirect({ baseUrl }) {
+      // Prevent an OAuth callback from restoring a previously visited route.
+      return baseUrl;
+    },
     // Only runs for OAuth sign-ins (google/facebook) — the credentials
     // provider already validated everything in its own authorize().
     // Finds or creates the matching User record so a Google/Facebook
@@ -103,15 +109,20 @@ export const authOptions: AuthOptions = {
         token.userId = u.id;
         token.role = u.role;
         token.agentRequestStatus = u.agentRequestStatus;
+        token.passwordChangedAt = u.passwordChangedAt?.toISOString?.() || null;
       }
       // Authorize against the current database role, not only the role
       // present when the JWT was issued. Approvals and revocations then take
       // effect on the next authenticated request.
-      if (token.userId) {
+      if (token.userId && !user) {
         const fresh = await prisma.user.findUnique({ where: { id: token.userId as string } });
         if (fresh) {
           token.role = fresh.role;
           token.agentRequestStatus = fresh.agentRequestStatus;
+          const tokenIssuedAt = typeof token.iat === "number" ? token.iat * 1000 : 0;
+          if (fresh.passwordChangedAt && fresh.passwordChangedAt.getTime() > tokenIssuedAt) {
+            token.sessionInvalidated = true;
+          }
         } else {
           token.role = "USER";
           token.agentRequestStatus = "NONE";
@@ -121,6 +132,9 @@ export const authOptions: AuthOptions = {
     },
 
     async session({ session, token }) {
+      // Returning no session forces every browser holding an older token to
+      // re-authenticate after a reset or password change.
+      if (token.sessionInvalidated) return null as any;
       if (session.user) {
         session.user.id = token.userId as string;
         session.user.role = token.role || "USER";

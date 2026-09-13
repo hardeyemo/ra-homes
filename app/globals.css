@@ -4,6 +4,10 @@
 
 @layer base {
   :root {
+    --font-fraunces: Georgia;
+    --font-inter: Arial;
+    --font-mono: "Courier New";
+
     /* Light mode — deep emerald green + gold + warm cream. A more
        distinctive luxury pairing than black/gold, which reads as a
        common real-estate template at this point. */
@@ -48,9 +52,11 @@
   }
   body {
     @apply min-w-0 bg-parchment text-ink transition-colors duration-300;
+    background-image: radial-gradient(hsl(var(--gold) / 0.055) 1px, transparent 1px);
+    background-size: 26px 26px;
   }
   button {
-    @apply rounded-lg transition-[color,background-color,border-color,box-shadow,transform] duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-parchment;
+    @apply touch-manipulation rounded-lg transition-[color,background-color,border-color,box-shadow,transform] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-parchment;
   }
   button:not(:disabled):active {
     transform: translateY(1px);
@@ -66,6 +72,9 @@
 @layer utilities {
   .container {
     @apply mx-auto px-6 max-w-[1320px];
+  }
+  .premium-card {
+    @apply rounded-2xl border border-line bg-surface shadow-[0_1px_2px_hsl(var(--ink)/0.04)] transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-0.5 hover:border-gold/50 hover:shadow-[0_18px_40px_hsl(var(--ink)/0.1)];
   }
   .hairline {
     @apply border-t border-line;

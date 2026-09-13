@@ -44,7 +44,7 @@ export const PropertyCard = ({ property }: { property: Property }) => {
   };
 
   return (
-    <article className="group relative overflow-hidden rounded-2xl border border-line bg-surface transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/60 hover:shadow-xl hover:shadow-ink/10">
+    <article className="premium-card group relative overflow-hidden">
       <Link href={`/properties/${property.slug}`} className="block">
       <div className="relative aspect-[4/3] overflow-hidden bg-parchment">
         <Image
@@ -55,12 +55,13 @@ export const PropertyCard = ({ property }: { property: Property }) => {
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
 
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-ink/35 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-100" />
         <div className="absolute left-3 top-3 flex flex-wrap gap-2">
-          <span className="bg-surface/95 px-3 py-1 text-[10px] font-mono uppercase tracking-widest text-ink shadow-sm backdrop-blur">
+          <span className="rounded-md bg-surface/95 px-3 py-1 text-[10px] font-mono uppercase tracking-widest text-ink shadow-sm backdrop-blur">
             {property.listingType === "SALE" ? "For Sale" : "For Rent"}
           </span>
           {newListingLabel && (
-            <span className="bg-surface/95 px-3 py-1 text-[10px] font-mono tracking-wide text-ink/70 shadow-sm backdrop-blur">
+            <span className="rounded-md bg-surface/95 px-3 py-1 text-[10px] font-mono tracking-wide text-ink/70 shadow-sm backdrop-blur">
               {newListingLabel}
             </span>
           )}
@@ -68,7 +69,7 @@ export const PropertyCard = ({ property }: { property: Property }) => {
 
       </div>
 
-      <div className="p-5">
+      <div className="p-5 sm:p-6">
         <p className="text-xl font-bold tracking-tight text-ink sm:text-2xl">
           {formatPrice(property.price, property.priceLabel ? undefined : property.listingType)}
           {property.priceLabel && <span className="ml-1 text-sm font-medium text-ink/55">{property.priceLabel}</span>}
@@ -92,7 +93,7 @@ export const PropertyCard = ({ property }: { property: Property }) => {
             </>}
           </div>
         )}
-        <div className="mt-5 flex h-11 w-full items-center justify-between rounded-lg bg-ink px-4 text-sm font-semibold text-parchment shadow-sm transition-all duration-300 group-hover:bg-clay group-hover:shadow-md group-hover:shadow-clay/20">
+        <div className="mt-5 flex h-11 w-full items-center justify-between rounded-lg bg-ink px-4 text-sm font-semibold text-parchment shadow-sm transition-all duration-300 group-hover:-translate-y-0.5 group-hover:bg-clay group-hover:shadow-lg group-hover:shadow-clay/20">
           <span>View details</span>
           <span className="text-lg font-normal leading-none transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&gt;</span>
         </div>
@@ -103,7 +104,7 @@ export const PropertyCard = ({ property }: { property: Property }) => {
           type="button"
           onClick={() => void toggleSaved()}
           aria-label={isSaved ? "Remove from saved" : "Save property"}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-surface/95 shadow-sm backdrop-blur hover:bg-surface"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-surface/95 shadow-sm backdrop-blur transition-all hover:scale-105 hover:bg-surface hover:shadow-md active:scale-95"
         >
           <Heart className={`w-4 h-4 ${isSaved ? "fill-clay text-clay" : "text-ink"}`} />
         </button>

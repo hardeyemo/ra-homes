@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { createAuthToken, sendPasswordResetEmail } from "@/lib/authEmails";
+import { canRequestPasswordReset } from "@/lib/authRateLimit";
 
 const schema = z.object({ email: z.string().email() });
 const successMessage = "If an eligible account exists for that email, we sent password reset instructions.";
@@ -9,7 +10,13 @@ const successMessage = "If an eligible account exists for that email, we sent pa
 export async function POST(req: NextRequest) {
   try {
     const { email } = schema.parse(await req.json());
-    const user = await prisma.user.findUnique({ where: { email: email.toLowerCase().trim() } });
+    const normalizedEmail = email.toLowerCase().trim();
+    const forwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+    const key = `${forwarded || "unknown"}:${normalizedEmail}`;
+    // Return the same response after the limit is reached too, so this route
+    // cannot become an account-discovery oracle.
+    if (!canRequestPasswordReset(key)) return NextResponse.json({ message: successMessage });
+    const user = await prisma.user.findUnique({ where: { email: normalizedEmail } });
 
     // OAuth-only accounts do not have a password to reset. Use the same response
     // for every request so account existence is never disclosed.

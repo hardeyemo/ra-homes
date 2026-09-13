@@ -8,9 +8,9 @@ import { ChangePasswordForm } from "@/components/profile/ChangePasswordForm";
 
 export default async function ChangePasswordPage() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) redirect("/login?callbackUrl=/change-password");
+  if (!session?.user?.id) redirect("/login");
   const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { passwordHash: true } });
-  if (!user) redirect("/login?callbackUrl=/change-password");
+  if (!user) redirect("/login");
 
   return <div className="container flex min-h-[calc(100vh-12rem)] items-center justify-center py-16"><div className="w-full max-w-md border border-line bg-surface p-6 shadow-sm sm:p-8">
     <Link href="/profile" className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-ink/60 hover:text-clay"><ArrowLeft className="h-3.5 w-3.5" /> Back to account</Link>

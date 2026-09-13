@@ -118,7 +118,7 @@ export default function SellPage() {
             lets our team follow up with you.
           </p>
           <Button asChild className="mt-5 rounded-lg">
-            <Link href="/login?callbackUrl=/sell">Sign In / Create Account</Link>
+            <Link href="/login">Sign In / Create Account</Link>
           </Button>
         </div>
       ) : (
@@ -200,19 +200,19 @@ export default function SellPage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div>
               <Label htmlFor="askingPrice">Asking price (₦)</Label>
-              <Input id="askingPrice" type="number" className="mt-1.5" value={form.askingPrice} onChange={(e) => setForm({ ...form, askingPrice: e.target.value })} />
+              <Input id="askingPrice" type="number" min="1" className="mt-1.5" value={form.askingPrice} onChange={(e) => setForm({ ...form, askingPrice: e.target.value })} />
             </div>
             <div>
               <Label htmlFor="bedrooms">Beds</Label>
-              <Input id="bedrooms" type="number" className="mt-1.5" value={form.bedrooms} onChange={(e) => setForm({ ...form, bedrooms: e.target.value })} />
+              <Input id="bedrooms" type="number" min="0" step="1" className="mt-1.5" value={form.bedrooms} onChange={(e) => setForm({ ...form, bedrooms: e.target.value })} />
             </div>
             <div>
               <Label htmlFor="bathrooms">Baths</Label>
-              <Input id="bathrooms" type="number" step="0.5" className="mt-1.5" value={form.bathrooms} onChange={(e) => setForm({ ...form, bathrooms: e.target.value })} />
+              <Input id="bathrooms" type="number" min="0" step="0.5" className="mt-1.5" value={form.bathrooms} onChange={(e) => setForm({ ...form, bathrooms: e.target.value })} />
             </div>
             <div>
               <Label htmlFor="sqft">Sqft</Label>
-              <Input id="sqft" type="number" className="mt-1.5" value={form.sqft} onChange={(e) => setForm({ ...form, sqft: e.target.value })} />
+              <Input id="sqft" type="number" min="1" step="1" className="mt-1.5" value={form.sqft} onChange={(e) => setForm({ ...form, sqft: e.target.value })} />
             </div>
           </div>
 

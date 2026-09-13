@@ -6,11 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { ImageUploader } from "@/components/shared/ImageUploader";
 import { textOnly } from "@/lib/inputValidation";
 
 interface Props {
-  initial: { name: string; phone: string; title: string; bio: string; image: string };
+  initial: { name: string; phone: string; title: string; bio: string };
 }
 
 export const ProfileForm = ({ initial }: Props) => {
@@ -27,7 +26,7 @@ export const ProfileForm = ({ initial }: Props) => {
       const res = await fetch("/api/account", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, image: form.image || null }),
+        body: JSON.stringify(form),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -56,24 +55,12 @@ export const ProfileForm = ({ initial }: Props) => {
       </div>
       </div>
       <div>
-        <Label htmlFor="p-title">Title</Label>
-        <Input id="p-title" placeholder="e.g. Listing Agent" className="mt-1.5" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-      </div>
-      <div>
-        <Label>Profile photo</Label>
-        <p className="mt-1 text-xs text-ink/55">Use a clear headshot so clients can recognise you.</p>
-        <div className="mt-3 max-w-sm">
-          <ImageUploader
-            images={form.image ? [form.image] : []}
-            onChange={(images) => setForm({ ...form, image: images[0] || "" })}
-            maxImages={1}
-            label="profile photo"
-          />
-        </div>
+        <Label htmlFor="p-title">Professional title (optional)</Label>
+        <Input id="p-title" maxLength={80} placeholder="e.g. Property Consultant" className="mt-1.5" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
       </div>
       <div>
         <Label htmlFor="p-bio">Bio</Label>
-        <Textarea id="p-bio" className="mt-1.5" value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} />
+        <Textarea id="p-bio" maxLength={500} placeholder="Share a short introduction or your property interests." className="mt-1.5" value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} />
       </div>
       <div className="flex items-center gap-4 pt-1">
       <Button type="submit" disabled={status === "saving"} className="rounded-lg px-5">

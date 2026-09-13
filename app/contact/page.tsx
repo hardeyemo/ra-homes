@@ -35,7 +35,7 @@ export default function ContactPage() {
         <p className="font-mono text-xs uppercase tracking-widest text-clay">Contact</p>
         <h1 className="mt-2 font-display text-4xl">Talk to the office</h1>
         <p className="mt-4 text-ink/60 max-w-sm">
-          For general questions not tied to a specific listing, reach us directly — or send a message below.
+          For general questions not tied to a specific listing, reach us directly or send a message below.
         </p>
         <div className="hairline mt-8 pt-8 space-y-4 text-sm">
           <p className="flex items-start gap-3">

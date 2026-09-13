@@ -18,14 +18,26 @@ export async function POST(req: NextRequest) {
     });
     if (!user) return NextResponse.json({ error: "This reset link is invalid or has expired. Request a new one." }, { status: 400 });
 
-    await prisma.user.update({
-      where: { id: user.id },
+    if (user.passwordHash && await bcrypt.compare(password, user.passwordHash)) {
+      return NextResponse.json({ error: "Choose a password you have not used for this account." }, { status: 400 });
+    }
+
+    // The second conditional write is what makes a link truly one-time even
+    // if two requests race with the same token.
+    const result = await prisma.user.updateMany({
+      where: {
+        id: user.id,
+        passwordResetToken: hashAuthToken(token),
+        passwordResetExpires: { gt: new Date() },
+      },
       data: {
         passwordHash: await bcrypt.hash(password, 12),
         passwordResetToken: null,
         passwordResetExpires: null,
+        passwordChangedAt: new Date(),
       },
     });
+    if (result.count !== 1) return NextResponse.json({ error: "This reset link is invalid or has expired. Request a new one." }, { status: 400 });
     return NextResponse.json({ message: "Your password has been reset. You can now sign in." });
   } catch (error) {
     if (error instanceof z.ZodError) return NextResponse.json({ error: error.errors[0]?.message || "Enter a valid password." }, { status: 400 });

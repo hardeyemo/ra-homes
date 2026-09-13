@@ -13,9 +13,11 @@ type Status = "NONE" | "PENDING" | "APPROVED" | "REJECTED";
 export const BecomeAgentToggle = ({
   role,
   initialStatus,
+  variant = "panel",
 }: {
   role: string;
   initialStatus: Status;
+  variant?: "panel" | "sidebar";
 }) => {
   const router = useRouter();
   const { update } = useSession();
@@ -46,9 +48,9 @@ export const BecomeAgentToggle = ({
 
   if (role === "AGENT" || role === "ADMIN") {
     return (
-      <div className="rounded-xl border border-line bg-surface p-6 md:p-8">
-        <p className="text-xl font-bold tracking-tight">Agent status</p>
-        <p className="mt-2 text-sm text-ink/60">
+      <div className={variant === "sidebar" ? "mt-5 border-t border-line pt-5" : "border border-line bg-surface p-6 md:p-8"}>
+        <p className={variant === "sidebar" ? "text-sm font-semibold" : "font-display text-2xl"}>Agent status</p>
+        <p className={variant === "sidebar" ? "mt-1 text-xs leading-relaxed text-ink/60" : "mt-2 text-sm text-ink/60"}>
           You already have {role === "ADMIN" ? "RA" : "agent"} access to the dashboard.
         </p>
       </div>
@@ -56,11 +58,11 @@ export const BecomeAgentToggle = ({
   }
 
   return (
-    <div className="rounded-xl border border-line bg-surface p-6 md:p-8">
-      <div className="flex items-center justify-between gap-4">
+    <div className={variant === "sidebar" ? "mt-5 border-t border-line pt-5" : "border border-line bg-surface p-6 md:p-8"}>
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xl font-bold tracking-tight">Become an agent</p>
-          <p className="mt-1 text-sm text-ink/60">
+          <p className={variant === "sidebar" ? "text-sm font-semibold" : "font-display text-2xl"}>Become an agent</p>
+          <p className={variant === "sidebar" ? "mt-1 text-xs leading-relaxed text-ink/60" : "mt-1 text-sm text-ink/60"}>
             {status === "REJECTED"
               ? "Your last request was declined. You can request again."
               : "Request access to list and manage properties on the dashboard. The RA team reviews every request."}

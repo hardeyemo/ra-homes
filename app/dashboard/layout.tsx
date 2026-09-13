@@ -8,7 +8,7 @@ import { prisma } from "@/lib/prisma";
 // data while the browser still has the old token.
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) redirect("/login?callbackUrl=/dashboard");
+  if (!session?.user?.id) redirect("/login");
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },

@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+
+const updateSubmissionSchema = z.object({
+  status: z.enum(["PENDING", "APPROVED", "REJECTED"]),
+});
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
@@ -13,13 +18,16 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 
   try {
-    const body = await req.json();
+    const body = updateSubmissionSchema.parse(await req.json());
     const submission = await prisma.propertySubmission.update({
       where: { id: params.id },
       data: { status: body.status },
     });
     return NextResponse.json({ submission });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: "Invalid submission status" }, { status: 400 });
+    }
     console.error(error);
     return NextResponse.json({ error: "Failed to update submission" }, { status: 500 });
   }
