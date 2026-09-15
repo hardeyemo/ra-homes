@@ -367,6 +367,15 @@ function LoginForm() {
                 </span>
               )}
             </Button>
+            {mode === "signup" && (
+              <p className="px-2 text-center text-xs leading-relaxed text-ink/50">
+                By creating an account, you agree to our {" "}
+                <Link href="/terms-and-conditions" className="font-medium text-gold-dark hover:text-gold hover:underline hover:underline-offset-4">
+                  Terms &amp; Conditions
+                </Link>{" "}
+                and Privacy Policy.
+              </p>
+            )}
           </form>
 
           <div className="mt-8">

@@ -3,7 +3,17 @@ import { resend } from "@/lib/resend";
 import { SITE_NAME } from "@/lib/constants";
 
 const FROM = process.env.RESEND_FROM_EMAIL || "inquiries@rahomesproperties.com";
-const APP_URL = (process.env.NEXTAUTH_URL || "http://localhost:3000").replace(/\/$/, "");
+
+function getAppUrl() {
+  const appUrl = process.env.NEXTAUTH_URL?.replace(/\/$/, "");
+  const isLocalUrl = appUrl && /:\/\/(localhost|127\.0\.0\.1)(:|\/|$)/i.test(appUrl);
+
+  if (!appUrl || (process.env.NODE_ENV === "production" && isLocalUrl)) {
+    throw new Error("NEXTAUTH_URL must be set to your deployed HTTPS domain before sending account emails.");
+  }
+
+  return appUrl;
+}
 
 export function createAuthToken(hours = 1) {
   const token = randomBytes(32).toString("hex");
@@ -26,7 +36,7 @@ const emailShell = (content: string) => `
 `;
 
 export function sendVerificationEmail({ email, name, token }: { email: string; name: string; token: string }) {
-  const url = `${APP_URL}/verify-email?token=${encodeURIComponent(token)}`;
+  const url = `${getAppUrl()}/verify-email?token=${encodeURIComponent(token)}`;
   return resend.emails.send({
     from: FROM,
     to: email,
@@ -41,7 +51,7 @@ export function sendVerificationEmail({ email, name, token }: { email: string; n
 }
 
 export function sendPasswordResetEmail({ email, name, token }: { email: string; name: string; token: string }) {
-  const url = `${APP_URL}/reset-password?token=${encodeURIComponent(token)}`;
+  const url = `${getAppUrl()}/reset-password?token=${encodeURIComponent(token)}`;
   return resend.emails.send({
     from: FROM,
     to: email,

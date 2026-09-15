@@ -85,13 +85,17 @@ Both are optional — the buttons on `/sell` show as disabled until configured, 
 **Google:**
 1. [Google Cloud Console](https://console.cloud.google.com) → create a project → **APIs & Services → Credentials**
 2. **Create Credentials → OAuth client ID** → Application type: **Web application**
-3. Authorized redirect URI: `<your-domain>/api/auth/callback/google` (e.g. `http://localhost:3000/api/auth/callback/google` for local dev). `NEXTAUTH_URL` must use the same domain with no trailing slash.
+3. Authorized redirect URI: `https://your-domain.com/api/auth/callback/google`. `NEXTAUTH_URL` must use the same deployed domain with no trailing slash.
 4. Copy the Client ID and Client Secret into `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` in `.env`
 
 **Facebook:**
 1. [Facebook Developers](https://developers.facebook.com) → create an app → add the **Facebook Login** product
-2. Valid OAuth Redirect URI: `<your-domain>/api/auth/callback/facebook`
-3. Copy the App ID and App Secret into `FACEBOOK_CLIENT_ID` / `FACEBOOK_CLIENT_SECRET` in `.env`
+2. In **Facebook Login settings**, turn on **Client OAuth Login** and **Web OAuth Login**.
+3. In **Valid OAuth Redirect URIs**, add the exact callback URL generated from `NEXTAUTH_URL`: `https://your-domain.com/api/auth/callback/facebook`. The protocol, domain (including or excluding `www`), path, and trailing slash must match exactly.
+4. In the app's basic settings, add the deployed site domain to **App Domains**. Make the app live before testing with people who are not app administrators, developers, or testers.
+5. For local development only, create a git-ignored `.env.local` with `NEXTAUTH_URL="http://localhost:3000"`, run the app on port 3000, and add `http://localhost:3000/api/auth/callback/facebook` as a separate valid redirect URI in Meta. Do not use this local value in production.
+6. This project uses NextAuth v4, which reads `NEXTAUTH_URL` and `NEXTAUTH_SECRET`; `AUTH_URL` and `AUTH_SECRET` are not required here.
+7. Copy the App ID and App Secret into `FACEBOOK_CLIENT_ID` / `FACEBOOK_CLIENT_SECRET` in `.env`
 
 Restart the dev server (or redeploy) after adding either — like the Cloudinary keys, these are only
 read at startup.

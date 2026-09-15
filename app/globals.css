@@ -55,6 +55,21 @@
     background-image: radial-gradient(hsl(var(--gold) / 0.055) 1px, transparent 1px);
     background-size: 26px 26px;
   }
+  /* Keep primary page titles distinct while giving section and card headings
+     enough weight to create a reliable reading hierarchy everywhere. */
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  th {
+    @apply font-bold;
+  }
+  /* Small uppercase mono text is used as a section label throughout the UI. */
+  p.font-mono.uppercase,
+  span.font-mono.uppercase {
+    @apply font-bold;
+  }
   button {
     @apply touch-manipulation rounded-lg transition-[color,background-color,border-color,box-shadow,transform] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-parchment;
   }

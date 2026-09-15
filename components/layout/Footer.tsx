@@ -64,7 +64,12 @@ export const Footer = () => (
     <div className="border-t border-parchment/10">
       <div className="container flex flex-col justify-between gap-1.5 py-3 text-[11px] font-mono text-parchment/40 sm:flex-row">
         <span>© {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</span>
-        <span className="hidden sm:inline">Real Estate in Ilorin, Kwara State</span>
+        <div className="flex items-center gap-4">
+          <Link href="/terms-and-conditions" className="text-parchment/60 transition-colors hover:text-gold">
+            Terms &amp; Conditions
+          </Link>
+          <span className="hidden sm:inline">Real Estate in Ilorin, Kwara State</span>
+        </div>
       </div>
     </div>
   </footer>
