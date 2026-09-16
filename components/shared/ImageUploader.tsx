@@ -11,6 +11,8 @@ interface Props {
   label?: string;
 }
 
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+
 export const ImageUploader = ({ images, onChange, maxImages = 12, label = "Photos" }: Props) => {
   const inputId = useId();
   const [uploading, setUploading] = useState(false);
@@ -21,7 +23,11 @@ export const ImageUploader = ({ images, onChange, maxImages = 12, label = "Photo
     if (!fileList) return;
     setError(null);
 
-    const files = Array.from(fileList).slice(0, maxImages - images.length);
+    const selected = Array.from(fileList).slice(0, maxImages - images.length);
+    const files = selected.filter((file) => file.type.startsWith("image/") && file.size <= MAX_FILE_SIZE_BYTES);
+    if (files.length !== selected.length) {
+      setError("Each photo must be an image smaller than 10 MB.");
+    }
     if (files.length === 0) return;
 
     setUploading(true);

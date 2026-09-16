@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isValidObjectId } from "@/lib/utils";
 
 const updateSchema = z.object({
   status: z.enum(["NEW", "CONTACTED", "CLOSED"]),
@@ -13,6 +14,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if (!isValidObjectId(params.id)) return NextResponse.json({ error: "Invalid inquiry ID" }, { status: 400 });
 
   try {
     const inquiry = await prisma.inquiry.findUnique({

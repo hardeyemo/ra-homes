@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendSubmissionNotification, sendSubmissionConfirmation } from "@/lib/resend";
 import { textOnlyPattern } from "@/lib/inputValidation";
+import { rateLimit } from "@/lib/rateLimit";
 
 const submissionSchema = z.object({
   ownerName: z.string().trim().min(2).regex(textOnlyPattern, "Name can only contain letters, spaces, apostrophes, periods, and hyphens"),
@@ -29,6 +30,8 @@ export async function POST(req: NextRequest) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Please sign in to submit a property." }, { status: 401 });
   }
+  const limited = rateLimit(req, "property-submission", 5, 60 * 60 * 1000);
+  if (limited) return limited;
 
   try {
     const body = await req.json();

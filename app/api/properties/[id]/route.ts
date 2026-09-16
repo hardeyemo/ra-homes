@@ -80,6 +80,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if (!isValidObjectId(params.id)) return NextResponse.json({ error: "Invalid property ID" }, { status: 400 });
 
   try {
     const existing = await prisma.property.findUnique({ where: { id: params.id } });
@@ -140,6 +141,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if (!isValidObjectId(params.id)) return NextResponse.json({ error: "Invalid property ID" }, { status: 400 });
 
   try {
     const existing = await prisma.property.findUnique({ where: { id: params.id } });

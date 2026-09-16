@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isValidObjectId } from "@/lib/utils";
 
 const decisionSchema = z.object({ action: z.enum(["approve", "reject"]) });
 
@@ -14,6 +15,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (!session?.user?.id || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if (!isValidObjectId(params.id)) return NextResponse.json({ error: "Invalid request ID" }, { status: 400 });
 
   try {
     const { action } = decisionSchema.parse(await req.json());

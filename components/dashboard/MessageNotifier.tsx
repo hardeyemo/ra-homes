@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { MessageSquare, Megaphone } from "lucide-react";
 
-const POLL_MS = 15_000;
+const POLL_MS = 60_000;
 
 interface MessageEntry {
   id: string;
@@ -22,12 +22,14 @@ interface MessageEntry {
 export const MessageNotifier = () => {
   const { data: session, status } = useSession();
   const lastSeenRef = useRef<string>(new Date().toISOString());
-  const authed = status === "authenticated" && !!session?.user?.id;
+  const isStaff = status === "authenticated" &&
+    (session?.user?.role === "AGENT" || session?.user?.role === "ADMIN");
 
   useEffect(() => {
-    if (!authed) return;
+    if (!isStaff) return;
 
     const poll = async () => {
+      if (document.visibilityState !== "visible") return;
       try {
         const res = await fetch(`/api/messages/recent?since=${encodeURIComponent(lastSeenRef.current)}`);
         if (!res.ok) return;
@@ -50,9 +52,17 @@ export const MessageNotifier = () => {
       }
     };
 
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") void poll();
+    };
+    void poll();
     const interval = setInterval(poll, POLL_MS);
-    return () => clearInterval(interval);
-  }, [authed]);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [isStaff]);
 
   return null;
 };

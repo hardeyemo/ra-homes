@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { sendInquiryNotification, sendInquiryConfirmation } from "@/lib/resend";
 import { AGENCY_EMAIL, PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
 import { textOnlyPattern } from "@/lib/inputValidation";
+import { rateLimit } from "@/lib/rateLimit";
 
 const inquirySchema = z.object({
   propertyId: z.string(),
@@ -16,6 +17,8 @@ const inquirySchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const limited = rateLimit(req, "inquiry", 8, 15 * 60 * 1000);
+  if (limited) return limited;
   try {
     const body = await req.json();
     const data = inquirySchema.parse(body);

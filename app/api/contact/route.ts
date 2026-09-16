@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendContactNotification, sendContactConfirmation } from "@/lib/resend";
 import { textOnlyPattern } from "@/lib/inputValidation";
+import { rateLimit } from "@/lib/rateLimit";
 
 const contactSchema = z.object({
   name: z.string().trim().min(2).regex(textOnlyPattern, "Name can only contain letters, spaces, apostrophes, periods, and hyphens"),
@@ -15,6 +16,8 @@ const contactSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const limited = rateLimit(req, "contact", 6, 15 * 60 * 1000);
+  if (limited) return limited;
   try {
     const body = await req.json();
     const data = contactSchema.parse(body);

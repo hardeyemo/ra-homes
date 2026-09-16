@@ -46,6 +46,7 @@ export default function PropertiesPage() {
     listingType: startingListingType,
     neighborhood: startingNeighborhood,
   });
+  const [debouncedSearch, setDebouncedSearch] = useState(startingSearch);
   const [properties, setProperties] = useState<Property[]>([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
@@ -67,6 +68,13 @@ export default function PropertiesPage() {
     }));
   }, [startingListingType, startingNeighborhood, startingSearch]);
 
+  // Search text changes rapidly while someone types; wait briefly before
+  // issuing the database-backed listing request. Other filters stay instant.
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setDebouncedSearch(filters.search), 300);
+    return () => window.clearTimeout(timeout);
+  }, [filters.search]);
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -87,7 +95,7 @@ export default function PropertiesPage() {
   const fetchProperties = useCallback(async () => {
     setLoading(true);
     const params = new URLSearchParams();
-    if (filters.search) params.set("search", filters.search);
+    if (debouncedSearch) params.set("search", debouncedSearch);
     if (filters.listingType) params.set("listingType", filters.listingType);
     filters.propertyTypes.forEach((t) => params.append("propertyType", t));
     if (filters.priceRange[1] < MAX_PRICE) params.set("maxPrice", String(filters.priceRange[1]));
@@ -112,11 +120,12 @@ export default function PropertiesPage() {
     } finally {
       setLoading(false);
     }
-  }, [filters, page, sort]);
+  }, [debouncedSearch, filters, page, sort]);
 
   useEffect(() => {
+    if (debouncedSearch !== filters.search) return;
     fetchProperties();
-  }, [fetchProperties]);
+  }, [debouncedSearch, fetchProperties, filters.search]);
 
   const activeCount = countActiveFilters(filters);
   const isRent = filters.listingType === "RENT";

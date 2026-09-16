@@ -10,20 +10,31 @@ import { PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
 import { textOnlyPattern } from "@/lib/inputValidation";
 
 const landSizePattern = /^\d[\d,]*(?:\.\d+)?\s*(?:sq\.?\s*ft\.?|sqft|plots?)$/i;
+const listingTypes = new Set(["SALE", "RENT"]);
+const propertyTypes = new Set(["HOUSE", "APARTMENT", "CONDO", "TOWNHOUSE", "LAND", "COMMERCIAL", "MULTI_FAMILY"]);
+
+function optionalNonNegativeNumber(value: string | null) {
+  if (value === null || value === "") return undefined;
+  const number = Number(value);
+  return Number.isFinite(number) && number >= 0 ? number : null;
+}
 
 // GET /api/properties?search=&listingType=&propertyType=&city=&minPrice=&maxPrice=&minBedrooms=&status=
 export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;
 
-  const search = params.get("search") || undefined;
+  const search = params.get("search")?.trim().slice(0, 100) || undefined;
   const listingType = params.get("listingType") || undefined;
-  const propertyTypes = params.getAll("propertyType");
-  const city = params.get("city") || undefined;
-  const minPrice = params.get("minPrice") ? Number(params.get("minPrice")) : undefined;
-  const maxPrice = params.get("maxPrice") ? Number(params.get("maxPrice")) : undefined;
-  const minBedrooms = params.get("minBedrooms") ? Number(params.get("minBedrooms")) : undefined;
-  const minBathrooms = params.get("minBathrooms") ? Number(params.get("minBathrooms")) : undefined;
-  const neighborhood = params.get("neighborhood") || undefined;
+  const requestedPropertyTypes = params.getAll("propertyType");
+  const city = params.get("city")?.trim().slice(0, 80) || undefined;
+  const minPrice = optionalNonNegativeNumber(params.get("minPrice"));
+  const maxPrice = optionalNonNegativeNumber(params.get("maxPrice"));
+  const minBedrooms = optionalNonNegativeNumber(params.get("minBedrooms"));
+  const minBathrooms = optionalNonNegativeNumber(params.get("minBathrooms"));
+  const neighborhood = params.get("neighborhood")?.trim().slice(0, 80) || undefined;
+  if ((listingType && !listingTypes.has(listingType)) || requestedPropertyTypes.some((type) => !propertyTypes.has(type)) || [minPrice, maxPrice, minBedrooms, minBathrooms].some((value) => value === null)) {
+    return NextResponse.json({ error: "Invalid property filters" }, { status: 400 });
+  }
   const requestedStatus = params.get("status");
   if (requestedStatus && !PUBLIC_PROPERTY_STATUSES.includes(requestedStatus as (typeof PUBLIC_PROPERTY_STATUSES)[number])) {
     return NextResponse.json({ error: "That listing status is not publicly available" }, { status: 400 });
@@ -44,7 +55,7 @@ export async function GET(req: NextRequest) {
 
   const where: any = { status };
   if (listingType) where.listingType = listingType;
-  if (propertyTypes.length) where.propertyType = { in: propertyTypes };
+  if (requestedPropertyTypes.length) where.propertyType = { in: requestedPropertyTypes };
   if (city) where.city = { equals: city, mode: "insensitive" };
   if (minBedrooms) where.bedrooms = { gte: minBedrooms };
   if (minBathrooms) where.bathrooms = { gte: minBathrooms };

@@ -12,9 +12,22 @@ function unauthorized() {
 }
 
 // GET /api/saved-properties -- private list for the current account only.
-export async function GET() {
+export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return unauthorized();
+
+  const includeProperties = req.nextUrl.searchParams.get("include") === "properties";
+  if (includeProperties) {
+    const savedProperties = await prisma.savedProperty.findMany({
+      where: { userId: session.user.id },
+      select: { propertyId: true, property: true },
+      orderBy: { createdAt: "desc" },
+    });
+    return NextResponse.json({
+      propertyIds: savedProperties.map((saved) => saved.propertyId),
+      properties: savedProperties.flatMap((saved) => saved.property ? [saved.property] : []),
+    });
+  }
 
   const savedProperties = await prisma.savedProperty.findMany({
     where: { userId: session.user.id },

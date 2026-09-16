@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { sendViewingConfirmation, sendViewingAgentNotification } from "@/lib/resend";
 import { textOnlyPattern } from "@/lib/inputValidation";
 import { AGENCY_EMAIL, PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
+import { rateLimit } from "@/lib/rateLimit";
 
 const viewingSchema = z.object({
   propertyId: z.string(),
@@ -18,6 +19,8 @@ const viewingSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const limited = rateLimit(req, "viewing-request", 6, 15 * 60 * 1000);
+  if (limited) return limited;
   try {
     const body = await req.json();
     const data = viewingSchema.parse(body);

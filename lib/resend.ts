@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { AGENCY_EMAIL, AGENCY_PHONE_LOCAL, SITE_NAME } from "@/lib/constants";
+import { escapeHtml } from "@/lib/html";
 
 export const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -39,10 +40,10 @@ export async function sendInquiryNotification({
     subject: `New inquiry — ${propertyReference} ${propertyTitle}`,
     html: wrap(`
       <p><strong>New inquiry for ${propertyReference} — ${propertyTitle}</strong></p>
-      <p><strong>Name:</strong> ${name}<br/>
-      <strong>Email:</strong> ${email}<br/>
+      <p><strong>Name:</strong> ${escapeHtml(name)}<br/>
+      <strong>Email:</strong> ${escapeHtml(email)}<br/>
       <strong>Phone:</strong> ${phone || "—"}</p>
-      <p><strong>Message:</strong><br/>${message}</p>
+      <p><strong>Message:</strong><br/>${escapeHtml(message)}</p>
     `),
   });
 }
@@ -63,7 +64,7 @@ export async function sendInquiryConfirmation({
     to: toEmail,
     subject: `We received your inquiry — ${propertyReference}`,
     html: wrap(`
-      <p>Hi ${toName},</p>
+      <p>Hi ${escapeHtml(toName)},</p>
       <p>Thanks for your interest in <strong>${propertyTitle}</strong> (${propertyReference}). An RA Homes agent
       will follow up with you shortly by phone, WhatsApp, or email.</p>
       <p>If it's urgent, feel free to call or WhatsApp us at ${AGENCY_PHONE_LOCAL}.</p>

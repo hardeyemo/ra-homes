@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { textOnlyPattern } from "@/lib/inputValidation";
+import { isValidObjectId } from "@/lib/utils";
 
 const agentUpdateSchema = z.object({
   name: z.string().trim().min(2).regex(textOnlyPattern, "Name can only contain letters, spaces, apostrophes, periods, and hyphens").optional(),
@@ -20,6 +21,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (!session?.user?.id || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if (!isValidObjectId(params.id)) return NextResponse.json({ error: "Invalid agent ID" }, { status: 400 });
 
   try {
     const body = agentUpdateSchema.parse(await req.json());
@@ -61,6 +63,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   if (!session?.user?.id || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if (!isValidObjectId(params.id)) return NextResponse.json({ error: "Invalid agent ID" }, { status: 400 });
 
   if (session.user.id === params.id) {
     return NextResponse.json({ error: "You can't revoke your own access while signed in as it." }, { status: 400 });
@@ -81,6 +84,10 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
           },
           { status: 409 }
         );
+      }
+
+      if (!isValidObjectId(reassignTo)) {
+        return NextResponse.json({ error: "Invalid reassignment target" }, { status: 400 });
       }
 
       const target = await prisma.user.findUnique({ where: { id: reassignTo } });

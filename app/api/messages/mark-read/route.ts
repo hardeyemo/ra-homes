@@ -4,12 +4,15 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-const schema = z.object({ ids: z.array(z.string()).min(1).max(200) });
+const schema = z.object({ ids: z.array(z.string().regex(/^[a-f\d]{24}$/i, "Invalid message ID")).min(1).max(200) });
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (session.user.role !== "AGENT" && session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   try {

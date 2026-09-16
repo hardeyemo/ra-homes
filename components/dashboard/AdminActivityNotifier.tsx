@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { DollarSign, PlusCircle, RefreshCcw, Trash2 } from "lucide-react";
 
-const POLL_MS = 15_000;
+const POLL_MS = 60_000;
 
 const ICONS: Record<string, any> = {
   created: PlusCircle,
@@ -38,6 +38,7 @@ export const AdminActivityNotifier = () => {
     if (!isAdmin) return;
 
     const poll = async () => {
+      if (document.visibilityState !== "visible") return;
       try {
         const res = await fetch(`/api/activity/recent?since=${encodeURIComponent(lastSeenRef.current)}`);
         if (!res.ok) return;
@@ -60,8 +61,16 @@ export const AdminActivityNotifier = () => {
       }
     };
 
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") void poll();
+    };
+    void poll();
     const interval = setInterval(poll, POLL_MS);
-    return () => clearInterval(interval);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
   }, [isAdmin]);
 
   return null;

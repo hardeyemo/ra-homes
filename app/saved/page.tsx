@@ -24,15 +24,10 @@ export default function SavedPropertiesPage() {
     }
 
     setLoading(true);
-    Promise.all(
-      savedIds.map((id) =>
-        fetch(`/api/properties/${id}`)
-          .then((response) => (response.ok ? response.json() : null))
-          .then((data) => data?.property ?? null)
-          .catch(() => null)
-      )
-    )
-      .then((results) => setProperties(results.filter(Boolean) as Property[]))
+    fetch("/api/saved-properties?include=properties")
+      .then((response) => (response.ok ? response.json() : { properties: [] }))
+      .then((data) => setProperties((data.properties || []) as Property[]))
+      .catch(() => setProperties([]))
       .finally(() => setLoading(false));
   }, [mounted, savedIds]);
 

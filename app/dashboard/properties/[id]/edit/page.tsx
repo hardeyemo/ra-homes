@@ -2,10 +2,12 @@ import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isValidObjectId } from "@/lib/utils";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { PropertyForm } from "@/components/dashboard/PropertyForm";
 
 export default async function EditPropertyPage({ params }: { params: { id: string } }) {
+  if (!isValidObjectId(params.id)) notFound();
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) redirect("/login");
 

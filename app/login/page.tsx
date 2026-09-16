@@ -55,6 +55,7 @@ function LoginForm() {
       OAuthCallback: "Social sign-in could not return you to this site. Check the sign-in address and try again.",
       OAuthAccountNotLinked: "This email is already connected to a different sign-in method.",
       AccessDenied: "Social sign-in was cancelled or denied.",
+      SocialEmailRequired: "Facebook did not provide an email address for this account. Use an account with a verified Facebook email, or create an account with email and password.",
     };
     setError(messages[oauthError] || "Social sign-in was not completed. Please try again.");
     setStatus("error");

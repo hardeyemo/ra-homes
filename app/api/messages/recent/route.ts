@@ -11,6 +11,9 @@ export async function GET(req: NextRequest) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if (session.user.role !== "AGENT" && session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   const since = req.nextUrl.searchParams.get("since");
   const sinceDate = since ? new Date(since) : new Date(Date.now() - 60_000);

@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isValidObjectId } from "@/lib/utils";
 
 const updateSubmissionSchema = z.object({
   status: z.enum(["PENDING", "APPROVED", "REJECTED"]),
@@ -13,6 +14,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if (!isValidObjectId(params.id)) return NextResponse.json({ error: "Invalid submission ID" }, { status: 400 });
   if (session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Only the RA team can approve or reject submissions" }, { status: 403 });
   }

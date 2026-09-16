@@ -25,6 +25,13 @@ if (process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET) {
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      // next-auth 4.24 pins this URL to Facebook Graph API v11, which has
+      // long been retired. Let Facebook select the supported API version for
+      // this app instead of failing after the user approves sign-in.
+      authorization: {
+        url: "https://www.facebook.com/dialog/oauth",
+        params: { scope: "email" },
+      },
     })
   );
 }
@@ -32,7 +39,7 @@ if (process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET) {
 export const authOptions: AuthOptions = {
   // SessionTimeout renews this on real user activity. If a browser goes idle,
   // the JWT itself expires after 30 minutes and every server route rejects it.
-  session: { strategy: "jwt", maxAge: 30 * 60, updateAge: 60 },
+  session: { strategy: "jwt", maxAge: 30 * 60, updateAge: 5 * 60 },
   pages: {
     signIn: "/login",
   },
@@ -83,7 +90,12 @@ export const authOptions: AuthOptions = {
       if (!account || account.provider === "credentials") {
         return true;
       }
-      if (!user.email) return false;
+      // Facebook can authenticate an account without returning its email
+      // address (for example, for some mobile-created Facebook accounts).
+      // Email is the unique account identifier in our database, so do not
+      // create an unusable placeholder account. Send the person back with a
+      // useful explanation instead of NextAuth's generic Access Denied page.
+      if (!user.email) return "/login?error=SocialEmailRequired";
 
       const existing = await prisma.user.findUnique({ where: { email: user.email } });
       const dbUser =

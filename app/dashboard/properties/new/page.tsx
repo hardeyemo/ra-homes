@@ -1,9 +1,11 @@
+import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { PropertyForm } from "@/components/dashboard/PropertyForm";
 import type { Property } from "@/types/property";
+import { isValidObjectId } from "@/lib/utils";
 
 export default async function NewPropertyPage({
   searchParams,
@@ -12,6 +14,7 @@ export default async function NewPropertyPage({
 }) {
   const session = await getServerSession(authOptions);
   const agent = session?.user?.id ? await prisma.user.findUnique({ where: { id: session.user.id } }) : null;
+  if (!agent) redirect("/login");
 
   // Pre-fill from an approved "List Your Property" submission, if the admin
   // arrived here via the "Create Listing" link on the Submissions page.
@@ -20,10 +23,13 @@ export default async function NewPropertyPage({
   // instead of widening to plain `string`, which is what broke the build.
   let initialData: Partial<Property> | undefined;
   if (searchParams.fromSubmission) {
+    // Submissions contain sellers' private contact details. Only an admin may
+    // open one, and only after it has passed review.
+    if (agent.role !== "ADMIN" || !isValidObjectId(searchParams.fromSubmission)) notFound();
     const submission = await prisma.propertySubmission.findUnique({
       where: { id: searchParams.fromSubmission },
     });
-    if (submission) {
+    if (submission?.status === "APPROVED") {
       initialData = {
         title: `${submission.bedrooms ? `${submission.bedrooms}BR ` : ""}${submission.propertyType === "HOUSE" ? "House" : submission.propertyType} in ${submission.city}`,
         description: submission.notes || "Details available on request.",
@@ -45,6 +51,8 @@ export default async function NewPropertyPage({
         amenities: [],
         status: "DRAFT",
       };
+    } else {
+      notFound();
     }
   }
 
@@ -59,11 +67,7 @@ export default async function NewPropertyPage({
         </p>
       )}
       <div className="mt-10">
-        {session?.user?.id ? (
-          <PropertyForm agentId={session.user.id} initialData={initialData} />
-        ) : (
-          <p className="text-ink/60">Please sign in again.</p>
-        )}
+        <PropertyForm agentId={agent.id} initialData={initialData} />
       </div>
     </div>
   );

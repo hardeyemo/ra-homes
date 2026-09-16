@@ -4,7 +4,9 @@ import { useEffect, useRef } from "react";
 import { signOut, useSession } from "next-auth/react";
 
 const INACTIVITY_MS = 30 * 60 * 1000;
-const RENEWAL_INTERVAL_MS = 60 * 1000;
+// Five minutes is comfortably inside the 30-minute idle timeout while
+// avoiding an auth/session request for every active minute.
+const RENEWAL_INTERVAL_MS = 5 * 60 * 1000;
 const CHANNEL_NAME = "ra-homes-session";
 const ACTIVITY_EVENTS = ["pointerdown", "keydown", "touchstart", "scroll"] as const;
 
