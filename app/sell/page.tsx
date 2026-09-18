@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { PROPERTY_TYPES, LISTING_TYPES, PREFERRED_CONTACT_METHODS } from "@/lib/constants";
 import Link from "next/link";
 import { ImageUploader } from "@/components/shared/ImageUploader";
+import { VideoUploader } from "@/components/shared/VideoUploader";
 import { CheckCircle2, ShieldCheck, Users } from "lucide-react";
 import { textOnly } from "@/lib/inputValidation";
 
@@ -30,11 +31,13 @@ const initialForm = {
 };
 
 const MAX_PHOTOS = 8;
+const MAX_VIDEOS = 3;
 
 export default function SellPage() {
   const { data: session, status: sessionStatus } = useSession();
   const [form, setForm] = useState(initialForm);
   const [photos, setPhotos] = useState<string[]>([]);
+  const [videos, setVideos] = useState<string[]>([]);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [prefilled, setPrefilled] = useState(false);
@@ -63,6 +66,7 @@ export default function SellPage() {
           bathrooms: form.bathrooms ? Number(form.bathrooms) : undefined,
           sqft: form.sqft ? Number(form.sqft) : undefined,
           images: photos,
+          videos,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -225,6 +229,14 @@ export default function SellPage() {
             <Label>Photos (up to {MAX_PHOTOS})</Label>
             <div className="mt-1.5">
               <ImageUploader images={photos} onChange={setPhotos} maxImages={MAX_PHOTOS} />
+            </div>
+          </div>
+
+          <div>
+            <Label>Property videos (up to {MAX_VIDEOS})</Label>
+            <p className="mt-1 text-xs text-ink/55">Add an optional MP4 or WebM walkthrough for the RA team to review with your submission.</p>
+            <div className="mt-1.5">
+              <VideoUploader videos={videos} onChange={setVideos} maxVideos={MAX_VIDEOS} />
             </div>
           </div>
 

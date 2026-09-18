@@ -48,6 +48,7 @@ export default async function NewPropertyPage({
         bathrooms: submission.bathrooms ?? undefined,
         sqft: submission.sqft || undefined,
         images: submission.images,
+        videos: submission.videos,
         amenities: [],
         status: "DRAFT",
       };

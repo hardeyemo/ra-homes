@@ -9,7 +9,11 @@ import { PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
 import { z } from "zod";
 import { textOnlyPattern } from "@/lib/inputValidation";
 
-const landSizePattern = /^\d[\d,]*(?:\.\d+)?\s*(?:sq\.?\s*ft\.?|sqft|plots?)$/i;
+const landSizePattern = /^\d[\d,]*(?:\.\d+)?\s*(?:sq\.?\s*(?:ft\.?|m(?:eters?)?\.?|metres?\.?)|sqft|sqm|plots?)$/i;
+const propertyVideoUrl = z.string().url().refine(
+  (url) => /^https:\/\/res\.cloudinary\.com\/[^/]+\/video\/upload\//.test(url) && /\.(mp4|webm)(?:$|[?#])/i.test(url),
+  "Videos must be MP4 or WebM files uploaded through Cloudinary"
+);
 
 const updatePropertySchema = z.object({
   title: z.string().min(3).optional(),
@@ -27,11 +31,12 @@ const updatePropertySchema = z.object({
   bathrooms: z.number().min(0).optional(),
   sqft: z.number().int().min(0).optional(),
   lotSqft: z.number().int().nullable().optional(),
-  landSize: z.string().trim().max(50).regex(landSizePattern, "Land size must be like '2 Plots' or '5,000 SQFT'").nullable().optional(),
+  landSize: z.string().trim().max(50).regex(landSizePattern, "Land size must be like '2 Plots', '5,000 SQFT', or '800 sqm'").nullable().optional(),
   yearBuilt: z.number().int().nullable().optional(),
   parkingSpaces: z.number().int().nullable().optional(),
   amenities: z.array(z.string()).optional(),
   images: z.array(z.string()).min(1).optional(),
+  videos: z.array(propertyVideoUrl).max(3).optional(),
   status: z.enum(["DRAFT", "ACTIVE", "PENDING", "SOLD", "RENTED", "ARCHIVED"]).optional(),
   agentId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid agent ID").optional(),
 });

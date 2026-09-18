@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { PROPERTY_TYPES, LISTING_TYPES, AMENITY_GROUPS } from "@/lib/constants";
 import { ImageUploader } from "@/components/shared/ImageUploader";
+import { VideoUploader } from "@/components/shared/VideoUploader";
 import type { Property } from "@/types/property";
 import { numericOnly, textOnly } from "@/lib/inputValidation";
 
@@ -39,6 +40,7 @@ export const PropertyForm = ({ agentId, initialData, propertyId }: Props) => {
     yearBuilt: initialData?.yearBuilt?.toString() || "",
     parkingSpaces: initialData?.parkingSpaces?.toString() || "",
     images: initialData?.images || ([] as string[]),
+    videos: initialData?.videos || ([] as string[]),
     amenities: initialData?.amenities || ([] as string[]),
   });
 
@@ -73,6 +75,7 @@ export const PropertyForm = ({ agentId, initialData, propertyId }: Props) => {
       yearBuilt: form.yearBuilt ? Number(form.yearBuilt) : undefined,
       parkingSpaces: form.parkingSpaces ? Number(form.parkingSpaces) : undefined,
       images: form.images,
+      videos: form.videos,
     };
 
     try {
@@ -196,6 +199,14 @@ export const PropertyForm = ({ agentId, initialData, propertyId }: Props) => {
         {form.images.length === 0 && (
           <p className="mt-2 text-xs text-clay-dark">Add at least one photo before saving.</p>
         )}
+      </div>
+
+      <div>
+        <Label>Property videos</Label>
+        <p className="mt-1 text-xs text-ink/55">Optional walkthroughs or exterior videos help buyers understand the property.</p>
+        <div className="mt-1.5">
+          <VideoUploader videos={form.videos} onChange={(videos) => setForm({ ...form, videos })} maxVideos={3} />
+        </div>
       </div>
 
       <div>

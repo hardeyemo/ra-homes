@@ -198,7 +198,106 @@ async function main() {
     });
   }
 
-  console.log("Seeded 36 properties, including 12 land listings, across Ilorin for admin", admin.email);
+  // Featured HRA listing. Use a stable reference so re-running the seed does
+  // not create duplicate copies of this property.
+  const hraReference = toReference(109);
+  const hraTitle = "Fully Furnished 5-Bedroom Smart Duplex in HRA";
+  const hraImages = galleryImages("HOUSE", 0);
+  await prisma.property.upsert({
+    where: { reference: hraReference },
+    update: {
+      title: hraTitle,
+      description: "A sophisticated, fully furnished 5-bedroom smart duplex in HRA, Ilorin, designed for modern luxury living, comfort, security, and convenience. The property combines contemporary residential design with smart-home automation, a 100% solar power system, comprehensive indoor and outdoor CCTV surveillance, and a spacious 800 sqm plot. It comes with a Certificate of Occupancy (C of O).",
+      status: "ACTIVE",
+      listingType: "SALE",
+      propertyType: "HOUSE",
+      price: 320_000_000,
+      address: "HRA",
+      city: "Ilorin",
+      neighborhood: "HRA",
+      state: "Kwara State",
+      landSize: "800 sqm",
+      bedrooms: 5,
+      bathrooms: 5,
+      sqft: 8_611,
+      lotSqft: 8_611,
+      amenities: [
+        "Fully Tiled Floors",
+        "Existing Fittings & Fixtures",
+        "Air Conditioning",
+        "Fitted Kitchen",
+        "Modern Kitchen",
+        "Kitchen Cabinets",
+        "En-suite Bedrooms",
+        "Family Lounge",
+        "Dining Area",
+        "Store Room",
+        "Spacious Compound",
+        "Ample Outdoor Space",
+        "Car Park",
+        "Fully Tiled Compound",
+        "Fenced & Gated",
+        "Borehole / Water Supply",
+        "Water Tank",
+        "100% Solar Power System",
+        "CCTV / Security",
+        "Security Gate",
+        "Perimeter Fencing",
+        "Automated Smart-Home System",
+      ],
+      images: hraImages,
+    },
+    create: {
+      reference: hraReference,
+      title: hraTitle,
+      slug: `${slugify(hraTitle)}-${hraReference.toLowerCase()}`,
+      description: "A sophisticated, fully furnished 5-bedroom smart duplex in HRA, Ilorin, designed for modern luxury living, comfort, security, and convenience. The property combines contemporary residential design with smart-home automation, a 100% solar power system, comprehensive indoor and outdoor CCTV surveillance, and a spacious 800 sqm plot. It comes with a Certificate of Occupancy (C of O).",
+      status: "ACTIVE",
+      listingType: "SALE",
+      propertyType: "HOUSE",
+      price: 320_000_000,
+      address: "HRA",
+      city: "Ilorin",
+      neighborhood: "HRA",
+      state: "Kwara State",
+      zip: "240001",
+      country: "Nigeria",
+      bedrooms: 5,
+      bathrooms: 5,
+      sqft: 8_611,
+      lotSqft: 8_611,
+      landSize: "800 sqm",
+      parkingSpaces: 1,
+      amenities: [
+        "Fully Tiled Floors",
+        "Existing Fittings & Fixtures",
+        "Air Conditioning",
+        "Fitted Kitchen",
+        "Modern Kitchen",
+        "Kitchen Cabinets",
+        "En-suite Bedrooms",
+        "Family Lounge",
+        "Dining Area",
+        "Store Room",
+        "Spacious Compound",
+        "Ample Outdoor Space",
+        "Car Park",
+        "Fully Tiled Compound",
+        "Fenced & Gated",
+        "Borehole / Water Supply",
+        "Water Tank",
+        "100% Solar Power System",
+        "CCTV / Security",
+        "Security Gate",
+        "Perimeter Fencing",
+        "Automated Smart-Home System",
+      ],
+      images: hraImages,
+      agentId: admin.id,
+    },
+  });
+
+  console.log("Seeded 37 properties, including 12 land listings and the HRA smart duplex, across Ilorin for admin", admin.email);
 }
 
 main()

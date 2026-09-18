@@ -5,16 +5,18 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendViewingConfirmation, sendViewingAgentNotification } from "@/lib/resend";
 import { textOnlyPattern } from "@/lib/inputValidation";
-import { AGENCY_EMAIL, PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
+import { AGENCY_EMAIL } from "@/lib/constants";
 import { rateLimit } from "@/lib/rateLimit";
+
+const validDate = z.string().refine((value) => !Number.isNaN(Date.parse(value)), "Enter a valid date and time");
 
 const viewingSchema = z.object({
   propertyId: z.string(),
   name: z.string().trim().min(2).regex(textOnlyPattern, "Name can only contain letters, spaces, apostrophes, periods, and hyphens"),
   email: z.string().email(),
   phone: z.string().min(7),
-  preferredDate: z.string(),
-  alternateDate: z.string().optional(),
+  preferredDate: validDate,
+  alternateDate: validDate.optional(),
   notes: z.string().optional(),
 });
 
@@ -24,9 +26,13 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const data = viewingSchema.parse(body);
+    const preferredDate = new Date(data.preferredDate);
+    const alternateDate = data.alternateDate ? new Date(data.alternateDate) : undefined;
 
     const property = await prisma.property.findUnique({ where: { id: data.propertyId } });
-    if (!property || !PUBLIC_PROPERTY_STATUSES.includes(property.status as (typeof PUBLIC_PROPERTY_STATUSES)[number])) {
+    // Retain sold/rented listings as public records, but do not let visitors
+    // book a viewing for a property that is no longer available.
+    if (!property || property.status !== "ACTIVE") {
       return NextResponse.json({ error: "Property not found" }, { status: 404 });
     }
 
@@ -34,8 +40,8 @@ export async function POST(req: NextRequest) {
       data: {
         ...data,
         agentId: property.agentId,
-        preferredDate: new Date(data.preferredDate),
-        alternateDate: data.alternateDate ? new Date(data.alternateDate) : undefined,
+        preferredDate,
+        alternateDate,
       },
     });
 
@@ -43,7 +49,7 @@ export async function POST(req: NextRequest) {
       toEmail: data.email,
       propertyTitle: property.title,
       propertyReference: property.reference,
-      preferredDate: new Date(data.preferredDate).toLocaleString(),
+      preferredDate: preferredDate.toLocaleString(),
     }).catch((err) => console.error("Email failed:", err));
 
     sendViewingAgentNotification({
@@ -55,7 +61,7 @@ export async function POST(req: NextRequest) {
       name: data.name,
       email: data.email,
       phone: data.phone,
-      preferredDate: new Date(data.preferredDate).toLocaleString(),
+      preferredDate: preferredDate.toLocaleString(),
       notes: data.notes,
     }).catch((err) => console.error("Agent notify email failed:", err));
 

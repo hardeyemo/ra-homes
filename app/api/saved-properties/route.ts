@@ -4,6 +4,7 @@ import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { isValidObjectId } from "@/lib/utils";
+import { PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
 
 const savedPropertySchema = z.object({ propertyId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid property ID") });
 
@@ -17,9 +18,15 @@ export async function GET(req: NextRequest) {
   if (!session?.user?.id) return unauthorized();
 
   const includeProperties = req.nextUrl.searchParams.get("include") === "properties";
+  // Saved records outlive a listing's public lifetime. Filter them here so a
+  // draft or archived listing cannot be exposed through a user's collection.
+  const where = {
+    userId: session.user.id,
+    property: { status: { in: [...PUBLIC_PROPERTY_STATUSES] } },
+  };
   if (includeProperties) {
     const savedProperties = await prisma.savedProperty.findMany({
-      where: { userId: session.user.id },
+      where,
       select: { propertyId: true, property: true },
       orderBy: { createdAt: "desc" },
     });
@@ -30,7 +37,7 @@ export async function GET(req: NextRequest) {
   }
 
   const savedProperties = await prisma.savedProperty.findMany({
-    where: { userId: session.user.id },
+    where,
     select: { propertyId: true },
     orderBy: { createdAt: "desc" },
   });
@@ -45,8 +52,10 @@ export async function POST(req: NextRequest) {
 
   try {
     const { propertyId } = savedPropertySchema.parse(await req.json());
-    const property = await prisma.property.findUnique({ where: { id: propertyId }, select: { id: true } });
-    if (!property) return NextResponse.json({ error: "Property not found" }, { status: 404 });
+    const property = await prisma.property.findUnique({ where: { id: propertyId }, select: { id: true, status: true } });
+    if (!property || !PUBLIC_PROPERTY_STATUSES.includes(property.status as (typeof PUBLIC_PROPERTY_STATUSES)[number])) {
+      return NextResponse.json({ error: "Property not found" }, { status: 404 });
+    }
 
     await prisma.savedProperty.upsert({
       where: { userId_propertyId: { userId: session.user.id, propertyId } },

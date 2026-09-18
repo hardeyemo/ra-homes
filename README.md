@@ -41,7 +41,7 @@ WhatsApp, a phone call, or a viewing request instead.
 - **Contact actions on every listing**: WhatsApp (pre-filled with the property name + location),
   Call, and Schedule a Viewing — plus a site-wide floating WhatsApp button
 - **List Your Property** (`/sell`): name, phone, email, location, type, sale/rent, asking price,
-  description, photo upload via Cloudinary, preferred contact method
+  description, photo and MP4/WebM walkthrough uploads via Cloudinary, preferred contact method
 - **Property Management** (`/property-management`): tenant coordination, rent collection,
   inspections, maintenance coordination, vacancy management, general oversight
 - **SEO location pages** (`/locations/ilorin`, `/gra`, `/tanke`, `/gra-extension`): statically
@@ -50,7 +50,7 @@ WhatsApp, a phone call, or a viewing request instead.
   write to MongoDB and appear in the dashboard; Resend sends an RA notification *and* a customer
   confirmation for each
 - **Admin/agent dashboard** (`/dashboard`): listings (with inline status + featured toggles,
-  Cloudinary photo upload), inquiries, viewing requests, general contact messages, property
+  Cloudinary photo/video upload), inquiries, viewing requests, general contact messages, property
   submissions (approve/reject, or "Create Listing" to pre-fill a new listing from one), agent
   management (admin-only), CSV import (admin-only)
 - **CSV import** (`/dashboard/import`, admin-only): downloadable template, client-side parsing,
@@ -100,22 +100,25 @@ Both are optional — the buttons on `/sell` show as disabled until configured, 
 Restart the dev server (or redeploy) after adding either — like the Cloudinary keys, these are only
 read at startup.
 
-## Image uploads (Cloudinary)
+## Media uploads (Cloudinary)
 
-Both the dashboard's listing form and the public "List Your Property" form upload straight from
-the browser to Cloudinary — no file passes through our server, and only the resulting URL is
-stored in MongoDB.
+Both the dashboard's listing form and the authenticated "List Your Property" form upload straight
+from the browser to Cloudinary — no file passes through our server, and only the resulting URLs are
+stored in MongoDB. Images keep their existing 10 MB limit. Videos support MP4 and WebM, with a
+100 MB per-video limit and a maximum of three videos per property.
 
 1. Create a free account at [cloudinary.com](https://cloudinary.com)
 2. Note your **Cloud Name** from the dashboard
 3. Go to **Settings → Upload** → scroll to **Upload presets** → **Add upload preset**
    - Set **Signing Mode** to **Unsigned**
-   - Optionally restrict allowed formats/max file size here
+   - Allow **images and videos**; restrict video formats to `mp4,webm` and set a 100 MB maximum
    - Save, and note the preset name
 4. Add both to `.env`:
    ```
    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="your-cloud-name"
    NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET="your-preset-name"
+   # Optional but recommended when the image preset does not permit videos
+   NEXT_PUBLIC_CLOUDINARY_VIDEO_UPLOAD_PRESET="your-video-preset-name"
    ```
 5. Restart `npm run dev`
 

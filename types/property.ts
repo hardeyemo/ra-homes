@@ -37,6 +37,7 @@ export interface Property {
   parkingSpaces?: number | null;
   amenities: string[];
   images: string[];
+  videos: string[];
   views: number;
   agentId: string;
   agent?: {

@@ -22,6 +22,10 @@ const submissionSchema = z.object({
   sqft: z.number().int().positive().optional(),
   notes: z.string().max(5000).optional(),
   images: z.array(z.string().url()).max(8).default([]),
+  videos: z.array(z.string().url().refine(
+    (url) => /^https:\/\/res\.cloudinary\.com\/[^/]+\/video\/upload\//.test(url) && /\.(mp4|webm)(?:$|[?#])/i.test(url),
+    "Videos must be MP4 or WebM files uploaded through Cloudinary"
+  )).max(3).default([]),
   preferredContact: z.enum(["PHONE", "WHATSAPP", "EMAIL"]).default("PHONE"),
 });
 

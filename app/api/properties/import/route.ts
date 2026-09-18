@@ -26,6 +26,17 @@ const importRowSchema = z.object({
   status: z.enum(["DRAFT", "ACTIVE", "PENDING", "SOLD", "RENTED", "ARCHIVED"]).default("DRAFT"),
 });
 
+// Property references can have gaps and reserved ranges, so do not derive
+// the next one from the total document count.
+async function nextPropertyReferenceSequence() {
+  const properties = await prisma.property.findMany({ select: { reference: true } });
+  return properties.reduce((highest, property) => {
+    const match = /^RA-(\d+)$/i.exec(property.reference);
+    const sequence = match ? Number(match[1]) : 0;
+    return Number.isSafeInteger(sequence) ? Math.max(highest, sequence) : highest;
+  }, 0) + 1;
+}
+
 // POST /api/properties/import — bulk create from validated CSV rows. Admin only.
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -58,7 +69,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Import is capped at 500 rows per batch" }, { status: 400 });
     }
 
-    let count = await prisma.property.count();
+    let count = await nextPropertyReferenceSequence() - 1;
     const created: string[] = [];
     const failed: { row: number; error: string }[] = [];
 

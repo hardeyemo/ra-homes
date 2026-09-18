@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Bed, Bath, Square, Calendar, Car, MapPin, Ruler, ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { PropertyGallery } from "@/components/property/PropertyGallery";
+import { PropertyVideos } from "@/components/property/PropertyVideos";
 import { PropertyContactActions } from "@/components/property/PropertyContactActions";
 import { InquiryForm } from "@/components/property/InquiryForm";
 import { ViewingRequestForm } from "@/components/property/ViewingRequestForm";
@@ -50,7 +51,7 @@ export default async function PropertyDetailPage({ params }: { params: { id: str
         <PropertyDetailActions propertyId={property.id} propertyTitle={property.title} />
       </div>
     </div>
-    <div className="container"><PropertyGallery images={property.images} title={property.title} /></div>
+    <div className="container"><PropertyGallery images={property.images} title={property.title} /><PropertyVideos videos={property.videos || []} title={property.title} /></div>
     <div className="container mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
       <main>
         <div className="flex flex-wrap gap-2"><Badge variant="outline">{property.listingType === "SALE" ? "For Sale" : "For Rent"}</Badge>{statusLabel && <Badge variant="clay">{statusLabel}</Badge>}{newListingLabel && <Badge variant="sage">{newListingLabel}</Badge>}</div>
@@ -63,7 +64,7 @@ export default async function PropertyDetailPage({ params }: { params: { id: str
         <section className="hairline mt-10 pt-8"><h2 className="font-display text-2xl">About this property</h2><p className="mt-3 max-w-3xl whitespace-pre-line leading-relaxed text-ink/70">{property.description}</p></section>
         <HomeHighlights amenities={property.amenities || []} />
       </main>
-      <aside className="space-y-5 lg:sticky lg:top-6"><div id="schedule-viewing"><ViewingRequestForm propertyId={property.id} /></div><InquiryForm propertyId={property.id} propertyTitle={property.title} /></aside>
+      <aside className="space-y-5 lg:sticky lg:top-6">{property.status === "ACTIVE" && <div id="schedule-viewing"><ViewingRequestForm propertyId={property.id} /></div>}<InquiryForm propertyId={property.id} propertyTitle={property.title} /></aside>
     </div>
   </div>;
 }

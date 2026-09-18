@@ -9,14 +9,30 @@ import { logActivity } from "@/lib/activityLog";
 import { PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
 import { textOnlyPattern } from "@/lib/inputValidation";
 
-const landSizePattern = /^\d[\d,]*(?:\.\d+)?\s*(?:sq\.?\s*ft\.?|sqft|plots?)$/i;
+const landSizePattern = /^\d[\d,]*(?:\.\d+)?\s*(?:sq\.?\s*(?:ft\.?|m(?:eters?)?\.?|metres?\.?)|sqft|sqm|plots?)$/i;
 const listingTypes = new Set(["SALE", "RENT"]);
 const propertyTypes = new Set(["HOUSE", "APARTMENT", "CONDO", "TOWNHOUSE", "LAND", "COMMERCIAL", "MULTI_FAMILY"]);
+const propertyVideoUrl = z.string().url().refine(
+  (url) => /^https:\/\/res\.cloudinary\.com\/[^/]+\/video\/upload\//.test(url) && /\.(mp4|webm)(?:$|[?#])/i.test(url),
+  "Videos must be MP4 or WebM files uploaded through Cloudinary"
+);
 
 function optionalNonNegativeNumber(value: string | null) {
   if (value === null || value === "") return undefined;
   const number = Number(value);
   return Number.isFinite(number) && number >= 0 ? number : null;
+}
+
+// References are not guaranteed to be contiguous (imports and the seed data
+// reserve higher ranges), so a record count can eventually reuse one. Start
+// after the largest existing RA reference instead.
+async function nextPropertyReferenceSequence() {
+  const properties = await prisma.property.findMany({ select: { reference: true } });
+  return properties.reduce((highest, property) => {
+    const match = /^RA-(\d+)$/i.exec(property.reference);
+    const sequence = match ? Number(match[1]) : 0;
+    return Number.isSafeInteger(sequence) ? Math.max(highest, sequence) : highest;
+  }, 0) + 1;
 }
 
 // GET /api/properties?search=&listingType=&propertyType=&city=&minPrice=&maxPrice=&minBedrooms=&status=
@@ -114,11 +130,12 @@ const createPropertySchema = z.object({
   bathrooms: z.number().min(0),
   sqft: z.number().int().min(0),
   lotSqft: z.number().int().optional(),
-  landSize: z.string().trim().max(50).regex(landSizePattern, "Land size must be like '2 Plots' or '5,000 SQFT'").optional(),
+  landSize: z.string().trim().max(50).regex(landSizePattern, "Land size must be like '2 Plots', '5,000 SQFT', or '800 sqm'").optional(),
   yearBuilt: z.number().int().optional(),
   parkingSpaces: z.number().int().optional(),
   amenities: z.array(z.string()).default([]),
   images: z.array(z.string()).min(1),
+  videos: z.array(propertyVideoUrl).max(3).default([]),
   agentId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid agent ID"),
   status: z.enum(["DRAFT", "ACTIVE", "PENDING", "SOLD", "RENTED", "ARCHIVED"]).default("DRAFT"),
 });
@@ -147,8 +164,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Listings must be assigned to an active agent or RA team member" }, { status: 400 });
     }
 
-    const count = await prisma.property.count();
-    const reference = toReference(count + 1);
+    const reference = toReference(await nextPropertyReferenceSequence());
     const slug = `${slugify(data.title)}-${reference.toLowerCase()}`;
 
     const property = await prisma.property.create({

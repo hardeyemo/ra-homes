@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
     await prisma.message.updateMany({
       where: {
         id: { in: ids },
+        NOT: { readBy: { has: session.user.id } },
         ...(isAdmin ? {} : { OR: [{ threadAgentId: session.user.id }, { isBroadcast: true }] }),
       },
       data: { readBy: { push: session.user.id } },

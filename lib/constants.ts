@@ -110,12 +110,14 @@ export const AMENITY_GROUPS = [
     items: [
       "Borehole / Water Supply",
       "Water Tank",
+      "100% Solar Power System",
       "Prepaid Meter",
       "Generator / Power Backup",
       "Fenced & Gated",
       "Perimeter Fencing",
       "Security Gate",
       "CCTV / Security",
+      "Automated Smart-Home System",
     ],
   },
   {
