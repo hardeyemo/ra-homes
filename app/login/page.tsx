@@ -102,7 +102,7 @@ function LoginForm() {
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-          setError(data.error || "Couldn't create your account.");
+          setError(data.error || "We couldn't sign you up. Please try again.");
           setStatus("error");
           return;
         }
@@ -212,7 +212,7 @@ function LoginForm() {
           </div>
 
           <h1 className="text-center font-display text-3xl leading-tight sm:text-4xl lg:text-left">
-            {mode === "signup" ? "Create your account" : "Welcome back"}
+            {mode === "signup" ? "Sign up" : "Welcome back"}
           </h1>
 
           <div className="relative mt-9 flex justify-center gap-7 border-b border-line lg:justify-start">
@@ -225,7 +225,7 @@ function LoginForm() {
                   mode === m ? "text-ink" : "text-ink/45 hover:text-ink/70"
                 }`}
               >
-                {m === "signin" ? "Sign In" : "Create Account"}
+                {m === "signin" ? "Sign In" : "Sign Up"}
                 {mode === m && (
                   <motion.span
                     layoutId="login-tab-indicator"
@@ -363,7 +363,7 @@ function LoginForm() {
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <span className="flex items-center gap-2">
-                  {mode === "signup" ? "Create Account" : "Sign In"}
+                  {mode === "signup" ? "Sign Up" : "Sign In"}
                   <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                 </span>
               )}
