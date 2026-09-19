@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { FloatingWhatsApp } from "@/components/layout/FloatingWhatsApp";
+import { SiteShell } from "@/components/layout/SiteShell";
 import { IntroAnimation } from "@/components/layout/IntroAnimation";
 import { NetworkNotifier } from "@/components/layout/NetworkNotifier";
 import { AdminActivityNotifier } from "@/components/dashboard/AdminActivityNotifier";
@@ -39,10 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               },
             }}
           />
-          <Navbar />
-          <main className="flex-grow pt-[76px] lg:pt-[108px]">{children}</main>
-          <Footer />
-          <FloatingWhatsApp />
+          <SiteShell>{children}</SiteShell>
         </Providers>
       </body>
     </html>

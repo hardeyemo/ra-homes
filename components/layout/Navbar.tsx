@@ -7,14 +7,13 @@ import {
   Menu,
   X,
   MessageCircle,
-  User,
+  CircleUserRound,
   Home,
   Key,
   Users,
   Tag,
   Info,
   LayoutDashboard,
-  LogOut,
   ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
@@ -160,13 +159,13 @@ export const Navbar = () => {
                 <Link
                   href="/profile"
                   aria-label="Your profile"
-                  className="text-ink/70 hover:text-clay transition-colors"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface text-ink/70 transition-all hover:border-gold hover:bg-parchment hover:text-gold-dark"
                 >
-                  <User className="w-5 h-5" />
+                  <CircleUserRound className="h-[19px] w-[19px]" />
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="text-xs font-mono uppercase tracking-widest text-ink/60 hover:text-clay transition-colors"
+                  className="rounded-md border border-clay/45 bg-clay/5 px-4 py-2 text-xs font-mono uppercase tracking-widest text-clay-dark transition-all hover:-translate-y-0.5 hover:border-clay-dark hover:bg-clay-dark hover:text-parchment hover:shadow-sm"
                 >
                   Sign Out
                 </button>
@@ -320,14 +319,13 @@ export const Navbar = () => {
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="flex flex-1 items-center justify-center gap-2 border border-ink px-3 py-2.5 text-xs font-mono uppercase tracking-widest text-ink hover:bg-ink hover:text-parchment transition-colors"
                       >
-                        <User className="w-3.5 h-3.5" /> Profile
+                          <CircleUserRound className="h-4 w-4" /> Profile
                       </Link>
                       <button
                         onClick={handleSignOut}
-                        aria-label="Sign out"
-                        className="flex h-[42px] w-[42px] shrink-0 items-center justify-center border border-line text-ink/50 hover:border-clay-dark hover:text-clay-dark transition-colors"
+                        className="flex h-[42px] shrink-0 items-center justify-center rounded-md border border-clay/45 bg-clay/5 px-3 text-xs font-mono uppercase tracking-widest text-clay-dark transition-all hover:border-clay-dark hover:bg-clay-dark hover:text-parchment"
                       >
-                        <LogOut className="w-4 h-4" />
+                        Sign Out
                       </button>
                     </div>
                   </>

@@ -5,7 +5,7 @@ import { Suspense, useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Lock, User, Eye, EyeOff, Loader2, ArrowRight } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, Loader2, ArrowRight, Building2, MapPinned } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -135,9 +135,11 @@ function LoginForm() {
   };
 
   return (
-    <div className="grid lg:grid-cols-2 lg:min-h-[calc(100vh-5rem)]">
+    <div className="relative isolate overflow-hidden bg-parchment">
+      <div className="pointer-events-none absolute inset-0 opacity-40 [background-image:radial-gradient(hsl(var(--ink)/0.08)_1px,transparent_1px)] [background-size:20px_20px]" />
+      <div className="relative grid min-h-[calc(100vh-4.75rem)] lg:min-h-[calc(100vh-6.75rem)] lg:grid-cols-[1.08fr_0.92fr]">
       {/* Brand / ledger panel — desktop only */}
-      <div className="hidden lg:flex relative flex-col justify-between bg-ink text-parchment px-14 py-16 overflow-hidden">
+      <div className="hidden lg:flex relative flex-col justify-between overflow-hidden bg-ink px-14 py-16 text-parchment xl:px-20">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.06]"
           style={{
@@ -146,6 +148,9 @@ function LoginForm() {
             backgroundSize: "22px 22px",
           }}
         />
+        <div className="pointer-events-none absolute -right-28 -top-28 h-[34rem] w-[34rem] rounded-full border border-gold/20" />
+        <div className="pointer-events-none absolute -right-8 -top-8 h-[24rem] w-[24rem] rounded-full border border-gold/15" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(145deg,transparent_15%,hsl(var(--gold)/0.12)_100%)]" />
 
         <div className="absolute inset-x-14 top-1/2 -translate-y-1/2">
           <motion.div
@@ -156,16 +161,14 @@ function LoginForm() {
           >
             <Logo variant="light" />
 
-            <p className="mt-16 font-mono text-xs uppercase tracking-widest text-gold">
-              Est. record, Ilorin
-            </p>
-            <h2 className="mt-4 font-display text-4xl xl:text-5xl leading-[1.1]">
-              Every address,
-              <br />
-              accounted for.
+            <div className="mt-14 inline-flex items-center gap-2 rounded-full border border-gold/35 bg-gold/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold-light">
+              <MapPinned className="h-3.5 w-3.5" /> Ilorin property, considered
+            </div>
+            <h2 className="mt-5 max-w-xl font-display text-5xl leading-[0.98] tracking-[-0.035em] xl:text-6xl">
+              A better way to keep your next move in view.
             </h2>
-            <p className="mt-5 text-parchment/60 max-w-sm leading-relaxed">
-              One account keeps your saved homes, inquiries, and, for agents, your complete listing records all in one place.
+            <p className="mt-6 max-w-md text-base leading-7 text-parchment/65">
+              Save the homes that feel right, make enquiries with confidence, and keep every property conversation in one considered place.
             </p>
           </motion.div>
         </div>
@@ -189,35 +192,30 @@ function LoginForm() {
             ))}
           </div>
 
-          <p className="mt-10 font-mono text-[11px] uppercase tracking-widest text-parchment/40">
+          <div className="mt-10 flex items-center gap-2 text-xs text-parchment/60"><Building2 className="h-4 w-4 text-gold" /> Established local expertise</div>
+          <p className="mt-5 font-mono text-[11px] uppercase tracking-widest text-parchment/40">
             {AGENCY_OFFICE.line1} · {AGENCY_OFFICE.city}, {AGENCY_OFFICE.state}
           </p>
         </motion.div>
       </div>
 
       {/* Form panel */}
-      <div className="flex items-center justify-center px-6 py-16 lg:py-24">
+      <div className="flex w-full items-center justify-center px-5 py-10 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="w-full max-w-sm"
+          transition={{ duration: 0.55, ease: "easeOut" }}
+          className="w-full max-w-[27rem] rounded-2xl border border-line/80 bg-surface/95 p-7 shadow-[0_24px_65px_hsl(var(--ink)/0.09)] backdrop-blur sm:p-10"
         >
-          <div className="lg:hidden mb-10">
+          <div className="mb-10 flex justify-center lg:hidden">
             <Logo />
           </div>
 
-          <p className="font-mono text-xs uppercase tracking-widest text-clay">Account</p>
-          <h1 className="mt-2 font-display text-3xl sm:text-4xl">
+          <h1 className="text-center font-display text-3xl leading-tight sm:text-4xl lg:text-left">
             {mode === "signup" ? "Create your account" : "Welcome back"}
           </h1>
-          <p className="mt-3 text-sm text-ink/60 leading-relaxed">
-            {mode === "signup"
-              ? "Browse and save listings, submit a property, or request agent access afterward."
-              : "Sign in to pick up where you left off."}
-          </p>
 
-          <div className="relative mt-8 flex gap-6 border-b border-line">
+          <div className="relative mt-9 flex justify-center gap-7 border-b border-line lg:justify-start">
             {(["signin", "signup"] as const).map((m) => (
               <button
                 key={m}
@@ -396,7 +394,7 @@ function LoginForm() {
                 disabled={!googleReady || status === "loading"}
                 title={googleReady ? undefined : "Google sign-in isn't configured yet"}
                 onClick={() => googleReady && void startOAuth("google")}
-                className="flex h-11 items-center justify-center gap-2 border border-line text-sm font-medium hover:border-ink hover:bg-surface transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-line disabled:hover:bg-transparent"
+              className="flex h-11 items-center justify-center gap-2 rounded-lg border border-line bg-parchment/60 text-sm font-medium transition-all hover:-translate-y-0.5 hover:border-ink hover:bg-surface hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:border-line disabled:hover:bg-transparent"
               >
                 <svg viewBox="0 0 18 18" className="h-4 w-4" aria-hidden>
                   <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.9c1.7-1.57 2.7-3.88 2.7-6.62z" />
@@ -411,7 +409,7 @@ function LoginForm() {
                 disabled={!facebookReady || status === "loading"}
                 title={facebookReady ? undefined : "Facebook sign-in isn't configured yet"}
                 onClick={() => facebookReady && void startOAuth("facebook")}
-                className="flex h-11 items-center justify-center gap-2 border border-line text-sm font-medium hover:border-ink hover:bg-surface transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-line disabled:hover:bg-transparent"
+              className="flex h-11 items-center justify-center gap-2 rounded-lg border border-line bg-parchment/60 text-sm font-medium transition-all hover:-translate-y-0.5 hover:border-ink hover:bg-surface hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:border-line disabled:hover:bg-transparent"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="#1877F2" aria-hidden>
                   <path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.09 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.96h-1.51c-1.49 0-1.95.93-1.95 1.89v2.26h3.32l-.53 3.49h-2.79V24C19.61 23.09 24 18.1 24 12.07z" />
@@ -422,6 +420,7 @@ function LoginForm() {
           </div>
         </motion.div>
       </div>
+    </div>
     </div>
   );
 }

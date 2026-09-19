@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import gsap from "gsap";
 import { ArrowRight, MapPin, MessageCircle, Search, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -18,11 +17,19 @@ export const Hero = () => {
     const image = imageRef.current;
     if (!image || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    let frameId: number | null = null;
     const handleScroll = () => {
-      gsap.to(image, { y: Math.min(window.scrollY * 0.12, 48), duration: 0.4, ease: "power1.out", overwrite: "auto" });
+      if (frameId !== null) return;
+      frameId = window.requestAnimationFrame(() => {
+        image.style.transform = `translate3d(0, ${Math.min(window.scrollY * 0.12, 48)}px, 0)`;
+        frameId = null;
+      });
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (frameId !== null) window.cancelAnimationFrame(frameId);
+    };
   }, []);
 
   const handleSearch = (event: React.FormEvent) => {
@@ -42,8 +49,9 @@ export const Hero = () => {
             alt="A welcoming home exterior"
             fill
             priority
+            quality={75}
             sizes="100vw"
-            className="h-[110%] w-full object-cover"
+            className="h-[110%] w-full object-cover [will-change:transform]"
           />
           <div className="absolute inset-0 bg-ink/45" />
         </div>

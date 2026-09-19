@@ -51,6 +51,7 @@ export const PropertyCard = ({ property }: { property: Property }) => {
           src={property.images[0]}
           alt={property.title}
           fill
+          quality={75}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
