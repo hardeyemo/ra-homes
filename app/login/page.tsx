@@ -17,7 +17,7 @@ import { PASSWORD_REQUIREMENTS } from "@/lib/passwordValidation";
 const LEDGER: { no: string; label: string; value: string }[] = [
   { no: "01", label: "Neighborhoods on record", value: `${SERVICE_AREAS.length} across Ilorin` },
   { no: "02", label: "Ways to reach an agent", value: "WhatsApp · Call · Viewing" },
-  { no: "03", label: "Listing types tracked", value: "Sale & Rent" },
+  { no: "03", label: "Listing types tracked", value: "Manage Sale & Rent" },
 ];
 
 // One route for everyone — sign in or create an account. Where you land
@@ -147,26 +147,28 @@ function LoginForm() {
           }}
         />
 
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="relative"
-        >
-          <Logo variant="light" />
+        <div className="absolute inset-x-14 top-1/2 -translate-y-1/2">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="relative"
+          >
+            <Logo variant="light" />
 
-          <p className="mt-16 font-mono text-xs uppercase tracking-widest text-gold">
-            Est. record, Ilorin
-          </p>
-          <h2 className="mt-4 font-display text-4xl xl:text-5xl leading-[1.1]">
-            Every address,
-            <br />
-            accounted for.
-          </h2>
-          <p className="mt-5 text-parchment/60 max-w-sm leading-relaxed">
-            One account keeps your saved homes, inquiries, and, for agents, your complete listing records all in one place.
-          </p>
-        </motion.div>
+            <p className="mt-16 font-mono text-xs uppercase tracking-widest text-gold">
+              Est. record, Ilorin
+            </p>
+            <h2 className="mt-4 font-display text-4xl xl:text-5xl leading-[1.1]">
+              Every address,
+              <br />
+              accounted for.
+            </h2>
+            <p className="mt-5 text-parchment/60 max-w-sm leading-relaxed">
+              One account keeps your saved homes, inquiries, and, for agents, your complete listing records all in one place.
+            </p>
+          </motion.div>
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 12 }}
