@@ -7,6 +7,12 @@ export const AGENCY_PHONE_LOCAL = "08118495138";
 export const AGENCY_PHONE_INTL = "2348118495138";
 export const AGENCY_EMAIL = "rahomesproperties@gmail.com";
 
+export const SOCIAL_LINKS = {
+  instagram: "https://www.instagram.com/rahomesproperties/",
+  facebook: "https://web.facebook.com/profile.php?id=61593989083468",
+  x: "https://x.com/RAPropertiesNG",
+} as const;
+
 export const AGENCY_OFFICE = {
   line1: "Space 12, City Plaza",
   line2: "Beside Kosemani Hospital, Emirs Road",
@@ -41,7 +47,7 @@ export const LISTING_TYPES = [
 
 // Only these listing states may be exposed through public pages and forms.
 // Draft and archived records remain available to the dashboard only.
-export const PUBLIC_PROPERTY_STATUSES = ["ACTIVE", "PENDING", "SOLD", "RENTED"] as const;
+export const PUBLIC_PROPERTY_STATUSES = ["ACTIVE", "PENDING"] as const;
 
 export const PREFERRED_CONTACT_METHODS = [
   { value: "PHONE", label: "Phone Call" },

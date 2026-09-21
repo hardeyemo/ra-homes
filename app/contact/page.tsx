@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { MapPin, Phone, Mail, MessageCircle } from "lucide-react";
 import { AGENCY_PHONE_LOCAL, AGENCY_PHONE_INTL, AGENCY_EMAIL, AGENCY_OFFICE, whatsappLink } from "@/lib/constants";
+import { SocialLinks } from "@/components/shared/SocialLinks";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -62,6 +63,7 @@ export default function ContactPage() {
           <a href={`mailto:${AGENCY_EMAIL}`} className="flex items-center gap-3 hover:text-clay">
             <Mail className="w-4 h-4 text-clay shrink-0" /> {AGENCY_EMAIL}
           </a>
+          <div className="pt-2"><SocialLinks /></div>
         </div>
       </div>
 

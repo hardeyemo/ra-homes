@@ -17,7 +17,7 @@ interface RowValidation {
 const REQUIRED = ["title", "listingType", "propertyType", "price", "address", "city", "images"];
 const ENUM_LISTING = ["SALE", "RENT"];
 const ENUM_PROPERTY = ["HOUSE", "APARTMENT", "CONDO", "TOWNHOUSE", "LAND", "COMMERCIAL", "MULTI_FAMILY"];
-const ENUM_STATUS = ["DRAFT", "ACTIVE", "PENDING", "SOLD", "RENTED", "ARCHIVED"];
+const ENUM_STATUS = ["PENDING", "ACTIVE"];
 
 function validateRow(row: Row): string[] {
   const errors: string[] = [];
@@ -101,7 +101,7 @@ export default function ImportPage() {
       <h1 className="mt-2 font-display text-4xl">Import Listings</h1>
       <p className="mt-3 text-ink/60 max-w-2xl">
         Upload a CSV of properties useful for RA's weekly batch of new listings. Preview and fix any
-        validation errors before importing. New listings are created as <strong>Draft</strong> so you can
+        validation errors before importing. New listings are created as <strong>Pending</strong> so you can
         review them before publishing. RA only.
       </p>
 

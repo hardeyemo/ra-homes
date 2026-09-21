@@ -37,7 +37,7 @@ const updatePropertySchema = z.object({
   amenities: z.array(z.string()).optional(),
   images: z.array(z.string()).min(1).optional(),
   videos: z.array(propertyVideoUrl).max(3).optional(),
-  status: z.enum(["DRAFT", "ACTIVE", "PENDING", "SOLD", "RENTED", "ARCHIVED"]).optional(),
+  status: z.enum(["ACTIVE", "PENDING"]).optional(),
   agentId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid agent ID").optional(),
 });
 

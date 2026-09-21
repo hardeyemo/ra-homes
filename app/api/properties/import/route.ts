@@ -23,7 +23,7 @@ const importRowSchema = z.object({
   parkingSpaces: z.coerce.number().int().optional(),
   amenities: z.string().optional().default(""), // pipe-separated in the CSV
   images: z.string().min(1), // pipe-separated URLs in the CSV
-  status: z.enum(["DRAFT", "ACTIVE", "PENDING", "SOLD", "RENTED", "ARCHIVED"]).default("DRAFT"),
+  status: z.enum(["ACTIVE", "PENDING"]).default("PENDING"),
 });
 
 // Property references can have gaps and reserved ranges, so do not derive

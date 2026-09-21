@@ -26,7 +26,7 @@ export const PropertyForm = ({ agentId, initialData, propertyId }: Props) => {
     description: initialData?.description || "",
     listingType: initialData?.listingType || "SALE",
     propertyType: initialData?.propertyType || "HOUSE",
-    status: initialData?.status || "DRAFT",
+    status: initialData?.status === "ACTIVE" ? "ACTIVE" : "PENDING",
     price: initialData?.price?.toString() || "",
     address: initialData?.address || "",
     city: initialData?.city || "",
@@ -129,7 +129,8 @@ export const PropertyForm = ({ agentId, initialData, propertyId }: Props) => {
         <div>
           <Label htmlFor="status">Status</Label>
           <select id="status" className="mt-1.5 w-full h-11 border border-line bg-surface px-3 text-sm" value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as any })}>
-            {["DRAFT", "ACTIVE", "PENDING", "SOLD", "RENTED", "ARCHIVED"].map((s) => <option key={s} value={s}>{s}</option>)}
+            <option value="PENDING">Pending</option>
+            <option value="ACTIVE">Active</option>
           </select>
         </div>
       </div>

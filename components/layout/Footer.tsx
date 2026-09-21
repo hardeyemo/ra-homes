@@ -7,6 +7,7 @@ import {
   AGENCY_OFFICE,
   whatsappLink,
 } from "@/lib/constants";
+import { SocialLinks } from "@/components/shared/SocialLinks";
 
 export const Footer = () => (
   <footer className="mt-8 bg-ink text-parchment md:mt-12">
@@ -33,6 +34,10 @@ export const Footer = () => (
           <li className="hidden sm:list-item"><Link href="/sell" className="hover:text-parchment">List Your Property</Link></li>
           <li className="hidden sm:list-item"><Link href="/property-management" className="hover:text-parchment">Property Management</Link></li>
         </ul>
+        <div className="mt-4">
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-parchment/45">Follow RA Homes</p>
+          <SocialLinks dark />
+        </div>
       </div>
 
       <div>

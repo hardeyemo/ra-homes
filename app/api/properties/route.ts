@@ -137,7 +137,7 @@ const createPropertySchema = z.object({
   images: z.array(z.string()).min(1),
   videos: z.array(propertyVideoUrl).max(3).default([]),
   agentId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid agent ID"),
-  status: z.enum(["DRAFT", "ACTIVE", "PENDING", "SOLD", "RENTED", "ARCHIVED"]).default("DRAFT"),
+  status: z.enum(["ACTIVE", "PENDING"]).default("PENDING"),
 });
 
 // POST /api/properties — agent creates a new listing

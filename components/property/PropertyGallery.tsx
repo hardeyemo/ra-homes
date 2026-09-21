@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Images, Play, X } from "lucide-react";
 
-type Props = { images: string[]; title: string };
+type Props = { images: string[]; title: string; instagramVideoUrl?: string; instagramVideoThumbnailUrl?: string };
 
-export const PropertyGallery = ({ images, title }: Props) => {
+export const PropertyGallery = ({ images, title, instagramVideoUrl, instagramVideoThumbnailUrl }: Props) => {
   const [active, setActive] = useState<number | null>(null);
   const visibleImages = images.slice(0, 5);
 
@@ -36,15 +36,26 @@ export const PropertyGallery = ({ images, title }: Props) => {
             {visibleImages.slice(1).map((image, offset) => {
               const index = offset + 1;
               const isLast = index === visibleImages.length - 1;
-              return <button key={`${image}-${index}`} onClick={() => open(index)} className="relative overflow-hidden" aria-label={`Open photo ${index + 1}`}>
-                <Image src={image} alt={`${title}, photo ${index + 1}`} fill sizes="30vw" className="object-cover transition duration-500 hover:scale-[1.04]" />
-                {isLast && images.length > visibleImages.length && <span className="absolute inset-0 grid place-items-center bg-ink/55 text-sm font-semibold text-parchment"><Images className="mr-2 h-5 w-5" /> View all {images.length} photos</span>}
-              </button>;
+              const isInstagramThumbnail = image === instagramVideoThumbnailUrl && Boolean(instagramVideoUrl);
+              return <div key={`${image}-${index}`} className="relative overflow-hidden">
+                <button onClick={() => open(index)} className="absolute inset-0 h-full w-full" aria-label={`Open photo ${index + 1}`}>
+                  <Image src={image} alt={isInstagramThumbnail ? `${title} video preview` : `${title}, photo ${index + 1}`} fill sizes="30vw" className="object-cover transition duration-500 hover:scale-[1.04]" />
+                </button>
+                {isInstagramThumbnail && <a href={instagramVideoUrl} target="_blank" rel="noopener noreferrer" aria-label={`Watch ${title} video on Instagram`} className="group absolute inset-0 z-10 grid place-items-center bg-ink/10 transition-colors hover:bg-ink/25"><span className="grid h-14 w-14 place-items-center rounded-full bg-white text-ink shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition-transform duration-300 group-hover:scale-110"><Play className="ml-0.5 h-6 w-6 fill-current" aria-hidden /></span><span className="sr-only">Watch on Instagram</span></a>}
+                {!isInstagramThumbnail && isLast && images.length > visibleImages.length && <span className="absolute inset-0 grid place-items-center bg-ink/55 text-sm font-semibold text-parchment"><Images className="mr-2 h-5 w-5" /> View all {images.length} photos</span>}
+              </div>;
             })}
           </div>}
         </div>
         <button onClick={() => open(0)} className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-lg bg-surface/95 px-3 py-2 text-sm font-semibold text-ink shadow-lg backdrop-blur sm:hidden"><Images className="h-4 w-4" /> {images.length} photos</button>
       </section>
+
+      {instagramVideoUrl && instagramVideoThumbnailUrl && (
+        <a href={instagramVideoUrl} target="_blank" rel="noopener noreferrer" aria-label={`Watch ${title} video on Instagram`} className="group relative mt-3 flex aspect-video overflow-hidden rounded-2xl sm:hidden">
+          <Image src={instagramVideoThumbnailUrl} alt={`${title} video preview`} fill sizes="100vw" className="object-cover" />
+          <span className="absolute inset-0 grid place-items-center bg-ink/15 transition-colors group-hover:bg-ink/25"><span className="grid h-16 w-16 place-items-center rounded-full bg-white text-ink shadow-[0_12px_30px_rgba(0,0,0,0.28)] transition-transform group-hover:scale-110"><Play className="ml-1 h-7 w-7 fill-current" aria-hidden /></span></span>
+        </a>
+      )}
 
       {active !== null && <div role="dialog" aria-modal="true" aria-label={`${title} photo viewer`} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4 sm:p-8">
         <button type="button" onClick={close} className="absolute inset-0 cursor-default" aria-label="Close photo viewer" />

@@ -50,7 +50,7 @@ export default async function NewPropertyPage({
         images: submission.images,
         videos: submission.videos,
         amenities: [],
-        status: "DRAFT",
+        status: "PENDING",
       };
     } else {
       notFound();

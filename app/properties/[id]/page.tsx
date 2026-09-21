@@ -32,6 +32,11 @@ export default async function PropertyDetailPage({ params }: { params: { id: str
   const newListingLabel = formatNewListingLabel(property.createdAt);
   const isLand = property.propertyType === "LAND";
   const landSize = property.landSize || (property.lotSqft ? `${formatNumber(property.lotSqft)} sqft` : null);
+  const instagramVideoUrl = property.videos?.find((video: string) => /^https?:\/\/(?:www\.)?instagram\.com\//i.test(video));
+  // RA-110's most recently uploaded gallery image is its Instagram reel
+  // thumbnail. Keeping this tied to the last item avoids covering its other
+  // property photos with a video control.
+  const instagramVideoThumbnailUrl = property.reference === "RA-110" ? property.images.at(-1) : undefined;
   const stats = isLand ? [
     { icon: MapPin, label: "Location", value: location },
     ...(landSize ? [{ icon: Ruler, label: "Land size", value: landSize }] : []),
@@ -51,7 +56,7 @@ export default async function PropertyDetailPage({ params }: { params: { id: str
         <PropertyDetailActions propertyId={property.id} propertyTitle={property.title} />
       </div>
     </div>
-    <div className="container"><PropertyGallery images={property.images} title={property.title} /><PropertyVideos videos={property.videos || []} title={property.title} /></div>
+    <div className="container"><PropertyGallery images={property.images} title={property.title} instagramVideoUrl={instagramVideoUrl} instagramVideoThumbnailUrl={instagramVideoThumbnailUrl} /><PropertyVideos videos={property.videos || []} title={property.title} /></div>
     <div className="container mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
       <main>
         <div className="flex flex-wrap gap-2"><Badge variant="outline">{property.listingType === "SALE" ? "For Sale" : "For Rent"}</Badge>{statusLabel && <Badge variant="clay">{statusLabel}</Badge>}{newListingLabel && <Badge variant="sage">{newListingLabel}</Badge>}</div>
