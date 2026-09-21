@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 
 // useLayoutEffect only exists meaningfully in the browser; falling back to
 // useEffect on the server avoids Next.js's SSR warning while still running
@@ -86,12 +87,12 @@ export const IntroAnimation = () => {
               transition={{ duration: SPIN_SECONDS, ease: [0.22, 0.8, 0.25, 1] }}
             />
             <motion.div
-              className="relative flex h-20 w-20 items-center justify-center rounded-full border border-gold bg-parchment text-ink shadow-[0_0_0_8px_hsl(var(--ink)),0_0_0_9px_hsl(var(--gold)/0.3)] sm:h-24 sm:w-24"
+              className="relative h-20 w-20 overflow-hidden rounded-full border border-gold bg-ink shadow-[0_0_0_8px_hsl(var(--ink)),0_0_0_9px_hsl(var(--gold)/0.3)] sm:h-24 sm:w-24"
               initial={{ rotate: -45, scale: 0.72 }}
               animate={{ rotate: 360, scale: 1 }}
               transition={{ duration: SPIN_SECONDS, ease: [0.22, 0.8, 0.25, 1] }}
             >
-              <span className="font-display text-3xl leading-none tracking-[-0.12em] sm:text-4xl">RA</span>
+              <Image src="/images/brand/ra-homes-logo.jpg" alt="RA Homes & Properties" fill sizes="96px" className="object-cover" priority />
             </motion.div>
           </motion.div>
         </motion.div>

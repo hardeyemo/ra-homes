@@ -8,12 +8,13 @@ import {
   whatsappLink,
 } from "@/lib/constants";
 import { SocialLinks } from "@/components/shared/SocialLinks";
+import { Logo } from "@/components/layout/Logo";
 
 export const Footer = () => (
   <footer className="mt-8 bg-ink text-parchment md:mt-12">
     <div className="container grid grid-cols-1 gap-5 py-5 md:grid-cols-[1.4fr_1fr_auto] md:items-start md:gap-6 md:py-6">
       <div>
-        <span className="font-display text-xl">RA Homes</span>
+        <Logo variant="light" />
         <p className="mt-1.5 hidden max-w-md text-sm text-parchment/60 sm:block">
           Every address, accounted for. A boutique brokerage for buyers, renters,
           and sellers who want the full record.
