@@ -31,7 +31,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="container py-16 grid grid-cols-1 md:grid-cols-2 gap-16">
+    <div className="container grid grid-cols-1 gap-10 py-12 md:grid-cols-2 md:gap-12 md:py-16">
       <div>
         <p className="font-mono text-xs uppercase tracking-widest text-clay">Contact</p>
         <h1 className="mt-2 font-display text-4xl">Talk to the office</h1>

@@ -1,6 +1,6 @@
 "use client";
 
-import { PROPERTY_TYPES, LISTING_TYPES, SERVICE_AREAS } from "@/lib/constants";
+import { KWARA_CITIES, PROPERTY_TYPES, LISTING_TYPES } from "@/lib/constants";
 import { Label } from "@/components/ui/label";
 import type { PropertyFilters as Filters } from "@/types/property";
 
@@ -56,17 +56,10 @@ export const PropertyFilters = ({ filters, onChange, onReset, resultCount }: Pro
 
       <div>
         <Label>Location</Label>
-        <select
-          value={filters.neighborhood || ""}
-          onChange={(e) => onChange({ ...filters, neighborhood: e.target.value || undefined })}
-          className="mt-3 h-10 w-full rounded-lg border border-line bg-surface px-3 text-sm focus:border-gold focus:outline-none"
-        >
-          <option value="">All areas in Ilorin</option>
-          {SERVICE_AREAS.filter((a) => a.slug !== "ilorin").map((area) => (
-            <option key={area.slug} value={area.name}>{area.name}</option>
-          ))}
-          <option value="Other">Other</option>
-        </select>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <label className="block"><span className="sr-only">State</span><input value="Kwara State" readOnly aria-label="State" className="h-10 w-full cursor-default rounded-lg border border-line bg-parchment/50 px-3 text-sm text-ink/65 outline-none" /></label>
+          <label className="block"><span className="sr-only">City or town</span><select value={filters.city || ""} onChange={(e) => onChange({ ...filters, city: e.target.value || undefined })} aria-label="City or town" className="h-10 w-full rounded-lg border border-line bg-surface px-3 text-sm focus:border-gold focus:outline-none"><option value="">All cities &amp; towns</option>{KWARA_CITIES.map((city) => <option key={city} value={city}>{city}</option>)}</select></label>
+        </div>
       </div>
 
       <div>

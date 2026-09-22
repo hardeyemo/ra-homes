@@ -70,21 +70,21 @@ export const PropertyCard = ({ property }: { property: Property }) => {
 
       </div>
 
-      <div className="p-5 sm:p-6">
-        <p className="text-xl font-bold tracking-tight text-ink sm:text-2xl">
+      <div className="p-3.5 sm:p-4">
+        <p className="text-lg font-bold tracking-tight text-ink sm:text-xl">
           {formatPrice(property.price, property.priceLabel ? undefined : property.listingType)}
           {property.priceLabel && <span className="ml-1 text-sm font-medium text-ink/55">{property.priceLabel}</span>}
         </p>
-        <h3 className="mt-3 font-display text-xl leading-snug text-ink transition-colors group-hover:text-clay">
+        <h3 className="mt-1.5 font-display text-lg leading-snug text-ink transition-colors group-hover:text-clay sm:text-xl">
           {property.title}
         </h3>
-        <p className="mt-1.5 flex items-start gap-1.5 text-sm leading-relaxed text-ink/60">
+        <p className="mt-1 flex items-start gap-1.5 text-[13px] leading-relaxed text-ink/60 sm:text-sm">
           <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-clay" />
           <span>{location}</span>
         </p>
 
         {(isLand ? landSize : property.bedrooms > 0 || property.bathrooms > 0 || property.sqft > 0) && (
-          <div className="hairline mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 pt-4 text-sm font-semibold text-ink/75">
+          <div className="hairline mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 pt-2.5 text-[13px] font-semibold text-ink/75 sm:text-sm">
             {isLand ? (
               landSize && <span className="flex items-center gap-1.5"><Square className="h-4 w-4 text-clay" />{landSize}</span>
             ) : <>
@@ -94,7 +94,7 @@ export const PropertyCard = ({ property }: { property: Property }) => {
             </>}
           </div>
         )}
-        <div className="mt-5 flex h-11 w-full items-center justify-between rounded-lg bg-ink px-4 text-sm font-semibold text-parchment shadow-sm transition-all duration-300 group-hover:-translate-y-0.5 group-hover:bg-clay group-hover:shadow-lg group-hover:shadow-clay/20">
+        <div className="mt-3 flex h-9 w-full items-center justify-between rounded-lg bg-ink px-3.5 text-sm font-semibold text-parchment shadow-sm transition-all duration-300 group-hover:-translate-y-0.5 group-hover:bg-clay group-hover:shadow-lg group-hover:shadow-clay/20">
           <span>View details</span>
           <span className="text-lg font-normal leading-none transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&gt;</span>
         </div>

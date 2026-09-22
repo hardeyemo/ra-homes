@@ -1,7 +1,7 @@
 export default function AboutPage() {
   return (
     <div>
-      <section className="border-b border-gold/25 bg-ink py-16 text-parchment md:py-24">
+      <section className="border-b border-gold/25 bg-ink py-12 text-parchment md:py-16">
         <div className="container">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-gold">About RA Homes &amp; Properties</p>
           <div className="mt-7 max-w-4xl">
@@ -16,7 +16,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="container py-16 md:py-24">
+      <section className="container py-12 md:py-16">
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-4">
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-clay">Who we are</p>
@@ -31,7 +31,7 @@ export default function AboutPage() {
       </section>
 
       <section className="border-y border-line bg-surface">
-        <div className="container py-16 md:py-24">
+        <div className="container py-12 md:py-16">
           <div className="grid gap-10 md:grid-cols-2 md:gap-16">
             <div>
               <p className="font-mono text-xs uppercase tracking-[0.18em] text-clay">Our approach</p>
@@ -49,7 +49,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="container py-16 md:py-24">
+      <section className="container py-12 md:py-16">
         <div className="max-w-3xl">
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-clay">Our vision</p>
           <h2 className="mt-3 font-display text-3xl leading-tight md:text-5xl">A trusted name in Nigerian real estate.</h2>
@@ -59,7 +59,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-t border-line bg-ink py-16 text-parchment md:py-24">
+      <section className="border-t border-line bg-ink py-12 text-parchment md:py-16">
         <div className="container">
           <div className="max-w-3xl">
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-gold">Why RA Homes and Properties</p>

@@ -39,7 +39,7 @@ function TermsSection({ id, number, title, children }: { id: string; number: str
 export default function TermsAndConditionsPage() {
   return (
     <div>
-      <section className="border-b border-gold/25 bg-ink py-16 text-parchment md:py-24">
+      <section className="border-b border-gold/25 bg-ink py-12 text-parchment md:py-16">
         <div className="container">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-gold">RA Homes &amp; Properties</p>
           <div className="mt-6 max-w-4xl">
@@ -54,8 +54,8 @@ export default function TermsAndConditionsPage() {
         </div>
       </section>
 
-      <div className="container py-12 md:py-20">
-        <div className="grid gap-12 lg:grid-cols-[15rem_minmax(0,46rem)] lg:gap-16">
+      <div className="container py-10 md:py-16">
+        <div className="grid gap-8 lg:grid-cols-[15rem_minmax(0,46rem)] lg:gap-12">
           <aside className="lg:sticky lg:top-32 lg:h-fit">
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-clay">On this page</p>
             <nav aria-label="Terms and conditions sections" className="mt-4 border-l border-line">

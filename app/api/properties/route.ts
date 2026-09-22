@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { slugify, toReference } from "@/lib/utils";
 import { logActivity } from "@/lib/activityLog";
-import { PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
+import { KWARA_CITIES, PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
 import { textOnlyPattern } from "@/lib/inputValidation";
 
 const landSizePattern = /^\d[\d,]*(?:\.\d+)?\s*(?:sq\.?\s*(?:ft\.?|m(?:eters?)?\.?|metres?\.?)|sqft|sqm|plots?)$/i;
@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
   const minBedrooms = optionalNonNegativeNumber(params.get("minBedrooms"));
   const minBathrooms = optionalNonNegativeNumber(params.get("minBathrooms"));
   const neighborhood = params.get("neighborhood")?.trim().slice(0, 80) || undefined;
-  if ((listingType && !listingTypes.has(listingType)) || requestedPropertyTypes.some((type) => !propertyTypes.has(type)) || [minPrice, maxPrice, minBedrooms, minBathrooms].some((value) => value === null)) {
+  if ((listingType && !listingTypes.has(listingType)) || requestedPropertyTypes.some((type) => !propertyTypes.has(type)) || (city && !KWARA_CITIES.some((kwaraCity) => kwaraCity.toLowerCase() === city.toLowerCase())) || [minPrice, maxPrice, minBedrooms, minBathrooms].some((value) => value === null)) {
     return NextResponse.json({ error: "Invalid property filters" }, { status: 400 });
   }
   const requestedStatus = params.get("status");
@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
       ? { price: "desc" as const }
       : { createdAt: "desc" as const };
 
-  const where: any = { status };
+  const where: any = { status, state: { equals: "Kwara State", mode: "insensitive" } };
   if (listingType) where.listingType = listingType;
   if (requestedPropertyTypes.length) where.propertyType = { in: requestedPropertyTypes };
   if (city) where.city = { equals: city, mode: "insensitive" };

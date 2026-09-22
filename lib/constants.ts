@@ -63,6 +63,24 @@ export const SERVICE_AREAS = [
   { slug: "gra-extension", name: "GRA Extension", description: "Properties in GRA Extension, Ilorin." },
 ] as const;
 
+// Public property browsing is scoped to Kwara State. Ilorin remains first as
+// RA Homes' primary market, followed by other cities and towns in the state.
+export const KWARA_CITIES = [
+  "Ilorin",
+  "Offa",
+  "Omu-Aran",
+  "Jebba",
+  "Pategi",
+  "Lafiagi",
+  "Kaiama",
+  "Share",
+  "Bode Saadu",
+  "Ajase-Ipo",
+  "Oke Ode",
+  "Kosubosu",
+  "Tsaragi",
+] as const;
+
 // The grouped catalog keeps the listing form easy to scan. Each value appears
 // once, even where a feature is commonly described in more than one way.
 export const AMENITY_GROUPS = [

@@ -55,6 +55,11 @@
     background-image: radial-gradient(hsl(var(--gold) / 0.055) 1px, transparent 1px);
     background-size: 26px 26px;
   }
+  .dark body {
+    /* Keep the dark-mode canvas clean and solid; the light texture can make
+       black surfaces look hazy when it shows through translucent layers. */
+    background-image: none;
+  }
   /* Keep primary page titles distinct while giving section and card headings
      enough weight to create a reliable reading hierarchy everywhere. */
   h2,
@@ -86,7 +91,7 @@
 
 @layer utilities {
   .container {
-    @apply mx-auto px-6 max-w-[1320px];
+    @apply mx-auto max-w-[1320px] px-4 sm:px-5 lg:px-6;
   }
   .premium-card {
     @apply rounded-2xl border border-line bg-surface shadow-[0_1px_2px_hsl(var(--ink)/0.04)] transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-0.5 hover:border-gold/50 hover:shadow-[0_18px_40px_hsl(var(--ink)/0.1)];
