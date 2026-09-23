@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Bed, Bath, Square, Calendar, Car, MapPin, Ruler, ArrowLeft, ArrowRight } from "lucide-react";
+import { Bed, Bath, Square, Calendar, Car, MapPin, Ruler, ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { PropertyGallery } from "@/components/property/PropertyGallery";
 import { PropertyVideos } from "@/components/property/PropertyVideos";
@@ -9,7 +9,7 @@ import { InquiryForm } from "@/components/property/InquiryForm";
 import { ViewingRequestForm } from "@/components/property/ViewingRequestForm";
 import { HomeHighlights } from "@/components/property/HomeHighlights";
 import { PropertyDetailActions } from "@/components/property/PropertyDetailActions";
-import { PropertyCard } from "@/components/property/PropertyCard";
+import { ContinueBrowsing } from "@/components/property/ContinueBrowsing";
 import { prisma } from "@/lib/prisma";
 import { formatNewListingLabel, formatPrice, formatNumber, formatPropertyLocation, isValidObjectId } from "@/lib/utils";
 import { PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
@@ -28,15 +28,16 @@ const STATUS_LABEL: Record<string, string> = { ACTIVE: "", PENDING: "Pending", S
 export default async function PropertyDetailPage({ params }: { params: { id: string } }) {
   const property = await getProperty(params.id);
   if (!property) notFound();
-  const availableProperties = await prisma.property.findMany({
-    where: { status: { in: [...PUBLIC_PROPERTY_STATUSES] } },
-    orderBy: { createdAt: "desc" },
-  });
-  const currentIndex = availableProperties.findIndex((item) => item.id === property.id);
-  const previousProperty = currentIndex > 0 ? availableProperties[currentIndex - 1] : null;
-  const nextProperty = currentIndex >= 0 && currentIndex < availableProperties.length - 1 ? availableProperties[currentIndex + 1] : null;
-  const relatedProperties = availableProperties
-    .filter((item) => item.id !== property.id)
+  // Keep recommendation work bounded. The previous implementation loaded the
+  // full public catalogue on every detail-page view before selecting three.
+  const recommendationWhere = { status: { in: [...PUBLIC_PROPERTY_STATUSES] }, id: { not: property.id } };
+  const [sameType, sameLocation, latest] = await Promise.all([
+    prisma.property.findMany({ where: { ...recommendationWhere, propertyType: property.propertyType }, orderBy: { createdAt: "desc" }, take: 3 }),
+    prisma.property.findMany({ where: { ...recommendationWhere, city: property.city }, orderBy: { createdAt: "desc" }, take: 4 }),
+    prisma.property.findMany({ where: recommendationWhere, orderBy: { createdAt: "desc" }, take: 6 }),
+  ]);
+  const relatedProperties = [...sameType, ...sameLocation, ...latest]
+    .filter((item, index, list) => list.findIndex((candidate) => candidate.id === item.id) === index)
     .sort((left, right) => {
       const score = (item: typeof left) => (item.propertyType === property.propertyType ? 4 : 0) + (item.neighborhood && item.neighborhood === property.neighborhood ? 2 : 0) + (item.city === property.city ? 1 : 0);
       return score(right) - score(left) || right.createdAt.getTime() - left.createdAt.getTime();
@@ -87,17 +88,6 @@ export default async function PropertyDetailPage({ params }: { params: { id: str
       </main>
       <aside className="space-y-5 lg:sticky lg:top-6">{property.status === "ACTIVE" && <div id="schedule-viewing"><ViewingRequestForm propertyId={property.id} /></div>}<InquiryForm propertyId={property.id} propertyTitle={property.title} /></aside>
     </div>
-    {(previousProperty || nextProperty) && <nav aria-label="Adjacent properties" className="container mt-12 border-y border-line py-5">
-      <div className="grid gap-3 sm:grid-cols-2">
-        {previousProperty ? <Link href={`/properties/${previousProperty.slug}`} className="group flex min-h-12 items-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-gold-dark"><ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" /> Previous Property</Link> : <span />}
-        {nextProperty ? <Link href={`/properties/${nextProperty.slug}`} className="group flex min-h-12 items-center justify-start gap-2 text-sm font-semibold text-ink transition-colors hover:text-gold-dark sm:justify-end">Next Property <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></Link> : <span className="hidden sm:block" />}
-      </div>
-    </nav>}
-    {relatedProperties.length > 0 && <section aria-labelledby="continue-exploring" className="container mt-12">
-      <div className="border-t border-line pt-8 md:pt-10">
-        <div className="flex flex-wrap items-end justify-between gap-4"><div><h2 id="continue-exploring" className="font-display text-3xl">More homes you may like</h2><p className="mt-2 text-sm leading-relaxed text-ink/60">Selected from similar properties and nearby locations.</p></div><Link href="/properties" className="group inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-gold-dark">See all homes <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></Link></div>
-        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">{relatedProperties.map((item) => <PropertyCard key={item.id} property={item} />)}</div>
-      </div>
-    </section>}
+    <ContinueBrowsing currentProperty={property} recommendations={relatedProperties} />
   </div>;
 }

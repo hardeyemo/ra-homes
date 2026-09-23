@@ -95,7 +95,7 @@ export const PropertyCard = ({ property }: { property: Property }) => {
           </div>
         )}
         <div className="mt-3 flex h-9 w-full items-center justify-between rounded-lg bg-ink px-3.5 text-sm font-semibold text-parchment shadow-sm transition-all duration-300 group-hover:-translate-y-0.5 group-hover:bg-clay group-hover:shadow-lg group-hover:shadow-clay/20">
-          <span>View details</span>
+          <span>View property</span>
           <span className="text-lg font-normal leading-none transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&gt;</span>
         </div>
         </div>

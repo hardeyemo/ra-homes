@@ -12,7 +12,9 @@ async function getCatalogProperties(): Promise<Property[]> {
     const properties = await prisma.property.findMany({
       where: { status: "ACTIVE" },
       orderBy: { createdAt: "desc" },
-      take: 48,
+      // The homepage renders at most three cards per collection. A compact
+      // catalogue window keeps the server payload and hydration work small.
+      take: 24,
     });
     return JSON.parse(JSON.stringify(properties));
   } catch {

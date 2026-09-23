@@ -10,10 +10,10 @@ import Image from "next/image";
 const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const SESSION_KEY = "ra-intro-shown";
-const SPIN_SECONDS = 1.05;
-const HOLD_SECONDS = 0.3;
-const FADE_SECONDS = 0.45;
-// Total ≈ 1.5s.
+const SPIN_SECONDS = 0.65;
+const HOLD_SECONDS = 0.1;
+const FADE_SECONDS = 0.3;
+// Total ≈ 1.0s. Keep the branded introduction without delaying first use.
 
 export const IntroAnimation = () => {
   const [visible, setVisible] = useState(true);

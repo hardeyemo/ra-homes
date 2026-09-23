@@ -98,7 +98,7 @@ export default function PropertiesPage() {
     setPage(1);
   }, [filters, sort]);
 
-  const fetchProperties = useCallback(async () => {
+  const fetchProperties = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     const params = new URLSearchParams();
     if (debouncedSearch) params.set("search", debouncedSearch);
@@ -110,27 +110,34 @@ export default function PropertiesPage() {
     if (filters.city) params.set("city", filters.city);
     params.set("sort", sort);
     params.set("page", String(page));
-    params.set("limit", String(isCatalogMode ? 48 : PAGE_SIZE));
+    // The curated view shows a maximum of three cards per collection; there
+    // is no need to transfer the API's full 48-record allowance up front.
+    params.set("limit", String(isCatalogMode ? 24 : PAGE_SIZE));
 
     try {
-      const res = await fetch(`/api/properties?${params.toString()}`);
+      const res = await fetch(`/api/properties?${params.toString()}`, { signal });
+      if (!res.ok) throw new Error("Unable to load properties");
       const data = await res.json();
+      if (signal?.aborted) return;
       setProperties(data.properties || []);
       setTotal(data.total || 0);
       setTotalPages(data.totalPages || 1);
       if (data.totalPages && page > data.totalPages) setPage(data.totalPages);
-    } catch {
+    } catch (error) {
+      if ((error as Error).name === "AbortError") return;
       setProperties([]);
       setTotal(0);
       setTotalPages(1);
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
   }, [debouncedSearch, filters, isCatalogMode, page, sort]);
 
   useEffect(() => {
     if (debouncedSearch !== filters.search) return;
-    fetchProperties();
+    const controller = new AbortController();
+    void fetchProperties(controller.signal);
+    return () => controller.abort();
   }, [debouncedSearch, fetchProperties, filters.search]);
 
   const activeCount = countActiveFilters(filters);

@@ -107,6 +107,11 @@ export async function GET(req: NextRequest) {
       page,
       limit,
       totalPages: Math.max(1, Math.ceil(total / limit)),
+    }, {
+      // Listing results are public and change infrequently. A short cache
+      // makes back/forward navigation and repeated filters feel immediate
+      // without leaving stale listings around for long.
+      headers: { "Cache-Control": "public, max-age=30, s-maxage=60, stale-while-revalidate=120" },
     });
   } catch (error) {
     console.error(error);
