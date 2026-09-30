@@ -69,7 +69,9 @@ export async function GET(req: NextRequest) {
       ? { price: "desc" as const }
       : { createdAt: "desc" as const };
 
-  const where: any = { status, state: { equals: "Kwara State", mode: "insensitive" } };
+  // Listings use both "Kwara" and "Kwara State". Keep the public catalogue
+  // unified; city remains available as an optional filter below.
+  const where: any = { status };
   if (listingType) where.listingType = listingType;
   if (requestedPropertyTypes.length) where.propertyType = { in: requestedPropertyTypes };
   if (city) where.city = { equals: city, mode: "insensitive" };

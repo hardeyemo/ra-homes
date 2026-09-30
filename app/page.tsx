@@ -7,28 +7,26 @@ import type { Property } from "@/types/property";
 
 export const revalidate = 60;
 
-async function getCatalogProperties(): Promise<Property[]> {
+async function getHomepageProperties(): Promise<{ properties: Property[]; totalPages: number }> {
   try {
-    const properties = await prisma.property.findMany({
-      where: { status: "ACTIVE" },
-      orderBy: { createdAt: "desc" },
-      // The homepage renders at most three cards per collection. A compact
-      // catalogue window keeps the server payload and hydration work small.
-      take: 24,
-    });
-    return JSON.parse(JSON.stringify(properties));
+    const where = { status: "ACTIVE" as const };
+    const [properties, total] = await Promise.all([
+      prisma.property.findMany({ where, orderBy: { createdAt: "desc" }, take: 9 }),
+      prisma.property.count({ where }),
+    ]);
+    return { properties: JSON.parse(JSON.stringify(properties)), totalPages: Math.max(1, Math.ceil(total / 9)) };
   } catch {
-    return [];
+    return { properties: [], totalPages: 1 };
   }
 }
 
 export default async function HomePage() {
-  const catalogProperties = await getCatalogProperties();
+  const { properties, totalPages } = await getHomepageProperties();
 
   return (
     <>
       <Hero />
-      <PropertyBrowseSections properties={catalogProperties} />
+      <PropertyBrowseSections initialProperties={properties} initialTotalPages={totalPages} />
 
       <section className="container py-8 md:py-16">
         <div className="grid overflow-hidden rounded-3xl border border-line bg-ink text-parchment lg:grid-cols-[1.1fr_0.9fr]">

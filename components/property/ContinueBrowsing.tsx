@@ -36,18 +36,15 @@ export function ContinueBrowsing({ currentProperty, recommendations }: { current
     setHydrated(true);
   }, [currentProperty]);
 
-  const recentSuggestions = recentlyViewed.slice(0, 3);
-  const properties = recentSuggestions.length ? recentSuggestions : recommendations;
-  const heading = recentSuggestions.length ? "Continue browsing" : "More homes you may like";
-  const description = recentSuggestions.length
-    ? "Pick up where you left off."
-    : "Selected from similar properties and nearby locations.";
+  const properties = [...recentlyViewed, ...recommendations]
+    .filter((property, index, list) => list.findIndex((candidate) => candidate.id === property.id) === index)
+    .slice(0, 3);
 
-  return <section aria-labelledby="continue-browsing" className="container mt-12">
+  return <section aria-labelledby="explore-properties" className="container mt-12">
     <div className="border-t border-line pt-8 md:pt-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div><h2 id="continue-browsing" className="font-display text-3xl">{heading}</h2><p className="mt-2 text-sm leading-relaxed text-ink/60">{description}</p></div>
-        <Link href="/properties" className="group inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-gold-dark">See all homes <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></Link>
+        <h2 id="explore-properties" className="font-display text-3xl">Explore Properties</h2>
+        <Link href="/properties" className="group inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-gold-dark">All properties <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></Link>
       </div>
 
       {!hydrated ? <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3" aria-label="Loading property recommendations">{Array.from({ length: 3 }).map((_, index) => <div key={index} className="aspect-[4/5] animate-pulse rounded-2xl bg-line/50" />)}</div> : properties.length > 0 ? <motion.div initial="hidden" animate="visible" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }} className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">

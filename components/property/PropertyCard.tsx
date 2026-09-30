@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Heart, Bed, Bath, Square, MapPin } from "lucide-react";
+import { ArrowRight, Heart, Bed, Bath, Square, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { useSavedPropertiesStore } from "@/store/savedPropertiesStore";
 import { formatNewListingLabel, formatPrice, formatNumber, formatPropertyLocation } from "@/lib/utils";
@@ -51,7 +51,7 @@ export const PropertyCard = ({ property }: { property: Property }) => {
           src={property.images[0]}
           alt={property.title}
           fill
-          quality={75}
+          quality={70}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
@@ -70,17 +70,17 @@ export const PropertyCard = ({ property }: { property: Property }) => {
 
       </div>
 
-      <div className="p-3.5 sm:p-4">
-        <p className="text-lg font-bold tracking-tight text-ink sm:text-xl">
-          {formatPrice(property.price, property.priceLabel ? undefined : property.listingType)}
-          {property.priceLabel && <span className="ml-1 text-sm font-medium text-ink/55">{property.priceLabel}</span>}
-        </p>
-        <h3 className="mt-1.5 font-display text-lg leading-snug text-ink transition-colors group-hover:text-clay sm:text-xl">
+      <div className="p-4 sm:p-5">
+        <h3 className="font-display text-lg leading-snug text-ink transition-colors group-hover:text-clay sm:text-xl">
           {property.title}
         </h3>
         <p className="mt-1 flex items-start gap-1.5 text-[13px] leading-relaxed text-ink/60 sm:text-sm">
           <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-clay" />
           <span>{location}</span>
+        </p>
+        <p className="mt-3 text-lg font-bold tracking-tight text-ink sm:text-xl">
+          {formatPrice(property.price, property.priceLabel ? undefined : property.listingType)}
+          {property.priceLabel && <span className="ml-1 text-sm font-medium text-ink/55">{property.priceLabel}</span>}
         </p>
 
         {(isLand ? landSize : property.bedrooms > 0 || property.bathrooms > 0 || property.sqft > 0) && (
@@ -94,9 +94,9 @@ export const PropertyCard = ({ property }: { property: Property }) => {
             </>}
           </div>
         )}
-        <div className="mt-3 flex h-9 w-full items-center justify-between rounded-lg bg-ink px-3.5 text-sm font-semibold text-parchment shadow-sm transition-all duration-300 group-hover:-translate-y-0.5 group-hover:bg-clay group-hover:shadow-lg group-hover:shadow-clay/20">
+        <div className="mt-4 flex h-10 w-full items-center justify-between rounded-lg bg-ink px-4 text-sm font-semibold text-parchment transition-colors duration-300 group-hover:bg-clay group-hover:text-ink">
           <span>View property</span>
-          <span className="text-lg font-normal leading-none transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">&gt;</span>
+          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
         </div>
         </div>
       </Link>

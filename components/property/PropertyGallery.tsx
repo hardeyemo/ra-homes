@@ -25,7 +25,6 @@ export const PropertyGallery = ({ images, title, instagramVideoUrl, instagramVid
   const open = (index: number) => setActive(index);
   const close = () => setActive(null);
   const activeIsInstagramThumbnail = active !== null && images[active] === instagramVideoThumbnailUrl && Boolean(instagramVideoUrl);
-
   return (
     <>
       <section aria-label={`${title} photos`} className="relative overflow-hidden rounded-2xl bg-ink sm:rounded-3xl">

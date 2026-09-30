@@ -7,7 +7,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, ChevronDown, KeyRound, Search, SlidersHorizontal, X } from "lucide-react";
 import { PropertyCard } from "@/components/property/PropertyCard";
 import { PropertyFilters } from "@/components/property/PropertyFilters";
-import { getPropertyCatalogSectionId, HOME_SECTION_CARD_LIMIT, PROPERTY_CATALOG_SECTIONS } from "@/lib/propertyCatalog";
 import type { Property, PropertyFilters as FiltersType } from "@/types/property";
 
 const MAX_PRICE = 100_000_000;
@@ -59,7 +58,6 @@ export default function PropertiesPage() {
   const [loading, setLoading] = useState(true);
   const [filtersPanelOpen, setFiltersPanelOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
-  const isCatalogMode = !filters.search && !filters.listingType && !filters.city && !filters.propertyTypes.length && !filters.minBedrooms && !filters.minBathrooms && filters.priceRange[1] === MAX_PRICE && sort === "newest";
 
   // Header search and the Buy/Rent links navigate to this same route with a
   // new query string. Sync those URL-owned filters so an existing page
@@ -110,9 +108,7 @@ export default function PropertiesPage() {
     if (filters.city) params.set("city", filters.city);
     params.set("sort", sort);
     params.set("page", String(page));
-    // The curated view shows a maximum of three cards per collection; there
-    // is no need to transfer the API's full 48-record allowance up front.
-    params.set("limit", String(isCatalogMode ? 24 : PAGE_SIZE));
+    params.set("limit", String(PAGE_SIZE));
 
     try {
       const res = await fetch(`/api/properties?${params.toString()}`, { signal });
@@ -131,7 +127,7 @@ export default function PropertiesPage() {
     } finally {
       if (!signal?.aborted) setLoading(false);
     }
-  }, [debouncedSearch, filters, isCatalogMode, page, sort]);
+  }, [debouncedSearch, filters, page, sort]);
 
   useEffect(() => {
     if (debouncedSearch !== filters.search) return;
@@ -143,26 +139,15 @@ export default function PropertiesPage() {
   const activeCount = countActiveFilters(filters);
   const isRent = filters.listingType === "RENT";
   const isSale = filters.listingType === "SALE";
-  const pageTitle = isRent ? "Find your next rental" : isSale ? "Find a home to own" : "Find the right place";
-  const pageDescription = isRent
-    ? "Flexible homes and apartments across Ilorin, ready for your next chapter."
-    : isSale
-      ? "Thoughtfully selected homes and land across Ilorin, with every detail on record."
-      : "Browse homes, apartments, land, and commercial spaces across Ilorin.";
+  const pageTitle = "Properties";
   const selectedSort = SORT_OPTIONS.find((option) => option.value === sort) || SORT_OPTIONS[0];
-  const catalogSections = isCatalogMode ? PROPERTY_CATALOG_SECTIONS.map((section) => ({
-    ...section,
-    properties: properties.filter((property) => getPropertyCatalogSectionId(property) === section.id),
-  })).filter((section) => section.properties.length > 0) : [];
 
   return (
     <div className="container py-8 md:py-10">
       <section className="border-b border-line pb-8 md:pb-10">
-        <p className="font-mono text-xs uppercase tracking-[0.18em] text-clay">RA Homes marketplace</p>
         <div className="mt-3 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <h1 className="font-sans text-3xl font-bold tracking-tight sm:text-4xl">{pageTitle}</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink/60 sm:text-base">{pageDescription}</p>
           </div>
           <div className="flex w-fit rounded-lg border border-line bg-surface p-1">
             <Link href="/properties?listingType=SALE" className={`inline-flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold transition-colors ${isSale ? "bg-ink text-parchment" : "text-ink/65 hover:bg-parchment"}`}><KeyRound className="h-4 w-4" /> Buy</Link>
@@ -174,9 +159,8 @@ export default function PropertiesPage() {
 
       <div className="mb-5 mt-8 flex items-end justify-between gap-4">
         <div>
-          <p className="font-mono text-xs uppercase tracking-widest text-clay">Available now</p>
           <h2 className="mt-2 font-display text-2xl sm:text-3xl">
-            {loading ? "Loading listings..." : `${total} ${total === 1 ? "property" : "properties"} to explore`}
+            {loading ? "Loading properties..." : `${total} ${total === 1 ? "property" : "properties"}`}
           </h2>
         </div>
 
@@ -240,24 +224,6 @@ export default function PropertiesPage() {
                 <div key={i} className="aspect-[4/3] bg-line/40 animate-pulse" />
               ))}
             </div>
-          ) : isCatalogMode && catalogSections.length > 0 ? (
-            <div className="space-y-14 md:space-y-20">
-              {catalogSections.map((section) => (
-                <section key={section.id} aria-labelledby={`${section.id}-heading`} className="border-t border-line pt-7 transition-opacity duration-300 md:pt-9">
-                  <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-                    <div>
-                      <p className="font-mono text-xs uppercase tracking-widest text-clay">Curated collection</p>
-                      <h2 id={`${section.id}-heading`} className="mt-2 font-display text-2xl sm:text-3xl">{section.title}</h2>
-                      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink/60">{section.description}</p>
-                    </div>
-                    {section.properties.length > HOME_SECTION_CARD_LIMIT && <Link href={section.href} className="group inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-gold-dark">View all <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></Link>}
-                  </div>
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                    {section.properties.slice(0, HOME_SECTION_CARD_LIMIT).map((property) => <PropertyCard key={property.id} property={property} />)}
-                  </div>
-                </section>
-              ))}
-            </div>
           ) : properties.length > 0 ? (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
               {properties.map((property) => (
@@ -274,7 +240,7 @@ export default function PropertiesPage() {
             </div>
           )}
 
-          {!loading && !isCatalogMode && totalPages > 1 && (
+          {!loading && totalPages > 1 && (
             <nav aria-label="Property listing pages" className="mt-10 flex flex-wrap items-center justify-center gap-2 sm:justify-between">
               <button onClick={() => setPage((current) => Math.max(1, current - 1))} disabled={page === 1} className="inline-flex h-10 items-center gap-2 rounded-lg border border-line bg-surface px-3 text-sm font-medium disabled:opacity-45"><ArrowLeft className="h-4 w-4" /><span className="hidden sm:inline">Previous</span></button>
               <div className="flex items-center gap-1" aria-label={`Page ${page} of ${totalPages}`}>
