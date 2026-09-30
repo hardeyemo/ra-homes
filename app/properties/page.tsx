@@ -10,7 +10,7 @@ import { PropertyFilters } from "@/components/property/PropertyFilters";
 import type { Property, PropertyFilters as FiltersType } from "@/types/property";
 
 const MAX_PRICE = 100_000_000;
-const PAGE_SIZE = 9;
+const PAGE_SIZE = 6;
 const SORT_OPTIONS = [
   { value: "newest", label: "Newest listings" },
   { value: "price-asc", label: "Price: Low to High" },
@@ -219,15 +219,15 @@ export default function PropertiesPage() {
 
       <div>
           {loading ? (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="aspect-[4/3] bg-line/40 animate-pulse" />
+            <div aria-busy="true" aria-label="Loading properties" className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {Array.from({ length: PAGE_SIZE }).map((_, i) => (
+                <div key={i} className="aspect-[4/5] animate-pulse rounded-2xl bg-line/40" />
               ))}
             </div>
           ) : properties.length > 0 ? (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {properties.map((property) => (
-                <PropertyCard key={property.id} property={property} />
+              {properties.map((property, index) => (
+                <PropertyCard key={property.id} property={property} priority={index < 3} />
               ))}
             </div>
           ) : (

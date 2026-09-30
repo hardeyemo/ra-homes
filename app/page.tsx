@@ -3,30 +3,33 @@ import { ArrowRight, MapPin, Search } from "lucide-react";
 import { Hero } from "@/components/property/Hero";
 import { PropertyBrowseSections } from "@/components/property/PropertyBrowseSections";
 import { prisma } from "@/lib/prisma";
+import { propertyCardSelect } from "@/lib/propertyCardSelect";
 import type { Property } from "@/types/property";
 
 export const revalidate = 60;
+const HOMEPAGE_PROPERTY_PAGE_SIZE = 6;
 
-async function getHomepageProperties(): Promise<{ properties: Property[]; totalPages: number }> {
+async function getHomepageProperties(requestedPage: number): Promise<{ properties: Property[]; page: number; totalPages: number }> {
   try {
     const where = { status: "ACTIVE" as const };
-    const [properties, total] = await Promise.all([
-      prisma.property.findMany({ where, orderBy: { createdAt: "desc" }, take: 9 }),
-      prisma.property.count({ where }),
-    ]);
-    return { properties: JSON.parse(JSON.stringify(properties)), totalPages: Math.max(1, Math.ceil(total / 9)) };
+    const total = await prisma.property.count({ where });
+    const totalPages = Math.max(1, Math.ceil(total / HOMEPAGE_PROPERTY_PAGE_SIZE));
+    const page = Math.min(Math.max(requestedPage, 1), totalPages);
+    const properties = await prisma.property.findMany({ where, orderBy: { createdAt: "desc" }, skip: (page - 1) * HOMEPAGE_PROPERTY_PAGE_SIZE, take: HOMEPAGE_PROPERTY_PAGE_SIZE, select: propertyCardSelect });
+    return { properties: JSON.parse(JSON.stringify(properties)), page, totalPages };
   } catch {
-    return { properties: [], totalPages: 1 };
+    return { properties: [], page: 1, totalPages: 1 };
   }
 }
 
-export default async function HomePage() {
-  const { properties, totalPages } = await getHomepageProperties();
+export default async function HomePage({ searchParams }: { searchParams?: { propertyPage?: string } }) {
+  const requestedPage = Number(searchParams?.propertyPage);
+  const { properties, page, totalPages } = await getHomepageProperties(Number.isSafeInteger(requestedPage) ? requestedPage : 1);
 
   return (
     <>
       <Hero />
-      <PropertyBrowseSections initialProperties={properties} initialTotalPages={totalPages} />
+      <PropertyBrowseSections properties={properties} page={page} totalPages={totalPages} />
 
       <section className="container py-8 md:py-16">
         <div className="grid overflow-hidden rounded-3xl border border-line bg-ink text-parchment lg:grid-cols-[1.1fr_0.9fr]">

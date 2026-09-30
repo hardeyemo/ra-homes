@@ -8,6 +8,7 @@ import { slugify, toReference } from "@/lib/utils";
 import { logActivity } from "@/lib/activityLog";
 import { KWARA_CITIES, PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
 import { textOnlyPattern } from "@/lib/inputValidation";
+import { propertyCardSelect } from "@/lib/propertyCardSelect";
 
 const landSizePattern = /^\d[\d,]*(?:\.\d+)?\s*(?:sq\.?\s*(?:ft\.?|m(?:eters?)?\.?|metres?\.?)|sqft|sqm|plots?)$/i;
 const listingTypes = new Set(["SALE", "RENT"]);
@@ -99,6 +100,7 @@ export async function GET(req: NextRequest) {
         orderBy,
         take: limit,
         skip: (page - 1) * limit,
+        select: propertyCardSelect,
       }),
       prisma.property.count({ where }),
     ]);
@@ -113,7 +115,7 @@ export async function GET(req: NextRequest) {
       // Listing results are public and change infrequently. A short cache
       // makes back/forward navigation and repeated filters feel immediate
       // without leaving stale listings around for long.
-      headers: { "Cache-Control": "public, max-age=30, s-maxage=60, stale-while-revalidate=120" },
+      headers: { "Cache-Control": "public, max-age=60, s-maxage=120, stale-while-revalidate=300" },
     });
   } catch (error) {
     console.error(error);

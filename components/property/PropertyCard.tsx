@@ -10,7 +10,7 @@ import { useSavedPropertiesStore } from "@/store/savedPropertiesStore";
 import { formatNewListingLabel, formatPrice, formatNumber, formatPropertyLocation } from "@/lib/utils";
 import type { Property } from "@/types/property";
 
-export const PropertyCard = ({ property }: { property: Property }) => {
+export const PropertyCard = ({ property, priority = false }: { property: Property; priority?: boolean }) => {
   const router = useRouter();
   const { data: session } = useSession();
   const isSaved = useSavedPropertiesStore((s) => s.isSaved(property.id));
@@ -51,8 +51,9 @@ export const PropertyCard = ({ property }: { property: Property }) => {
           src={property.images[0]}
           alt={property.title}
           fill
+          priority={priority}
           quality={70}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
 
