@@ -96,7 +96,7 @@ export const PropertyCard = ({ property, priority = false }: { property: Propert
           </button>
         </div>
 
-        <Link href={`/properties/${property.slug}`} className="mt-2 block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold">
+        <Link href={`/properties/${property.slug}`} className="mt-2 block rounded-xl border border-gold/30 p-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/70 hover:bg-parchment/45 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold">
           <h3 className="line-clamp-1 text-base font-bold leading-snug text-ink transition-colors group-hover:text-gold-dark sm:text-lg">{property.title}</h3>
           <p className="mt-1.5 flex min-h-5 items-start gap-1.5 text-[13px] leading-snug text-ink/60">
             <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sage" />
