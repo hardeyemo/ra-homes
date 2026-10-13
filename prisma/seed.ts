@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 const SEED_ADMIN_PASSWORD = "admin-demo-pass";
 const SEED_USER_PASSWORD = "user-demo-pass";
 
-// Ilorin neighborhoods RA Homes serves (city stays "Ilorin" for all of them).
+// Ilorin neighborhoods served by RAHomes Property (city stays "Ilorin" for all of them).
 const NEIGHBORHOODS = ["GRA", "Tanke", "GRA Extension", "Fate", "Adewole", "Taiwo Road"];
 
 const PROPERTY_TYPES = ["HOUSE", "APARTMENT", "CONDO", "TOWNHOUSE", "LAND", "COMMERCIAL", "MULTI_FAMILY"] as const;
@@ -83,13 +83,13 @@ const galleryImages = (propertyType: (typeof PROPERTY_TYPES)[number], index: num
 async function main() {
   const admin = await prisma.user.upsert({
     where: { email: "rahomesproperties@gmail.com" },
-    update: {},
+    update: { name: "RAHomes Realty", title: "RAHomes Realty" },
     create: {
-      name: "RA Admin",
+      name: "RAHomes Realty",
       email: "rahomesproperties@gmail.com",
       passwordHash: await bcrypt.hash(SEED_ADMIN_PASSWORD, 10),
       phone: "08118495138",
-      title: "Brokerage Admin",
+      title: "RAHomes Realty",
       role: "ADMIN",
       agentRequestStatus: "APPROVED",
     },
@@ -135,7 +135,7 @@ async function main() {
         title,
         slug: `${slugify(title)}-${reference.toLowerCase()}`,
         description: isLand
-          ? "A well-positioned parcel of land with accessible road frontage and strong development potential. Contact RA Homes for inspection, survey details, and title information."
+          ? "A well-positioned parcel of land with accessible road frontage and strong development potential. Contact RAHomes Property for inspection, survey details, and title information."
           : "A well-maintained property with reliable water supply, a fenced compound, and easy access to major roads. Full details available on request.",
         status: "ACTIVE",
         listingType,
@@ -175,7 +175,7 @@ async function main() {
         reference,
         title,
         slug: `${slugify(title)}-${reference.toLowerCase()}`,
-        description: "A verified residential plot in a growing Ilorin neighbourhood. Contact RA Homes to arrange a site inspection and review the available survey and title documents.",
+        description: "A verified residential plot in a growing Ilorin neighbourhood. Contact RAHomes Property to arrange a site inspection and review the available survey and title documents.",
         status: "ACTIVE",
         listingType: "SALE",
         propertyType: "LAND",

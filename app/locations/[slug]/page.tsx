@@ -21,7 +21,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   if (!area) return {};
   return {
     title: `Real Estate in ${area.name}, Ilorin — ${SITE_NAME}`,
-    description: `${area.description} Browse homes for sale and rent, verified by RA Homes & Properties.`,
+    description: `${area.description} Browse homes for sale and rent, verified by RAHomes Property.`,
   };
 }
 

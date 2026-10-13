@@ -5,14 +5,13 @@ import { Suspense, useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Lock, User, Eye, EyeOff, Loader2, ArrowRight, Building2, MapPinned } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, Loader2, ArrowRight, Building2, MapPinned, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Logo } from "@/components/layout/Logo";
 import { AGENCY_OFFICE, SERVICE_AREAS } from "@/lib/constants";
 import { textOnly } from "@/lib/inputValidation";
-import { PASSWORD_REQUIREMENTS } from "@/lib/passwordValidation";
+import { isValidPassword, PASSWORD_REQUIREMENTS } from "@/lib/passwordValidation";
 
 const LEDGER: { no: string; label: string; value: string }[] = [
   { no: "01", label: "Neighborhoods on record", value: `${SERVICE_AREAS.length} across Ilorin` },
@@ -32,13 +31,17 @@ function LoginForm() {
   const passwordChanged = searchParams.get("password") === "changed";
   const sessionExpired = searchParams.get("session") === "expired";
 
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState<"signin" | "signup">(() => searchParams.get("mode") === "signup" ? "signup" : "signin");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [verificationSent, setVerificationSent] = useState(false);
   const [availableProviders, setAvailableProviders] = useState<string[]>([]);
+
+  useEffect(() => {
+    setMode(searchParams.get("mode") === "signup" ? "signup" : "signin");
+  }, [searchParams]);
 
   useEffect(() => {
     fetch("/api/auth/providers")
@@ -95,6 +98,11 @@ function LoginForm() {
 
     try {
       if (mode === "signup") {
+        if (!isValidPassword(form.password)) {
+          setError(PASSWORD_REQUIREMENTS);
+          setStatus("error");
+          return;
+        }
         const res = await fetch("/api/auth/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -135,11 +143,11 @@ function LoginForm() {
   };
 
   return (
-    <div className="relative isolate overflow-hidden bg-parchment">
+    <div className="relative isolate min-h-screen overflow-hidden bg-parchment">
       <div className="pointer-events-none absolute inset-0 opacity-40 [background-image:radial-gradient(hsl(var(--ink)/0.08)_1px,transparent_1px)] [background-size:20px_20px]" />
-      <div className="relative grid min-h-[calc(100vh-4.75rem)] lg:min-h-[calc(100vh-6.75rem)] lg:grid-cols-[1.08fr_0.92fr]">
+      <div className="relative grid min-h-screen lg:grid-cols-[1.02fr_0.98fr]">
       {/* Brand / ledger panel — desktop only */}
-      <div className="hidden lg:flex relative flex-col justify-between overflow-hidden bg-ink px-14 py-16 text-parchment xl:px-20">
+      <div className="hidden lg:flex relative flex-col justify-between overflow-hidden bg-ink px-12 py-10 text-parchment xl:px-20 xl:py-14">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.06]"
           style={{
@@ -152,24 +160,31 @@ function LoginForm() {
         <div className="pointer-events-none absolute -right-8 -top-8 h-[24rem] w-[24rem] rounded-full border border-gold/15" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(145deg,transparent_15%,hsl(var(--gold)/0.12)_100%)]" />
 
-        <div className="absolute inset-x-14 top-1/2 -translate-y-1/2">
+        <Link href="/" aria-label="RAHomes Realty home" className="relative inline-flex w-fit items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold">
+          <span className="grid h-11 w-11 place-items-center rounded-full border border-gold/75 bg-parchment/5 font-display text-lg font-bold text-gold">RA</span>
+          <span className="leading-tight"><span className="block text-sm font-extrabold tracking-tight text-parchment">RAHomes</span><span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.2em] text-gold-light">Realty</span></span>
+        </Link>
+
+        <div className="relative my-auto max-w-xl py-10">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="relative"
           >
-            <Logo variant="light" />
-
             <div className="mt-14 inline-flex items-center gap-2 rounded-full border border-gold/35 bg-gold/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-gold-light">
-              <MapPinned className="h-3.5 w-3.5" /> Ilorin property, considered
+              <MapPinned className="h-3.5 w-3.5" /> Find your place in Ilorin
             </div>
             <h2 className="mt-5 max-w-xl font-display text-5xl leading-[0.98] tracking-[-0.035em] xl:text-6xl">
-              A better way to keep your next move in view.
+              Make room for what comes next.
             </h2>
             <p className="mt-6 max-w-md text-base leading-7 text-parchment/65">
-              Save the homes that feel right, make enquiries with confidence, and keep every property conversation in one considered place.
+              Explore homes, save the ones you love, and connect with a local property expert when you are ready.
             </p>
+            <div className="mt-10 flex items-center gap-3 rounded-2xl border border-parchment/15 bg-parchment/[0.06] p-4 backdrop-blur-sm">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gold/15 text-gold-light"><Home className="h-5 w-5" /></span>
+              <span><span className="block text-sm font-semibold text-parchment">A more personal property search</span><span className="mt-1 block text-xs text-parchment/55">Your saved homes and enquiries, together in one place.</span></span>
+            </div>
           </motion.div>
         </div>
 
@@ -192,7 +207,7 @@ function LoginForm() {
             ))}
           </div>
 
-          <div className="mt-10 flex items-center gap-2 text-xs text-parchment/60"><Building2 className="h-4 w-4 text-gold" /> Established local expertise</div>
+          <div className="mt-6 flex items-center gap-2 text-xs text-parchment/60"><Building2 className="h-4 w-4 text-gold" /> Local knowledge. Clear guidance.</div>
           <p className="mt-5 font-mono text-[11px] uppercase tracking-widest text-parchment/40">
             {AGENCY_OFFICE.line1} · {AGENCY_OFFICE.city}, {AGENCY_OFFICE.state}
           </p>
@@ -200,27 +215,32 @@ function LoginForm() {
       </div>
 
       {/* Form panel */}
-      <div className="flex w-full items-center justify-center px-5 py-10 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
+      <div className="flex w-full items-center justify-center px-5 py-8 sm:px-8 sm:py-12 lg:px-12 lg:py-14">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: "easeOut" }}
-          className="w-full max-w-[27rem] rounded-2xl border border-line/80 bg-surface/95 p-7 shadow-[0_24px_65px_hsl(var(--ink)/0.09)] backdrop-blur sm:p-10"
+          className="w-full max-w-[27rem] rounded-3xl border border-line/80 bg-surface/95 p-6 shadow-[0_24px_65px_hsl(var(--ink)/0.09)] backdrop-blur sm:p-9"
         >
-          <div className="mb-10 flex justify-center lg:hidden">
-            <Logo />
+          <div className="mb-8 flex justify-center lg:hidden">
+            <Link href="/" aria-label="RAHomes Realty home" className="inline-flex items-center gap-3">
+              <span className="grid h-11 w-11 place-items-center rounded-full border border-gold/75 bg-ink font-display text-lg font-bold text-gold">RA</span>
+              <span className="text-left leading-tight"><span className="block text-sm font-extrabold tracking-tight">RAHomes</span><span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.2em] text-gold-dark">Realty</span></span>
+            </Link>
           </div>
 
+          <p className="mb-2 text-center font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-gold-dark lg:text-left">Your property journey starts here</p>
           <h1 className="text-center font-display text-3xl leading-tight sm:text-4xl lg:text-left">
-            {mode === "signup" ? "Sign up" : "Welcome back"}
+            {mode === "signup" ? "Create your account" : "Welcome back"}
           </h1>
+          <p className="mt-2 text-center text-sm text-ink/55 lg:text-left">{mode === "signup" ? "Save homes and connect with our local team." : "Sign in to pick up where you left off."}</p>
 
-          <div className="relative mt-9 flex justify-center gap-7 border-b border-line lg:justify-start">
+          <div className="relative mt-7 flex justify-center gap-7 border-b border-line lg:justify-start">
             {(["signin", "signup"] as const).map((m) => (
               <button
                 key={m}
                 type="button"
-                onClick={() => switchMode(m)}
+                onClick={() => { switchMode(m); router.replace(m === "signup" ? "/login?mode=signup" : "/login", { scroll: false }); }}
                 className={`relative pb-3 text-xs font-mono uppercase tracking-widest transition-colors ${
                   mode === m ? "text-ink" : "text-ink/45 hover:text-ink/70"
                 }`}
@@ -254,6 +274,7 @@ function LoginForm() {
                     <Input
                       id="name"
                       required
+                      autoComplete="name"
                       className="pl-10"
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: textOnly(e.target.value) })}
@@ -296,7 +317,6 @@ function LoginForm() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  tabIndex={-1}
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-ink/35 hover:text-ink/70 transition-colors"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >

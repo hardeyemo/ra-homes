@@ -143,7 +143,7 @@ export const AgentRow = ({
               className="h-11 border border-line bg-surface px-3 text-sm disabled:opacity-50"
             >
               <option value="AGENT">Agent</option>
-              <option value="ADMIN">RA</option>
+              <option value="ADMIN">Admin</option>
             </select>
           </div>
           {isSelf && <p className="mt-2 text-xs text-ink/40">You can't change your own role.</p>}
@@ -171,11 +171,11 @@ export const AgentRow = ({
         {agent.name}
         {isSelf && <span className="ml-2 text-xs text-ink/40">(you)</span>}
         <br />
-        <span className="text-ink/50 text-xs">{agent.title || "Agent"}</span>
+        <span className="text-ink/50 text-xs">{agent.title && agent.title.toLowerCase() !== "user" ? agent.title : agent.role === "ADMIN" ? "Administrator" : "Agent"}</span>
       </td>
       <td className="p-4">{agent.email}</td>
       <td className="p-4">
-        <Badge variant={agent.role === "ADMIN" ? "clay" : "outline"}>{agent.role === "ADMIN" ? "RA" : agent.role}</Badge>
+        <Badge variant={agent.role === "ADMIN" ? "clay" : "outline"}>{agent.role === "ADMIN" ? "Admin" : "Agent"}</Badge>
       </td>
       <td className="p-4 text-right">
         <div className="flex items-center justify-end gap-2">

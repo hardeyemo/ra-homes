@@ -9,6 +9,7 @@ interface Props {
   scheduleHref?: string;
   variant?: "default" | "management";
   scheduleLabel?: string;
+  columns?: "responsive" | "stacked";
 }
 
 export const PropertyContactActions = ({
@@ -19,6 +20,7 @@ export const PropertyContactActions = ({
   scheduleHref = "/contact",
   variant = "default",
   scheduleLabel = "Schedule Viewing",
+  columns = "responsive",
 }: Props) => {
   const message = propertyWhatsappMessage(propertyTitle, propertyLocation);
   const isManagement = variant === "management";
@@ -33,20 +35,20 @@ export const PropertyContactActions = ({
     : "border border-ink text-ink hover:bg-ink hover:text-parchment";
 
   return (
-    <div className={`grid grid-cols-1 sm:grid-cols-3 gap-3 ${className}`}>
+    <div className={`grid ${columns === "stacked" ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-3"} gap-3 ${className}`}>
       <a
         href={whatsappLink(message)}
         target="_blank"
         rel="noopener noreferrer"
         className={`flex h-12 items-center justify-center gap-2 text-sm font-semibold transition-all duration-200 ${whatsappClassName}`}
       >
-        <MessageCircle className="w-4 h-4" /> WhatsApp RA Homes
+        <MessageCircle className="w-4 h-4" /> WhatsApp RAHomes Property
       </a>
       <a
         href={`tel:+${AGENCY_PHONE_INTL}`}
         className={`flex h-12 items-center justify-center gap-2 text-sm font-semibold transition-all duration-200 ${callClassName}`}
       >
-        <Phone className="w-4 h-4" /> Call RA Homes
+        <Phone className="w-4 h-4" /> Call RAHomes Property
       </a>
       {onScheduleClick ? (
         <button

@@ -5,7 +5,7 @@ import { AGENCY_EMAIL, AGENCY_OFFICE_FULL, SITE_NAME } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: `Terms & Conditions | ${SITE_NAME}`,
-  description: "Terms and conditions for using the RA Homes & Properties website and services.",
+  description: "Terms and conditions for using the RAHomes Property website and services.",
 };
 
 const sections = [
@@ -41,7 +41,7 @@ export default function TermsAndConditionsPage() {
     <div>
       <section className="border-b border-gold/25 bg-ink py-12 text-parchment md:py-16">
         <div className="container">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-gold">RA Homes &amp; Properties</p>
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-gold">RAHomes Property</p>
           <div className="mt-6 max-w-4xl">
             <h1 className="font-display text-4xl leading-[1.05] tracking-tight sm:text-5xl md:text-7xl">Terms &amp; Conditions</h1>
             <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-parchment/70">
@@ -70,7 +70,7 @@ export default function TermsAndConditionsPage() {
 
           <article>
             <div className="mb-10 border-l-2 border-gold bg-surface px-5 py-4 text-sm leading-7 text-ink/70 md:px-6">
-              Please read these Terms &amp; Conditions carefully before using the RA Homes &amp; Properties website, creating an account, submitting a property, or contacting us about a listing.
+              Please read these Terms &amp; Conditions carefully before using the RAHomes Property website, creating an account, submitting a property, or contacting us about a listing.
             </div>
 
             <TermsSection id="acceptance" number="01" title="Acceptance of these terms">
@@ -82,7 +82,7 @@ export default function TermsAndConditionsPage() {
               <p>You are responsible for activity carried out through your account. Please let us know promptly if you believe your account has been used without your permission.</p>
             </TermsSection>
             <TermsSection id="listings" number="03" title="Property listings">
-              <p>Our website presents property opportunities for sale and rent and provides ways to contact RA Homes &amp; Properties, request a viewing, or submit an inquiry. A listing, image, price, availability status, feature, measurement, or description is not a binding offer or guarantee.</p>
+              <p>Our website presents property opportunities for sale and rent and provides ways to contact RAHomes Property, request a viewing, or submit an inquiry. A listing, image, price, availability status, feature, measurement, or description is not a binding offer or guarantee.</p>
               <p>Properties may be updated, become unavailable, or change status without notice. Before making a decision, please speak with our team and independently confirm the details that matter to you.</p>
             </TermsSection>
             <TermsSection id="responsibilities" number="04" title="Your responsibilities">
@@ -102,16 +102,16 @@ export default function TermsAndConditionsPage() {
               <p>You should carry out your own enquiries and obtain any professional advice you need before making property, financial, legal, or investment decisions.</p>
             </TermsSection>
             <TermsSection id="liability" number="08" title="Liability">
-              <p>To the extent permitted by applicable law, RA Homes &amp; Properties is not responsible for loss or damage arising from your use of, or inability to use, the website or from reliance on information displayed on it. This does not limit any responsibility that cannot lawfully be excluded.</p>
+              <p>To the extent permitted by applicable law, RAHomes Property is not responsible for loss or damage arising from your use of, or inability to use, the website or from reliance on information displayed on it. This does not limit any responsibility that cannot lawfully be excluded.</p>
             </TermsSection>
             <TermsSection id="termination" number="09" title="Termination">
-              <p>We may suspend, restrict, or close access to an account or website feature where we reasonably believe these terms have been breached, the service is being misused, or doing so is necessary to protect the website, our users, or RA Homes &amp; Properties.</p>
+              <p>We may suspend, restrict, or close access to an account or website feature where we reasonably believe these terms have been breached, the service is being misused, or doing so is necessary to protect the website, our users, or RAHomes Property.</p>
             </TermsSection>
             <TermsSection id="changes" number="10" title="Changes to these terms">
               <p>We may update these Terms &amp; Conditions as our website and services develop. The revised version will be posted on this page with an updated date. Continuing to use the website after a change means you accept the updated terms.</p>
             </TermsSection>
             <TermsSection id="contact" number="11" title="Contact us">
-              <p>If you have a question about these Terms &amp; Conditions, contact RA Homes &amp; Properties using the details below.</p>
+              <p>If you have a question about these Terms &amp; Conditions, contact RAHomes Property using the details below.</p>
               <div className="mt-5 grid gap-3 border border-line bg-surface p-5 text-sm sm:grid-cols-2">
                 <a href={`mailto:${AGENCY_EMAIL}`} className="flex items-center gap-3 text-ink transition-colors hover:text-gold-dark"><Mail className="h-4 w-4 shrink-0 text-gold" /><span>{AGENCY_EMAIL}</span></a>
                 <p className="flex items-start gap-3 text-ink/70"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold" /><span>{AGENCY_OFFICE_FULL}</span></p>

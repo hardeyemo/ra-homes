@@ -51,7 +51,7 @@ export const BecomeAgentToggle = ({
       <div className={variant === "sidebar" ? "mt-5 border-t border-line pt-5" : "border border-line bg-surface p-6 md:p-8"}>
         <p className={variant === "sidebar" ? "text-sm font-semibold" : "font-display text-2xl"}>Agent status</p>
         <p className={variant === "sidebar" ? "mt-1 text-xs leading-relaxed text-ink/60" : "mt-2 text-sm text-ink/60"}>
-          You already have {role === "ADMIN" ? "RA" : "agent"} access to the dashboard.
+          You already have {role === "ADMIN" ? "Admin" : "agent"} access to the dashboard.
         </p>
       </div>
     );

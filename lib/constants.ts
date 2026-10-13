@@ -1,7 +1,7 @@
-export const SITE_NAME = "RA Homes & Properties";
+export const SITE_NAME = "RAHomes Property";
 export const SITE_TAGLINE = "Every address, accounted for.";
 
-// RA Homes admin contact details. Keep the international number free of a
+// RAHomes Property contact details. Keep the international number free of a
 // leading zero for tel: and wa.me links.
 export const AGENCY_PHONE_LOCAL = "08118495138";
 export const AGENCY_PHONE_INTL = "2348118495138";
@@ -27,7 +27,7 @@ export function whatsappLink(message: string) {
 }
 
 export function propertyWhatsappMessage(title: string, location: string) {
-  return `Hello RA Homes & Properties, I'm interested in "${title}" in ${location}. Could you share more details?`;
+  return `Hello RAHomes Property, I'm interested in "${title}" in ${location}. Could you share more details?`;
 }
 
 export const PROPERTY_TYPES = [
@@ -64,7 +64,7 @@ export const SERVICE_AREAS = [
 ] as const;
 
 // Public property browsing is scoped to Kwara State. Ilorin remains first as
-// RA Homes' primary market, followed by other cities and towns in the state.
+// RAHomes Property's primary market, followed by other cities and towns in the state.
 export const KWARA_CITIES = [
   "Ilorin",
   "Offa",

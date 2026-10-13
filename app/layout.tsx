@@ -12,7 +12,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: `${SITE_NAME} — ${SITE_TAGLINE}`,
   description:
-    "Browse homes for sale and rent, request a viewing, or list your property with RA Homes & Properties.",
+    "Browse homes for sale and rent, request a viewing, or list your property with RAHomes Property.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -53,7 +53,7 @@ export default function ContactPage() {
             <Phone className="w-4 h-4 text-clay shrink-0" /> {AGENCY_PHONE_LOCAL}
           </a>
           <a
-            href={whatsappLink("Hello RA Homes & Properties, I have a question.")}
+            href={whatsappLink("Hello RAHomes Property, I have a question.")}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-3 hover:text-clay"

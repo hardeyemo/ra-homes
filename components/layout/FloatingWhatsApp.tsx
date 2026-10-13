@@ -7,10 +7,10 @@ import { whatsappLink } from "@/lib/constants";
 export const FloatingWhatsApp = () => {
   return (
     <motion.a
-      href={whatsappLink("Hello RA Homes & Properties, I'd like to know more about your listings.")}
+      href={whatsappLink("Hello RAHomes Property, I'd like to know more about your listings.")}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Chat with RA Homes on WhatsApp"
+      aria-label="Chat with RAHomes Property on WhatsApp"
       initial={{ opacity: 0, scale: 0.7, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ delay: 0.8, duration: 0.4, ease: "easeOut" }}

@@ -8,13 +8,15 @@ import { FloatingWhatsApp } from "@/components/layout/FloatingWhatsApp";
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isLoginPage = pathname === "/login";
+  const isDashboard = pathname.startsWith("/dashboard");
+  const hideSiteChrome = isLoginPage || isDashboard;
 
   return (
     <>
-      <Navbar />
-      <main className="flex-grow pt-[76px] lg:pt-[108px]">{children}</main>
-      {!isLoginPage && <Footer />}
-      {!isLoginPage && <FloatingWhatsApp />}
+      {!hideSiteChrome && <Navbar />}
+      <main className={`flex-grow ${hideSiteChrome ? "" : "pt-[76px] lg:pt-[108px]"}`}>{children}</main>
+      {!hideSiteChrome && <Footer />}
+      {!hideSiteChrome && <FloatingWhatsApp />}
     </>
   );
 }

@@ -40,7 +40,7 @@ export function sendVerificationEmail({ email, name, token }: { email: string; n
   return resend.emails.send({
     from: FROM,
     to: email,
-    subject: "Verify your RA Homes email address",
+    subject: "Verify your RAHomes Property email address",
     html: emailShell(`
       <p>Hi ${name},</p>
       <p>Please verify your email address to activate your account.</p>
@@ -55,7 +55,7 @@ export function sendPasswordResetEmail({ email, name, token }: { email: string; 
   return resend.emails.send({
     from: FROM,
     to: email,
-    subject: "Reset your RA Homes password",
+    subject: "Reset your RAHomes Property password",
     html: emailShell(`
       <p>Hi ${name},</p>
       <p>We received a request to reset your password.</p>

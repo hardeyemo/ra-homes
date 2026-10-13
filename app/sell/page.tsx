@@ -85,37 +85,44 @@ export default function SellPage() {
   };
 
   return (
-    <div className="container max-w-5xl py-10 md:py-12">
-      <p className="text-sm font-medium text-clay">Sell with RA Homes</p>
-      <h1 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">Let&apos;s get your property seen.</h1>
-      <p className="mt-3 text-ink/60">
+    <div className="container max-w-6xl py-8 md:py-14">
+      <section className="relative overflow-hidden rounded-3xl border border-line bg-surface px-6 py-8 shadow-[0_20px_60px_hsl(var(--ink)/0.07)] sm:px-10 sm:py-11">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-24 h-72 w-72 rounded-full border border-gold/20 sm:h-96 sm:w-96" />
+        <div aria-hidden="true" className="pointer-events-none absolute -right-3 -top-10 h-52 w-52 rounded-full border border-gold/10 sm:h-72 sm:w-72" />
+      <div className="relative max-w-3xl">
+      <p className="text-sm font-semibold text-gold-dark">Sell with RAHomes Property</p>
+      <h1 className="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-5xl">Let&apos;s get your property seen.</h1>
+      <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/65 sm:text-base">
         Tell us about the property and an agent will follow up with a market valuation within one business day.
-        RA Homes handles viewings and the transaction from there — this form is just to get your listing started.
+        RAHomes Property handles viewings and the transaction from there — this form is just to get your listing started.
       </p>
+      </div>
+      </section>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+      <div className="mt-8 grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+      <section aria-label="Our selling services" className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
         {[
           { icon: Users, title: "Local support", body: "An Ilorin agent handles your listing." },
           { icon: ShieldCheck, title: "Verified process", body: "We review every property before it goes live." },
           { icon: CheckCircle2, title: "Clear next steps", body: "Expect a response within one business day." },
         ].map((item) => (
-          <div key={item.title} className="rounded-xl border border-line bg-surface p-4">
-            <item.icon className="h-5 w-5 text-clay" />
-            <p className="mt-3 text-sm font-semibold">{item.title}</p>
+          <div key={item.title} className="rounded-2xl border border-line bg-surface p-5 shadow-sm transition-shadow hover:shadow-md">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-gold/10 text-gold-dark"><item.icon className="h-5 w-5" /></span>
+            <p className="mt-4 text-sm font-semibold">{item.title}</p>
             <p className="mt-1 text-xs leading-relaxed text-ink/60">{item.body}</p>
           </div>
         ))}
-      </div>
+      </section>
 
       {sessionStatus === "loading" ? (
-        <div className="mt-8 h-40 rounded-xl bg-line/40 animate-pulse" />
+        <div className="h-40 rounded-2xl bg-line/40 animate-pulse" />
       ) : status === "sent" ? (
-        <div className="mt-8 max-w-3xl rounded-xl border border-line bg-surface p-6 md:p-8">
+        <div className="rounded-2xl border border-line bg-surface p-6 shadow-sm md:p-8">
           <p className="text-xl font-bold tracking-tight">Submission received.</p>
           <p className="mt-2 text-ink/60">We'll be in touch using your preferred contact method.</p>
         </div>
       ) : sessionStatus !== "authenticated" ? (
-        <div className="mt-8 max-w-3xl rounded-xl border border-line bg-surface p-6 md:p-8">
+        <div className="rounded-2xl border border-line bg-surface p-6 shadow-sm md:p-8">
           <p className="text-xl font-bold tracking-tight">Sign in to continue</p>
           <p className="mt-2 text-ink/60">
             Create a quick account (or sign in) to submit your property — this lets you track its status and
@@ -139,7 +146,7 @@ export default function SellPage() {
               Sign out
             </button>
           </p>
-          <form onSubmit={handleSubmit} className="mt-4 max-w-3xl space-y-5 rounded-xl border border-line bg-surface p-5 shadow-sm md:p-7">
+          <form onSubmit={handleSubmit} className="mt-4 space-y-5 rounded-2xl border border-line bg-surface p-5 shadow-[0_15px_45px_hsl(var(--ink)/0.06)] md:p-7">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Label htmlFor="ownerName">Your name</Label>
@@ -269,6 +276,7 @@ export default function SellPage() {
         </form>
         </>
       )}
+      </div>
     </div>
   );
 }

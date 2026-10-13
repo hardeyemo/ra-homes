@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { MessagesClient } from "@/components/dashboard/MessagesClient";
 
 export default async function MessagesPage() {
@@ -26,7 +25,6 @@ export default async function MessagesPage() {
 
   return (
     <div className="container py-12">
-      <DashboardNav isAdmin={isAdmin} />
       <p className="font-mono text-xs uppercase tracking-widest text-clay">Dashboard</p>
       <h1 className="mt-2 font-display text-4xl">Messages</h1>
 

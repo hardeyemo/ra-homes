@@ -12,7 +12,7 @@ const ACTIVITY_EVENTS = ["pointerdown", "keydown", "touchstart", "scroll"] as co
 
 // Keeps the cookie's server-side expiry and the browser's idle timer aligned.
 // Activity is shared between same-origin tabs, preventing an inactive tab from
-// signing someone out while they are actively using another RA Homes tab.
+// signing someone out while they are actively using another RAHomes Property tab.
 export function SessionTimeout() {
   const { status, update } = useSession();
   const timer = useRef<number | null>(null);

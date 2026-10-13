@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Check, Sparkles } from "lucide-react";
 
 export function HomeHighlights({ amenities }: { amenities: string[] }) {
@@ -18,33 +17,19 @@ export function HomeHighlights({ amenities }: { amenities: string[] }) {
         <p className="text-sm text-ink/55">{amenities.length} selected {amenities.length === 1 ? "feature" : "features"}</p>
       </div>
 
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-        variants={{
-          hidden: {},
-          visible: { transition: { staggerChildren: 0.05 } },
-        }}
-        className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2"
-      >
+      <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {amenities.map((amenity) => (
-          <motion.div
+          <div
             key={amenity}
-            variants={{
-              hidden: { opacity: 0, y: 12 },
-              visible: { opacity: 1, y: 0 },
-            }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
             className="group flex items-center gap-3 rounded-xl border border-line bg-surface px-4 py-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/60 hover:shadow-md sm:px-5"
           >
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gold/15 text-gold-dark transition-colors group-hover:bg-gold group-hover:text-ink">
               <Check className="h-4 w-4 stroke-[2.5]" />
             </span>
             <span className="text-sm font-semibold tracking-tight text-ink sm:text-[15px]">{amenity}</span>
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 }

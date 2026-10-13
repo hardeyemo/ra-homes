@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
-import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { PropertyQuickActions } from "@/components/dashboard/PropertyQuickActions";
 import { formatPrice } from "@/lib/utils";
 import { ArrowLeft, ArrowRight, Building2, CalendarDays, ClipboardList, MessageSquare } from "lucide-react";
@@ -17,20 +16,28 @@ async function getCurrentAgentAndListings(page: number) {
   const agent = await prisma.user.findUnique({ where: { id: session.user.id } });
   if (!agent) return { agent: null, properties: [], stats: null };
 
-  // Admins see every listing; agents see only their own.
+  // Admins see listings after review; pending listing records stay in the
+  // database and remain available through the existing submission workflow.
+  // Agents continue to see all of their own listings, including pending ones.
   const propertyWhere = agent.role === "ADMIN" ? {} : { agentId: agent.id };
+  const listingWhere = agent.role === "ADMIN" ? { status: { not: "PENDING" as const } } : propertyWhere;
 
-  const [totalProperties, activeCount, inquiryCount, viewingCount, submissionCount] = await Promise.all([
-    prisma.property.count({ where: propertyWhere }),
-    prisma.property.count({ where: { ...propertyWhere, status: "ACTIVE" } }),
+  const [totalProperties, activeCount, inquiryCount, viewingCount, submissionCount, recentActivity] = await Promise.all([
+    prisma.property.count({ where: listingWhere }),
+    prisma.property.count({ where: { ...listingWhere, status: "ACTIVE" } }),
     prisma.inquiry.count({ where: { property: propertyWhere } }),
     prisma.viewingRequest.count({ where: agent.role === "ADMIN" ? {} : { agentId: agent.id } }),
     agent.role === "ADMIN" ? prisma.propertySubmission.count({ where: { status: "PENDING" } }) : Promise.resolve(0),
+    prisma.activityLog.findMany({
+      where: agent.role === "ADMIN" ? undefined : { agentName: agent.name },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    }),
   ]);
   const totalPages = Math.max(1, Math.ceil(totalProperties / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
   const properties = await prisma.property.findMany({
-    where: propertyWhere,
+    where: listingWhere,
     orderBy: { createdAt: "desc" },
     skip: (currentPage - 1) * PAGE_SIZE,
     take: PAGE_SIZE,
@@ -47,6 +54,7 @@ async function getCurrentAgentAndListings(page: number) {
       viewingCount,
       submissionCount,
       active: activeCount,
+      recentActivity: JSON.parse(JSON.stringify(recentActivity)),
     },
   };
 }
@@ -72,11 +80,9 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
   return (
     <div className="bg-parchment py-8 md:py-12">
     <div className="container max-w-6xl">
-      <DashboardNav isAdmin={isAdmin} />
-
       <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-sm font-medium text-ink/55">RA Homes workspace</p>
+          <p className="text-sm font-medium text-ink/55">RAHomes Realty workspace</p>
           <h1 className="mt-1 text-3xl font-bold tracking-tight md:text-4xl">Welcome back, {agent.name.split(" ")[0]}</h1>
         </div>
         <div className="flex gap-3">
@@ -106,7 +112,24 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
         ))}
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-line bg-surface">
+      <section className="mb-8 overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
+        <div className="flex items-center justify-between border-b border-line px-5 py-4 md:px-6">
+          <div><p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gold-dark">Workspace updates</p><h2 className="mt-1 text-lg font-bold">Recent activity</h2></div>
+          {isAdmin && <Link href="/dashboard/activity" className="text-sm font-semibold text-gold-dark hover:underline">View activity</Link>}
+        </div>
+        {stats?.recentActivity?.length ? (
+          <div className="divide-y divide-line">
+            {stats.recentActivity.map((entry: { id: string; action: string; agentName: string; summary: string; createdAt: string }) => (
+              <div key={entry.id} className="flex flex-col gap-1.5 px-5 py-4 sm:flex-row sm:items-center sm:justify-between md:px-6">
+                <div className="min-w-0"><p className="text-sm font-semibold">{entry.summary}</p><p className="mt-1 text-xs text-ink/50">{entry.agentName} · {entry.action.replaceAll("_", " ")}</p></div>
+                <time className="shrink-0 text-xs text-ink/45">{new Date(entry.createdAt).toLocaleString()}</time>
+              </div>
+            ))}
+          </div>
+        ) : <p className="px-5 py-6 text-sm text-ink/55">No recent activity to show.</p>}
+      </section>
+
+      <div id="listings" className="scroll-mt-28 overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
         <div className="flex items-center justify-between border-b border-line p-5 md:p-6">
           <div>
             <h2 className="text-xl font-bold tracking-tight">{isAdmin ? "All listings" : "Your listings"}</h2>

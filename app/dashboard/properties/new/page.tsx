@@ -2,7 +2,6 @@ import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { PropertyForm } from "@/components/dashboard/PropertyForm";
 import type { Property } from "@/types/property";
 import { isValidObjectId } from "@/lib/utils";
@@ -59,7 +58,6 @@ export default async function NewPropertyPage({
 
   return (
     <div className="container py-12 max-w-3xl">
-      <DashboardNav isAdmin={agent?.role === "ADMIN"} />
       <p className="font-mono text-xs uppercase tracking-widest text-clay">Dashboard</p>
       <h1 className="mt-2 font-display text-4xl">New listing</h1>
       {searchParams.fromSubmission && initialData && (

@@ -149,7 +149,7 @@ export const MessagesClient = ({ isAdmin, currentAgentId, agents }: Props) => {
                     }`}
                   >
                     <p className="text-sm font-medium">{a.name}</p>
-                    <p className="text-xs text-ink/50">{a.title || (a.role === "ADMIN" ? "RA" : a.role)}</p>
+                    <p className="text-xs text-ink/50">{a.title && a.title.toLowerCase() !== "user" ? a.title : a.role === "ADMIN" ? "Admin" : "Agent"}</p>
                   </button>
                 ))
               )}

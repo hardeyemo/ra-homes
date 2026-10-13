@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
@@ -38,12 +37,10 @@ export default async function ActivityPage() {
 
   return (
     <div className="container py-12">
-      <DashboardNav isAdmin />
-
       <p className="font-mono text-xs uppercase tracking-widest text-clay">Dashboard</p>
       <h1 className="mt-2 font-display text-4xl">Activity</h1>
       <p className="mt-3 text-ink/60 max-w-xl">
-        Every price change, status change, and listing created or deleted by any agent — RA only.
+        Every price change, status change, and listing created or deleted by any agent — admins only.
       </p>
 
       <div className="mt-10 border border-line bg-surface">

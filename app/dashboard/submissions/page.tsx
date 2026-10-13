@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Badge } from "@/components/ui/badge";
-import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { SubmissionStatusControl } from "@/components/dashboard/SubmissionStatusControl";
 
 export default async function SubmissionsPage() {
@@ -18,8 +17,6 @@ export default async function SubmissionsPage() {
 
   return (
     <div className="container py-12">
-      <DashboardNav isAdmin />
-
       <p className="font-mono text-xs uppercase tracking-widest text-clay">Dashboard</p>
       <h1 className="mt-2 font-display text-4xl">Property Submissions</h1>
       <p className="mt-3 text-ink/60 max-w-xl">

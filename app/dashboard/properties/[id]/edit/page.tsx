@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { isValidObjectId } from "@/lib/utils";
-import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { PropertyForm } from "@/components/dashboard/PropertyForm";
 
 export default async function EditPropertyPage({ params }: { params: { id: string } }) {
@@ -26,7 +25,6 @@ export default async function EditPropertyPage({ params }: { params: { id: strin
 
   return (
     <div className="container py-12 max-w-3xl">
-      <DashboardNav isAdmin={currentAgent.role === "ADMIN"} />
       <p className="font-mono text-xs uppercase tracking-widest text-clay">Dashboard</p>
       <h1 className="mt-2 font-display text-4xl">Edit {data.reference}</h1>
       <div className="mt-10">

@@ -64,11 +64,14 @@ export async function GET(req: NextRequest) {
   const requestedPage = Number(params.get("page") || 1);
   const page = Number.isFinite(requestedPage) ? Math.max(Math.floor(requestedPage), 1) : 1;
   const sort = params.get("sort") || "newest";
+  // `skip` pagination needs a deterministic order. Many listings share the
+  // same price or timestamp, so include the unique id as a tie-breaker to
+  // keep records from moving between pages across requests.
   const orderBy = sort === "price-asc"
-    ? { price: "asc" as const }
+    ? [{ price: "asc" as const }, { id: "asc" as const }]
     : sort === "price-desc"
-      ? { price: "desc" as const }
-      : { createdAt: "desc" as const };
+      ? [{ price: "desc" as const }, { id: "asc" as const }]
+      : [{ createdAt: "desc" as const }, { id: "asc" as const }];
 
   // Listings use both "Kwara" and "Kwara State". Keep the public catalogue
   // unified; city remains available as an optional filter below.

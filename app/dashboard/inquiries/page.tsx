@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Badge } from "@/components/ui/badge";
-import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { InquiryStatusControl } from "@/components/dashboard/InquiryStatusControl";
 import { ViewingStatusControl } from "@/components/dashboard/ViewingStatusControl";
 
@@ -35,8 +34,6 @@ export default async function DashboardInquiriesPage() {
 
   return (
     <div className="container py-12">
-      <DashboardNav isAdmin={isAdmin} />
-
       <div className="mb-10">
         <p className="font-mono text-xs uppercase tracking-widest text-clay">Dashboard</p>
         <h1 className="mt-2 font-display text-4xl">Inquiries &amp; Viewings</h1>

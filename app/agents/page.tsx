@@ -1,21 +1,13 @@
-import Image from "next/image";
-import { ShieldCheck, Users } from "lucide-react";
+import { ShieldCheck, Users, UserRound } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
 export const revalidate = 300;
 
-const PORTFOLIO_AGENT_PHOTOS = [
-  "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=480&h=480&fit=crop&crop=faces",
-  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=480&h=480&fit=crop&crop=faces",
-  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=480&h=480&fit=crop&crop=faces",
-  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=480&h=480&fit=crop&crop=faces",
-];
-
 async function getAgents() {
   try {
     const agents = await prisma.user.findMany({
-      where: { role: "AGENT" },
-      select: { id: true, name: true, title: true },
+      where: { role: { in: ["AGENT", "ADMIN"] } },
+      select: { id: true, name: true, title: true, role: true },
       orderBy: { name: "asc" },
     });
     return agents;
@@ -34,9 +26,9 @@ export default async function AgentsPage() {
         <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
           <div className="max-w-2xl">
       <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-gold"><Users className="h-3.5 w-3.5" /> Our team</p>
-      <h1 className="mt-4 font-display text-4xl leading-tight sm:text-5xl">Meet your RA Homes team.</h1>
+      <h1 className="mt-4 font-display text-4xl leading-tight sm:text-5xl">Meet your RAHomes Property team.</h1>
       <p className="mt-4 max-w-xl text-sm leading-relaxed text-parchment/70 sm:text-base">
-        Every listing on this site is handled directly by a dedicated RA Homes property specialist.
+        Every listing on this site is handled directly by a dedicated RAHomes Property specialist.
       </p>
           </div>
           <div className="flex items-center gap-3 rounded-2xl border border-parchment/15 bg-parchment/10 px-5 py-4 backdrop-blur-sm">
@@ -57,22 +49,16 @@ export default async function AgentsPage() {
             <div><p className="font-mono text-xs uppercase tracking-widest text-clay">Our specialists</p><h2 className="mt-2 font-display text-3xl">Meet the team</h2></div>
           </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {agents.map((agent, index) => (
+          {agents.map((agent) => (
             <article key={agent.id} className="group overflow-hidden rounded-2xl border border-line bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-xl hover:shadow-ink/10">
               <div className="flex items-start justify-between gap-4">
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-sage-light font-display text-2xl">
-                  <Image
-                    src={PORTFOLIO_AGENT_PHOTOS[index % PORTFOLIO_AGENT_PHOTOS.length]}
-                    alt=""
-                    width={64}
-                    height={64}
-                    className="h-full w-full object-cover"
-                  />
+                <div aria-label={`${agent.name} initials`} className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-ink font-display text-xl font-semibold tracking-wide text-gold">
+                  {agent.name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("") || <UserRound className="h-7 w-7" />}
                 </div>
-                <span className="rounded-full border border-line px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-ink/50">RA Homes</span>
+                <span className={`rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-widest ${agent.role === "ADMIN" ? "border-gold/60 bg-gold/10 text-gold-dark" : "border-line text-ink/50"}`}>{agent.role === "ADMIN" ? "Admin" : "Agent"}</span>
               </div>
               <p className="mt-5 font-display text-2xl">{agent.name}</p>
-              <p className="mt-1 text-sm text-ink/60">{agent.title || "Property Consultant"}</p>
+              <p className="mt-1 text-sm text-ink/60">{agent.role === "ADMIN" ? "Administrator" : agent.title && agent.title.toLowerCase() !== "user" ? agent.title : "Property Consultant"}</p>
             </article>
           ))}
         </div>

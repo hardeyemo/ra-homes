@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Images, Play, X } from "lucide-react";
+import { Building2, ChevronLeft, ChevronRight, Images, Play, X } from "lucide-react";
 
 type Props = { images: string[]; title: string; instagramVideoUrl?: string; instagramVideoThumbnailUrl?: string };
 
@@ -21,7 +21,7 @@ export const PropertyGallery = ({ images, title, instagramVideoUrl, instagramVid
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [active, images.length]);
 
-  if (!images.length) return null;
+  if (!images.length) return <div aria-label={`${title} photos`} className="grid h-[300px] place-items-center rounded-2xl border border-line bg-gradient-to-br from-surface to-parchment text-ink/45 sm:h-[460px] sm:rounded-3xl lg:h-[560px]"><div className="text-center"><Building2 className="mx-auto h-12 w-12" /><p className="mt-3 text-sm font-medium">Photos coming soon</p></div></div>;
   const open = (index: number) => setActive(index);
   const close = () => setActive(null);
   const activeIsInstagramThumbnail = active !== null && images[active] === instagramVideoThumbnailUrl && Boolean(instagramVideoUrl);

@@ -129,6 +129,9 @@ export const authOptions: AuthOptions = {
       if (token.userId && !user) {
         const fresh = await prisma.user.findUnique({ where: { id: token.userId as string } });
         if (fresh) {
+          // Keep the display name in existing JWT sessions in sync with the
+          // database so profile/agent name changes show without changing auth.
+          token.name = fresh.name;
           token.role = fresh.role;
           token.agentRequestStatus = fresh.agentRequestStatus;
           const tokenIssuedAt = typeof token.iat === "number" ? token.iat * 1000 : 0;
