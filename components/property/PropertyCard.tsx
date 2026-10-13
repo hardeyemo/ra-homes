@@ -96,12 +96,15 @@ export const PropertyCard = ({ property, priority = false }: { property: Propert
           </button>
         </div>
 
-        <Link href={`/properties/${property.slug}`} className="mt-2 block rounded-xl border border-gold/30 p-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/70 hover:bg-parchment/45 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold">
-          <h3 className="line-clamp-1 text-base font-bold leading-snug text-ink transition-colors group-hover:text-gold-dark sm:text-lg">{property.title}</h3>
+        <Link href={`/properties/${property.slug}`} className="group/details relative mt-2 block rounded-xl border border-gold/30 p-3 pr-12 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/70 hover:bg-parchment/45 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold">
+          <h3 className="line-clamp-1 text-base font-bold leading-snug text-ink transition-colors group-hover/details:text-gold-dark sm:text-lg">{property.title}</h3>
           <p className="mt-1.5 flex min-h-5 items-start gap-1.5 text-[13px] leading-snug text-ink/60">
             <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sage" />
             <span className="line-clamp-1">{location}</span>
           </p>
+          <span aria-hidden="true" className="absolute right-3 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full border border-gold/35 bg-surface text-gold-dark transition-all duration-300 group-hover/details:translate-x-0.5 group-hover/details:border-gold/70 group-hover/details:bg-gold/10">
+            <ArrowRight className="h-4 w-4" />
+          </span>
         </Link>
 
         <div className="mt-auto pt-4">

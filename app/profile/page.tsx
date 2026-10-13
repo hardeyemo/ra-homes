@@ -33,8 +33,8 @@ export default async function ProfilePage() {
           </div>
         </section>
 
-        <div className="mt-7 grid gap-7 md:grid-cols-[260px_minmax(0,1fr)]">
-          <aside className="h-fit border border-line bg-surface p-5">
+        <div className="mt-7 grid gap-6 md:grid-cols-[220px_minmax(0,1fr)] lg:gap-7">
+          <aside className="h-fit min-w-0 border border-line bg-surface p-4">
             <div className="flex items-center gap-3 border-b border-line pb-5">
               <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-ink text-base font-semibold text-parchment">
                 {initial}
