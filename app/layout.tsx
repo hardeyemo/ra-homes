@@ -4,6 +4,7 @@ import { IntroAnimation } from "@/components/layout/IntroAnimation";
 import { NetworkNotifier } from "@/components/layout/NetworkNotifier";
 import { AdminActivityNotifier } from "@/components/dashboard/AdminActivityNotifier";
 import { MessageNotifier } from "@/components/dashboard/MessageNotifier";
+import { CookieNotice } from "@/components/layout/CookieNotice";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
 import { SITE_NAME, SITE_TAGLINE } from "@/lib/constants";
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <NetworkNotifier />
           <AdminActivityNotifier />
           <MessageNotifier />
+          <CookieNotice />
           <Toaster
             position="top-right"
             closeButton

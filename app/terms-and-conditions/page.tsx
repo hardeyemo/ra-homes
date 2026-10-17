@@ -94,7 +94,8 @@ export default function TermsAndConditionsPage() {
               <p>You must not use our listings, contact channels, or forms to send spam, harassment, unsolicited promotions, or content unrelated to genuine property enquiries and services.</p>
             </TermsSection>
             <TermsSection id="privacy" number="06" title="Privacy and cookies">
-              <p>We use the information you provide to operate the requested website features for example, to create and manage accounts, respond to enquiries, arrange viewing requests, and review property submissions. Our website also uses technical features needed to keep accounts signed in and services working as expected.</p>
+              <p>We use the information you provide to operate the website features you request, including managing accounts, responding to enquiries, arranging viewing requests, and reviewing property submissions. We use essential cookies for functions such as keeping you signed in and protecting account sessions. These cookies are needed for the requested service to work.</p>
+              <p>We do not currently use cookies for advertising or optional analytics. You can clear cookies through your browser settings; doing so may sign you out or affect account features. This website may also store functional preferences in your browser.</p>
               <p>Do not include sensitive personal or financial information in free-text forms unless our team has specifically asked for it through an appropriate channel.</p>
             </TermsSection>
             <TermsSection id="disclaimers" number="07" title="Disclaimers">
