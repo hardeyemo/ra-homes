@@ -70,6 +70,8 @@ export async function POST(req: NextRequest) {
     }
 
     let count = await nextPropertyReferenceSequence() - 1;
+    const lastOrdered = await prisma.property.findFirst({ orderBy: { displayOrder: "desc" }, select: { displayOrder: true } });
+    let displayOrder = lastOrdered?.displayOrder || 0;
     const created: string[] = [];
     const failed: { row: number; error: string }[] = [];
 
@@ -83,6 +85,7 @@ export async function POST(req: NextRequest) {
 
       try {
         count += 1;
+        displayOrder += 1;
         const reference = toReference(count);
         const slug = `${slugify(data.title)}-${reference.toLowerCase()}`;
 
@@ -106,6 +109,7 @@ export async function POST(req: NextRequest) {
             amenities: data.amenities ? data.amenities.split("|").map((s) => s.trim()).filter(Boolean) : [],
             images: data.images.split("|").map((s) => s.trim()).filter(Boolean),
             status: data.status,
+            displayOrder,
             agentId,
             reference,
             slug,

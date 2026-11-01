@@ -12,6 +12,7 @@ import type { Property, PropertyFilters as FiltersType } from "@/types/property"
 const MAX_PRICE = 100_000_000;
 const PAGE_SIZE = 6;
 const SORT_OPTIONS = [
+  { value: "manual", label: "Featured order" },
   { value: "newest", label: "Newest listings" },
   { value: "price-asc", label: "Price: Low to High" },
   { value: "price-desc", label: "Price: High to Low" },
@@ -54,7 +55,7 @@ export default function PropertiesPage() {
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
-  const [sort, setSort] = useState("newest");
+  const [sort, setSort] = useState("manual");
   const [loading, setLoading] = useState(true);
   const [filtersPanelOpen, setFiltersPanelOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);

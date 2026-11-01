@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
   const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(Math.floor(requestedLimit), 1), 48) : 12;
   const requestedPage = Number(params.get("page") || 1);
   const page = Number.isFinite(requestedPage) ? Math.max(Math.floor(requestedPage), 1) : 1;
-  const sort = params.get("sort") || "newest";
+  const sort = params.get("sort") || "manual";
   // `skip` pagination needs a deterministic order. Many listings share the
   // same price or timestamp, so include the unique id as a tie-breaker to
   // keep records from moving between pages across requests.
@@ -71,7 +71,9 @@ export async function GET(req: NextRequest) {
     ? [{ price: "asc" as const }, { id: "asc" as const }]
     : sort === "price-desc"
       ? [{ price: "desc" as const }, { id: "asc" as const }]
-      : [{ createdAt: "desc" as const }, { id: "asc" as const }];
+      : sort === "newest"
+        ? [{ createdAt: "desc" as const }, { id: "asc" as const }]
+        : [{ displayOrder: "asc" as const }, { createdAt: "desc" as const }, { id: "asc" as const }];
 
   // Listings use both "Kwara" and "Kwara State". Keep the public catalogue
   // unified; city remains available as an optional filter below.
@@ -179,8 +181,9 @@ export async function POST(req: NextRequest) {
     const reference = toReference(await nextPropertyReferenceSequence());
     const slug = `${slugify(data.title)}-${reference.toLowerCase()}`;
 
+    const lastOrdered = await prisma.property.findFirst({ orderBy: { displayOrder: "desc" }, select: { displayOrder: true } });
     const property = await prisma.property.create({
-      data: { ...data, zip: data.zip || "000000", reference, slug },
+      data: { ...data, zip: data.zip || "000000", reference, slug, displayOrder: (lastOrdered?.displayOrder || 0) + 1 },
     });
 
     const agent = await prisma.user.findUnique({ where: { id: session.user.id } });

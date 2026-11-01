@@ -41,9 +41,9 @@ export default async function PropertyDetailPage({ params }: { params: { id: str
   // Keep recommendation work bounded while prioritizing similar nearby homes.
   const recommendationWhere = { status: { in: [...PUBLIC_PROPERTY_STATUSES] }, id: { not: property.id } };
   const [sameType, sameLocation, latest] = await Promise.all([
-    prisma.property.findMany({ where: { ...recommendationWhere, propertyType: property.propertyType }, orderBy: [{ createdAt: "desc" }, { id: "asc" }], take: 3 }),
-    prisma.property.findMany({ where: { ...recommendationWhere, city: property.city }, orderBy: [{ createdAt: "desc" }, { id: "asc" }], take: 4 }),
-    prisma.property.findMany({ where: recommendationWhere, orderBy: [{ createdAt: "desc" }, { id: "asc" }], take: 6 }),
+    prisma.property.findMany({ where: { ...recommendationWhere, propertyType: property.propertyType }, orderBy: [{ displayOrder: "asc" }, { createdAt: "desc" }, { id: "asc" }], take: 3 }),
+    prisma.property.findMany({ where: { ...recommendationWhere, city: property.city }, orderBy: [{ displayOrder: "asc" }, { createdAt: "desc" }, { id: "asc" }], take: 4 }),
+    prisma.property.findMany({ where: recommendationWhere, orderBy: [{ displayOrder: "asc" }, { createdAt: "desc" }, { id: "asc" }], take: 6 }),
   ]);
   const relatedProperties = [...sameType, ...sameLocation, ...latest]
     .filter((item, index, list) => list.findIndex((candidate) => candidate.id === item.id) === index)
@@ -62,7 +62,7 @@ export default async function PropertyDetailPage({ params }: { params: { id: str
   const landSize = property.landSize || (property.lotSqft ? `${formatNumber(property.lotSqft)} sqft` : null);
   const propertyTypeLabel = property.propertyType.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, (letter: string) => letter.toUpperCase());
   const instagramVideoUrl = property.videos?.find((video: string) => /^https?:\/\/(?:www\.)?instagram\.com\//i.test(video));
-  const instagramVideoThumbnailUrl = property.reference === "RA-110" ? "/images/properties/ra-110-instagram-thumbnail.jpg" : undefined;
+  const instagramVideoThumbnailUrl = property.slug.endsWith("-ra-110") && instagramVideoUrl ? "/images/properties/ra-110-instagram-thumbnail.jpg" : undefined;
   const galleryImages = instagramVideoThumbnailUrl && instagramVideoUrl && !property.images.includes(instagramVideoThumbnailUrl)
     ? [...property.images, instagramVideoThumbnailUrl]
     : property.images;

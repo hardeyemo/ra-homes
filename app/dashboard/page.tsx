@@ -136,6 +136,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
             <p className="mt-1 text-sm text-ink/55">{totalProperties} listing{totalProperties === 1 ? "" : "s"} in total.</p>
           </div>
           <Link href="/properties" className="hidden text-sm font-medium text-clay hover:underline sm:block">View public listings</Link>
+          {isAdmin && <Link href="/dashboard/properties/order" className="text-sm font-semibold text-gold-dark hover:underline">Arrange listings</Link>}
         </div>
         {properties.length === 0 ? (
           <p className="p-6 text-ink/60">No listings yet. Create your first one.</p>

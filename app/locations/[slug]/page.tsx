@@ -35,7 +35,7 @@ async function getAreaProperties(area: ReturnType<typeof getArea>): Promise<Prop
 
     const properties = await prisma.property.findMany({
       where,
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ displayOrder: "asc" }, { createdAt: "desc" }, { id: "asc" }],
       take: 24,
     });
     return JSON.parse(JSON.stringify(properties));

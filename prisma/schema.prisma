@@ -157,6 +157,10 @@ model Property {
 
   views Int @default(0)
 
+  // Admin-controlled order across the public catalogue. Existing records are
+  // initialized by the dashboard reorder endpoint when first saved.
+  displayOrder Int @default(0)
+
   agentId String @db.ObjectId
   agent   User   @relation(fields: [agentId], references: [id])
 
@@ -168,6 +172,7 @@ model Property {
   updatedAt DateTime @updatedAt
 
   @@index([status, createdAt(sort: Desc)])
+  @@index([status, displayOrder])
   @@index([status, listingType, createdAt(sort: Desc)])
   @@index([status, propertyType, createdAt(sort: Desc)])
   @@index([status, city, createdAt(sort: Desc)])

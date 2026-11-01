@@ -15,7 +15,7 @@ async function getHomepageProperties(requestedPage: number): Promise<{ propertie
     const total = await prisma.property.count({ where });
     const totalPages = Math.max(1, Math.ceil(total / HOMEPAGE_PROPERTY_PAGE_SIZE));
     const page = Math.min(Math.max(requestedPage, 1), totalPages);
-    const properties = await prisma.property.findMany({ where, orderBy: [{ createdAt: "desc" }, { id: "asc" }], skip: (page - 1) * HOMEPAGE_PROPERTY_PAGE_SIZE, take: HOMEPAGE_PROPERTY_PAGE_SIZE, select: propertyCardSelect });
+    const properties = await prisma.property.findMany({ where, orderBy: [{ displayOrder: "asc" }, { createdAt: "desc" }, { id: "asc" }], skip: (page - 1) * HOMEPAGE_PROPERTY_PAGE_SIZE, take: HOMEPAGE_PROPERTY_PAGE_SIZE, select: propertyCardSelect });
     return { properties: JSON.parse(JSON.stringify(properties)), page, totalPages, totalProperties: total };
   } catch {
     return { properties: [], page: 1, totalPages: 1, totalProperties: 0 };
