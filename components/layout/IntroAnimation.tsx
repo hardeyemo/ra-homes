@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 
 // useLayoutEffect only exists meaningfully in the browser; falling back to
 // useEffect on the server avoids Next.js's SSR warning while still running
@@ -86,14 +87,14 @@ export const IntroAnimation = () => {
               transition={{ duration: SPIN_SECONDS, ease: [0.22, 0.8, 0.25, 1] }}
             />
             <motion.div
-              className="grid h-20 w-20 place-items-center rounded-full border border-gold bg-ink font-display text-3xl font-bold tracking-tight text-gold shadow-[0_0_0_8px_hsl(var(--ink)),0_0_0_9px_hsl(var(--gold)/0.3)] sm:h-24 sm:w-24 sm:text-4xl"
+              className="h-20 w-20 overflow-hidden rounded-full border border-gold shadow-[0_0_0_8px_hsl(var(--ink)),0_0_0_9px_hsl(var(--gold)/0.3)] sm:h-24 sm:w-24"
               initial={{ rotate: -45, scale: 0.72 }}
               animate={{ rotate: 360, scale: 1 }}
               transition={{ duration: SPIN_SECONDS, ease: [0.22, 0.8, 0.25, 1] }}
             >
-              RA
+              <Image src="/images/brand/ra-homes-logo.jpg" alt="RA Home & Properties" width={1280} height={1280} className="h-full w-full object-cover" priority />
             </motion.div>
-            <p className="mt-6 text-center font-sans text-xs font-bold uppercase tracking-[0.28em] text-parchment sm:text-sm">RAHomes Property</p>
+            <p className="mt-6 text-center font-sans text-xs font-bold uppercase tracking-[0.28em] text-parchment sm:text-sm">RA Home &amp; Properties</p>
           </motion.div>
         </motion.div>
       )}

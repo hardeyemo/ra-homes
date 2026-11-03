@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
@@ -74,8 +75,8 @@ export const DashboardNav = ({ isAdmin, name, email }: { isAdmin: boolean; name:
     <aside className="z-30 border-b border-line bg-surface lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:border-b-0 lg:border-r">
       <div className="flex items-center justify-between px-4 py-3 sm:px-6 lg:block lg:px-5 lg:py-6">
         <Link href="/dashboard" className="flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-gold/70 bg-ink font-display text-sm font-bold text-gold">RA</span>
-          <span className="leading-tight"><span className="block text-sm font-extrabold tracking-tight">RAHomes Realty</span><span className="mt-1 hidden font-mono text-[9px] uppercase tracking-[0.18em] text-ink/45 lg:block">Workspace</span></span>
+          <Image src="/images/brand/ra-homes-logo.jpg" alt="" width={1280} height={1280} className="h-10 w-10 shrink-0 rounded-full object-cover" />
+          <span className="leading-tight"><span className="block text-sm font-extrabold tracking-tight">RA Home &amp; Properties</span><span className="mt-1 hidden font-mono text-[9px] uppercase tracking-[0.18em] text-ink/45 lg:block">Workspace</span></span>
         </Link>
         <div className="hidden items-center gap-3 border-y border-line py-5 lg:mt-6 lg:flex">
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-ink text-xs font-semibold text-parchment">{initials}</span>

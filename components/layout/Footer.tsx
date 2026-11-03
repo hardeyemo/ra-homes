@@ -15,15 +15,15 @@ export const Footer = () => (
     <div className="container grid grid-cols-1 gap-5 py-5 md:grid-cols-[1.4fr_1fr_auto] md:items-start md:gap-6 md:py-6">
       <div>
         <Logo variant="light" />
+        <p className="mt-1 flex items-center justify-center gap-2 text-center text-xs text-parchment/70 sm:mt-2">
+          <MapPin className="h-4 w-4 shrink-0 text-gold" aria-hidden="true" />
+          <span className="max-w-sm">
+            {AGENCY_OFFICE.line1}, {AGENCY_OFFICE.line2}, {AGENCY_OFFICE.city}, {AGENCY_OFFICE.state}
+          </span>
+        </p>
         <p className="mt-1.5 hidden max-w-md text-sm text-parchment/60 sm:block">
           Every address, accounted for. A boutique brokerage for buyers, renters,
           and sellers who want the full record.
-        </p>
-        <p className="mt-1 flex items-start gap-2 text-xs text-parchment/70 sm:mt-2">
-          <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-gold" />
-          <span>
-            {AGENCY_OFFICE.line1}, {AGENCY_OFFICE.city}, {AGENCY_OFFICE.state}
-          </span>
         </p>
       </div>
 

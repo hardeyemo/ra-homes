@@ -1,5 +1,5 @@
-export const SITE_NAME = "RAHomes Property";
-export const SITE_TAGLINE = "Every address, accounted for.";
+export const SITE_NAME = "RA Homes & Properties";
+export const SITE_TAGLINE = "Buy, Sell, Rent & Manage with Confidence";
 
 // RAHomes Property contact details. Keep the international number free of a
 // leading zero for tel: and wa.me links.
@@ -15,7 +15,7 @@ export const SOCIAL_LINKS = {
 
 export const AGENCY_OFFICE = {
   line1: "Space 12, City Plaza",
-  line2: "Beside Kosemani Hospital, Emirs Road",
+  line2: "Emir's Road",
   city: "Ilorin",
   state: "Kwara State",
   country: "Nigeria",

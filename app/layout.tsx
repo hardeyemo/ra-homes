@@ -11,7 +11,8 @@ import { SITE_NAME, SITE_TAGLINE } from "@/lib/constants";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+  metadataBase: new URL("https://www.rahomesproperties.com"),
+  title: `${SITE_NAME} | ${SITE_TAGLINE}`,
   description:
     "Browse homes for sale and rent, request a viewing, or list your property with RAHomes Property.",
 };

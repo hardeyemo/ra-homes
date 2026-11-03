@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Suspense, useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -160,9 +161,9 @@ function LoginForm() {
         <div className="pointer-events-none absolute -right-8 -top-8 h-[24rem] w-[24rem] rounded-full border border-gold/15" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(145deg,transparent_15%,hsl(var(--gold)/0.12)_100%)]" />
 
-        <Link href="/" aria-label="RAHomes Realty home" className="relative inline-flex w-fit items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold">
-          <span className="grid h-11 w-11 place-items-center rounded-full border border-gold/75 bg-parchment/5 font-display text-lg font-bold text-gold">RA</span>
-          <span className="leading-tight"><span className="block text-sm font-extrabold tracking-tight text-parchment">RAHomes</span><span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.2em] text-gold-light">Realty</span></span>
+        <Link href="/" aria-label="RA Home and Properties home" className="relative inline-flex w-fit items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold">
+          <Image src="/images/brand/ra-homes-logo.jpg" alt="" width={1280} height={1280} className="h-12 w-12 rounded-full object-cover" />
+          <span className="leading-tight"><span className="block text-sm font-extrabold tracking-tight text-parchment">RA Home &amp;</span><span className="mt-1 text-[9px] font-bold uppercase tracking-[0.2em] text-gold-light">Properties</span></span>
         </Link>
 
         <div className="relative my-auto max-w-xl py-10">
@@ -209,7 +210,7 @@ function LoginForm() {
 
           <div className="mt-6 flex items-center gap-2 text-xs text-parchment/60"><Building2 className="h-4 w-4 text-gold" /> Local knowledge. Clear guidance.</div>
           <p className="mt-5 font-mono text-[11px] uppercase tracking-widest text-parchment/40">
-            {AGENCY_OFFICE.line1} · {AGENCY_OFFICE.city}, {AGENCY_OFFICE.state}
+            {AGENCY_OFFICE.line1} · {AGENCY_OFFICE.line2}, {AGENCY_OFFICE.city}, {AGENCY_OFFICE.state}
           </p>
         </motion.div>
       </div>
@@ -223,9 +224,9 @@ function LoginForm() {
           className="w-full max-w-[27rem] rounded-3xl border border-line/80 bg-surface/95 p-6 shadow-[0_24px_65px_hsl(var(--ink)/0.09)] backdrop-blur sm:p-9"
         >
           <div className="mb-8 flex justify-center lg:hidden">
-            <Link href="/" aria-label="RAHomes Realty home" className="inline-flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-full border border-gold/75 bg-ink font-display text-lg font-bold text-gold">RA</span>
-              <span className="text-left leading-tight"><span className="block text-sm font-extrabold tracking-tight">RAHomes</span><span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.2em] text-gold-dark">Realty</span></span>
+            <Link href="/" aria-label="RA Home and Properties home" className="inline-flex items-center gap-3">
+              <Image src="/images/brand/ra-homes-logo.jpg" alt="" width={1280} height={1280} className="h-12 w-12 rounded-full object-cover" />
+              <span className="text-left leading-tight"><span className="block text-sm font-extrabold tracking-tight">RA Home &amp;</span><span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.2em] text-gold-dark">Properties</span></span>
             </Link>
           </div>
 

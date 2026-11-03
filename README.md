@@ -57,7 +57,7 @@ WhatsApp, a phone call, or a viewing request instead.
   per-row validation preview, then bulk create via `/api/properties/import` (listings land as
   `DRAFT` for review before publishing)
 - **Dark/light mode**: toggle in the Navbar (desktop + mobile), persisted via `next-themes`
-- **Office info**: Space 12, City Plaza, beside Kosemani Hospital, Emirs Road, Ilorin, Kwara State —
+- **Office info**: Space 12, City Plaza, Emir's Road, Ilorin, Kwara State —
   in the Footer, Contact page, and About page
 
 ## Auth & access control
