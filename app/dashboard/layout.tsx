@@ -24,7 +24,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="min-h-screen bg-parchment lg:grid lg:grid-cols-[264px_minmax(0,1fr)]">
-      <DashboardNav isAdmin={isAdmin} name={user.name || "RAHomes Realty"} email={user.email} />
+      <DashboardNav isAdmin={isAdmin} name={user.name || "RA Homes and Properties"} email={user.email} />
       <main className="min-w-0 py-2 sm:py-3 lg:py-5">{children}</main>
     </div>
   );

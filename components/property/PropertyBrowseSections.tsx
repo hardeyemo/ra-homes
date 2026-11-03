@@ -20,7 +20,7 @@ export function PropertyBrowseSections({ properties, page, totalPages, totalProp
         <div>
           <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-sage">Find your place in Ilorin</p>
           <h2 className="font-display text-2xl text-ink sm:text-3xl">Homes and land worth exploring</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink/60">Browse verified homes, land, and commercial spaces from the RAHomes Property team.</p>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink/60">Browse verified homes, land, and commercial spaces from the RA Homes and Properties team.</p>
         </div>
         <div className="flex items-center gap-3">
           <span className="whitespace-nowrap rounded-full border border-line bg-surface px-3 py-1.5 text-xs font-semibold text-ink/70">{totalProperties} listings</span>

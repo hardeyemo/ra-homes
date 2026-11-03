@@ -32,7 +32,7 @@ export default async function DashboardUsersPage({ searchParams }: { searchParam
         <div>
           <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-gold-dark"><Users className="h-3.5 w-3.5" /> Account directory</p>
           <h1 className="mt-2 font-display text-4xl">Users</h1>
-          <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink/60">Review registered RAHomes Realty accounts and agent access requests.</p>
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink/60">Review registered RA Homes and Properties accounts and agent access requests.</p>
         </div>
         <Link href="/dashboard/agents" className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-line bg-surface px-4 text-sm font-semibold hover:bg-parchment">
           Manage agents <ArrowRight className="h-4 w-4" />
@@ -49,7 +49,7 @@ export default async function DashboardUsersPage({ searchParams }: { searchParam
               <thead><tr className="border-b border-line bg-parchment/60 text-xs uppercase tracking-wider text-ink/50"><th className="px-5 py-3 font-semibold">User</th><th className="px-5 py-3 font-semibold">Contact</th><th className="px-5 py-3 font-semibold">Agent access</th><th className="px-5 py-3 font-semibold">Joined</th></tr></thead>
               <tbody className="divide-y divide-line">
                 {users.map((user) => {
-                  const displayName = user.name || "RAHomes Realty member";
+                  const displayName = user.name || "RA Homes and Properties member";
                   const initials = displayName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("");
                   return <tr key={user.id} className="hover:bg-parchment/40">
                     <td className="px-5 py-4"><div className="flex items-center gap-3"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-ink text-xs font-semibold text-parchment">{initials || "RA"}</span><span className="font-medium">{displayName}</span></div></td>

@@ -112,7 +112,7 @@ export const Navbar = () => {
         <div className="container flex items-center justify-between py-2 text-[10px] font-mono uppercase tracking-[0.16em]">
           <div className="flex items-center gap-4">
             <a
-              href={whatsappLink("Hello RAHomes Property, I'd like to know more about your listings.")}
+              href={whatsappLink("Hello RA Homes and Properties, I'd like to know more about your listings.")}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 hover:text-gold transition-colors"
@@ -311,7 +311,7 @@ export const Navbar = () => {
                     )}
                   </Link>
                   <a
-                    href={whatsappLink("Hello RAHomes Property, I'd like to know more about your listings.")}
+                    href={whatsappLink("Hello RA Homes and Properties, I'd like to know more about your listings.")}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setIsMobileMenuOpen(false)}

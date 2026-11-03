@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
-import { PUBLIC_PROPERTY_STATUSES, SERVICE_AREAS } from "@/lib/constants";
+import { PUBLIC_PROPERTY_STATUSES, SERVICE_AREAS, SITE_URL } from "@/lib/constants";
 
 // Keep the sitemap available at runtime so it can include current public listings
 // without requiring a database connection during the production build.
@@ -16,8 +16,6 @@ const STATIC_ROUTES = [
   "/sell",
   "/terms-and-conditions",
 ];
-
-const SITE_URL = "https://www.rahomesproperties.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = [

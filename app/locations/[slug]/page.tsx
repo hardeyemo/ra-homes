@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
-import type { Metadata } from "next";
 import Link from "next/link";
 import { PropertyCard } from "@/components/property/PropertyCard";
 import { prisma } from "@/lib/prisma";
 import { SERVICE_AREAS, SITE_NAME } from "@/lib/constants";
+import { createPageMetadata } from "@/lib/seo";
 import type { Property } from "@/types/property";
 
 export const revalidate = 60;
@@ -16,13 +16,14 @@ function getArea(slug: string) {
   return SERVICE_AREAS.find((a) => a.slug === slug);
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+export function generateMetadata({ params }: { params: { slug: string } }) {
   const area = getArea(params.slug);
   if (!area) return {};
-  return {
-    title: `Real Estate in ${area.name}, Ilorin — ${SITE_NAME}`,
-    description: `${area.description} Browse homes for sale and rent, verified by RAHomes Property.`,
-  };
+  return createPageMetadata(
+    `${area.name === "Ilorin" ? "Real Estate in Ilorin" : `Real Estate in ${area.name}, Ilorin`} | ${SITE_NAME}`,
+    `${area.description} Browse homes for sale and rent with ${SITE_NAME}.`,
+    `/locations/${area.slug}`,
+  );
 }
 
 async function getAreaProperties(area: ReturnType<typeof getArea>): Promise<Property[]> {

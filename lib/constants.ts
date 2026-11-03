@@ -1,7 +1,10 @@
-export const SITE_NAME = "RA Homes & Properties";
+export const SITE_NAME = "RA Homes and Properties";
 export const SITE_TAGLINE = "Buy, Sell, Rent & Manage with Confidence";
+export const SITE_URL = "https://www.rahomesproperties.com";
+export const SITE_TITLE = `${SITE_NAME} | ${SITE_TAGLINE}`;
+export const SITE_DESCRIPTION = `Buy, sell, rent, and manage property in Ilorin, Kwara State with ${SITE_NAME}. Browse homes and land, request a viewing, or list your property with our local team.`;
 
-// RAHomes Property contact details. Keep the international number free of a
+// RA Homes and Properties contact details. Keep the international number free of a
 // leading zero for tel: and wa.me links.
 export const AGENCY_PHONE_LOCAL = "08118495138";
 export const AGENCY_PHONE_INTL = "2348118495138";
@@ -27,7 +30,7 @@ export function whatsappLink(message: string) {
 }
 
 export function propertyWhatsappMessage(title: string, location: string) {
-  return `Hello RAHomes Property, I'm interested in "${title}" in ${location}. Could you share more details?`;
+  return `Hello RA Homes and Properties, I'm interested in "${title}" in ${location}. Could you share more details?`;
 }
 
 export const PROPERTY_TYPES = [
@@ -64,7 +67,7 @@ export const SERVICE_AREAS = [
 ] as const;
 
 // Public property browsing is scoped to Kwara State. Ilorin remains first as
-// RAHomes Property's primary market, followed by other cities and towns in the state.
+// RA Homes and Properties's primary market, followed by other cities and towns in the state.
 export const KWARA_CITIES = [
   "Ilorin",
   "Offa",

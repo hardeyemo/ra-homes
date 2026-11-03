@@ -5,6 +5,10 @@ import { PropertyBrowseSections } from "@/components/property/PropertyBrowseSect
 import { prisma } from "@/lib/prisma";
 import { propertyCardSelect } from "@/lib/propertyCardSelect";
 import type { Property } from "@/types/property";
+import { SITE_DESCRIPTION, SITE_TITLE } from "@/lib/constants";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata(SITE_TITLE, SITE_DESCRIPTION, "/");
 
 export const revalidate = 60;
 const HOMEPAGE_PROPERTY_PAGE_SIZE = 6;
@@ -36,7 +40,7 @@ export default async function HomePage({ searchParams }: { searchParams?: { prop
           <div className="p-6 sm:p-12">
             <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-gold"><MapPin className="h-3.5 w-3.5" /> Local, considered, connected</p>
             <h2 className="mt-3 max-w-md font-display text-2xl leading-tight sm:mt-4 sm:text-4xl">A better way to find your next address.</h2>
-            <p className="mt-3 max-w-lg text-sm leading-relaxed text-parchment/65 sm:mt-4">Search by neighbourhood, compare the details, save the homes you love, and speak directly with RAHomes Property when you are ready.</p>
+            <p className="mt-3 max-w-lg text-sm leading-relaxed text-parchment/65 sm:mt-4">Search by neighbourhood, compare the details, save the homes you love, and speak directly with RA Homes and Properties when you are ready.</p>
             <Link href="/properties" className="mt-5 inline-flex h-10 items-center gap-2 rounded-lg bg-gold px-4 text-xs font-mono uppercase tracking-widest text-ink transition-colors hover:bg-parchment sm:mt-7 sm:h-11 sm:px-5"><Search className="h-4 w-4" /> Start exploring</Link>
           </div>
           <div className="border-t border-parchment/10 bg-parchment/5 p-6 sm:p-12 lg:border-l lg:border-t-0">

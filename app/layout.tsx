@@ -7,20 +7,80 @@ import { MessageNotifier } from "@/components/dashboard/MessageNotifier";
 import { CookieNotice } from "@/components/layout/CookieNotice";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
-import { SITE_NAME, SITE_TAGLINE } from "@/lib/constants";
+import {
+  AGENCY_EMAIL,
+  AGENCY_OFFICE,
+  AGENCY_PHONE_INTL,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
+  SOCIAL_LINKS,
+} from "@/lib/constants";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.rahomesproperties.com"),
-  title: `${SITE_NAME} | ${SITE_TAGLINE}`,
-  description:
-    "Browse homes for sale and rent, request a viewing, or list your property with RAHomes Property.",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  icons: {
+    icon: [
+      { url: "/favicon.ico", type: "image/x-icon", sizes: "any" },
+      { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
+      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/android-chrome-192x192.png", type: "image/png", sizes: "192x192" },
+      { url: "/android-chrome-512x512.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" }],
+  },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [{
+      url: `${SITE_URL}/images/brand/ra-homes-social.jpg`,
+      width: 1200,
+      height: 630,
+      type: "image/jpeg",
+      alt: `${SITE_NAME} official logo`,
+    }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [`${SITE_URL}/images/brand/ra-homes-social.jpg`],
+  },
+};
+
+const realEstateAgentJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "@id": `${SITE_URL}/#real-estate-agent`,
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: `${SITE_URL}/images/brand/ra-homes-logo.jpg`,
+  email: AGENCY_EMAIL,
+  telephone: `+${AGENCY_PHONE_INTL}`,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: `${AGENCY_OFFICE.line1}, ${AGENCY_OFFICE.line2}`,
+    addressLocality: AGENCY_OFFICE.city,
+    addressRegion: AGENCY_OFFICE.state,
+    addressCountry: AGENCY_OFFICE.country,
+  },
+  sameAs: Object.values(SOCIAL_LINKS),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col bg-parchment text-ink font-sans antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(realEstateAgentJsonLd).replace(/</g, "\\u003c") }}
+        />
         <Providers>
           <IntroAnimation />
           <NetworkNotifier />

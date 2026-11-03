@@ -40,7 +40,7 @@ export default async function ProfilePage() {
                 {initial}
               </span>
               <div className="min-w-0">
-                <p className="truncate font-semibold text-ink">{user.name || "RAHomes Property member"}</p>
+                <p className="truncate font-semibold text-ink">{user.name || "RA Homes and Properties member"}</p>
                 <p className="truncate text-xs text-ink/55">{user.email}</p>
               </div>
             </div>
@@ -68,7 +68,7 @@ export default async function ProfilePage() {
           <div className="space-y-6">
             <section className="border border-line bg-surface p-6 md:p-8">
               <h2 className="font-display text-2xl text-ink">Profile details</h2>
-              <p className="mt-1 text-sm text-ink/60">Update the information RAHomes Property uses to contact you.</p>
+              <p className="mt-1 text-sm text-ink/60">Update the information RA Homes and Properties uses to contact you.</p>
               <ProfileForm
                 initial={{
                   name: user.name,

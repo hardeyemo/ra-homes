@@ -121,7 +121,7 @@ export const Hero = () => {
               <ShieldCheck className="h-5 w-5 shrink-0 text-gold" />
               <div>
                 <p className="text-sm font-medium text-parchment">Clear listing details</p>
-                <p className="mt-0.5 hidden text-xs text-parchment/60 md:block">Every address, accounted for.</p>
+                <p className="mt-0.5 hidden text-xs text-parchment/60 md:block">Buy, sell, rent, and manage with confidence.</p>
               </div>
             </div>
 

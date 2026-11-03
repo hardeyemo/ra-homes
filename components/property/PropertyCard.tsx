@@ -54,7 +54,7 @@ export const PropertyCard = ({ property, priority = false }: { property: Propert
           {property.images[0] ? (
             <Image
               src={property.images[0]}
-              alt={property.title}
+              alt={`${property.title} in ${location}`}
               fill
               priority={priority}
               quality={75}

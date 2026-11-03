@@ -10,10 +10,10 @@ import Image from "next/image";
 const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const SESSION_KEY = "ra-intro-shown";
-const SPIN_SECONDS = 0.65;
-const HOLD_SECONDS = 0.1;
-const FADE_SECONDS = 0.3;
-// Total ≈ 1.0s. Keep the branded introduction without delaying first use.
+const REVEAL_SECONDS = 0.75;
+const HOLD_SECONDS = 0.35;
+const FADE_SECONDS = 0.45;
+// Keep the brand reveal brief while giving the logo room to settle.
 
 export const IntroAnimation = () => {
   const [visible, setVisible] = useState(true);
@@ -45,7 +45,7 @@ export const IntroAnimation = () => {
 
   useEffect(() => {
     if (!visible || exiting) return;
-    const timer = setTimeout(() => setExiting(true), (SPIN_SECONDS + HOLD_SECONDS) * 1000);
+    const timer = setTimeout(() => setExiting(true), (REVEAL_SECONDS + HOLD_SECONDS) * 1000);
     return () => clearTimeout(timer);
   }, [visible, exiting]);
 
@@ -63,38 +63,59 @@ export const IntroAnimation = () => {
           key="intro"
           className="fixed inset-0 z-[999] flex items-center justify-center overflow-hidden bg-ink"
           exit={{ opacity: 0 }}
-          transition={{ duration: FADE_SECONDS, ease: "easeInOut" }}
+          transition={{ duration: FADE_SECONDS, ease: [0.22, 1, 0.36, 1] }}
         >
           <div
-            className="pointer-events-none absolute inset-0 opacity-[0.12]"
+            className="pointer-events-none absolute inset-0 opacity-[0.045]"
             style={{
               backgroundImage: "radial-gradient(hsl(var(--parchment)) 1px, transparent 1px)",
               backgroundSize: "24px 24px",
             }}
           />
-          <div className="pointer-events-none absolute h-[34rem] w-[34rem] rounded-full border border-gold/15" />
-          <div className="pointer-events-none absolute h-[22rem] w-[22rem] rounded-full border border-parchment/10" />
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute h-[min(82vw,34rem)] w-[min(82vw,34rem)] rounded-full border border-gold/15"
+            initial={{ opacity: 0, scale: 0.88 }}
+            animate={{ opacity: [0, 0.55, 0.25], scale: [0.88, 1, 1.04] }}
+            transition={{ duration: REVEAL_SECONDS + HOLD_SECONDS, ease: "easeOut" }}
+          />
+          <div className="pointer-events-none absolute h-[min(56vw,22rem)] w-[min(56vw,22rem)] rounded-full border border-parchment/[0.07]" />
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute h-56 w-56 rounded-full bg-gold/[0.07] blur-3xl sm:h-72 sm:w-72"
+            initial={{ opacity: 0, scale: 0.72 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: REVEAL_SECONDS, ease: [0.22, 1, 0.36, 1] }}
+          />
           <motion.div
             className="relative flex flex-col items-center"
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            transition={{ duration: REVEAL_SECONDS, ease: [0.22, 1, 0.36, 1] }}
           >
             <motion.div
-              className="absolute -inset-4 rounded-full border border-gold/60 border-t-parchment"
-              initial={{ opacity: 0, rotate: -100, scale: 0.8 }}
-              animate={{ opacity: 1, rotate: 360, scale: 1 }}
-              transition={{ duration: SPIN_SECONDS, ease: [0.22, 0.8, 0.25, 1] }}
+              aria-hidden="true"
+              className="absolute -inset-3 rounded-full border border-gold/35"
+              initial={{ opacity: 0, scale: 0.84 }}
+              animate={{ opacity: [0, 0.8, 0.35], scale: [0.84, 1, 1.06] }}
+              transition={{ duration: REVEAL_SECONDS + HOLD_SECONDS, ease: "easeOut" }}
             />
             <motion.div
-              className="h-20 w-20 overflow-hidden rounded-full border border-gold shadow-[0_0_0_8px_hsl(var(--ink)),0_0_0_9px_hsl(var(--gold)/0.3)] sm:h-24 sm:w-24"
-              initial={{ rotate: -45, scale: 0.72 }}
-              animate={{ rotate: 360, scale: 1 }}
-              transition={{ duration: SPIN_SECONDS, ease: [0.22, 0.8, 0.25, 1] }}
+              className="h-24 w-24 overflow-hidden rounded-full border border-gold/80 shadow-[0_0_0_7px_hsl(var(--ink)),0_0_0_8px_hsl(var(--gold)/0.22),0_12px_40px_hsl(var(--gold)/0.12)] sm:h-28 sm:w-28"
+              initial={{ opacity: 0, scale: 0.78 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: REVEAL_SECONDS, ease: [0.16, 1, 0.3, 1] }}
             >
-              <Image src="/images/brand/ra-homes-logo.jpg" alt="RA Home & Properties" width={1280} height={1280} className="h-full w-full object-cover" priority />
+              <Image src="/images/brand/ra-homes-logo.jpg" alt="RA Homes and Properties" width={1254} height={1254} className="h-full w-full object-cover" priority />
             </motion.div>
-            <p className="mt-6 text-center font-sans text-xs font-bold uppercase tracking-[0.28em] text-parchment sm:text-sm">RA Home &amp; Properties</p>
+            <motion.p
+              className="mt-6 text-center font-sans text-xs font-semibold uppercase tracking-[0.28em] text-parchment sm:text-sm"
+              initial={{ opacity: 0, y: 7 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            >
+              RA Homes and Properties
+            </motion.p>
           </motion.div>
         </motion.div>
       )}

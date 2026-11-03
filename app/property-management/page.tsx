@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { ArrowUpRight, ClipboardList, Wallet, Search, Wrench, Home, ShieldCheck } from "lucide-react";
 import { PropertyContactActions } from "@/components/property/PropertyContactActions";
+import { SITE_NAME } from "@/lib/constants";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata(
+  `Property Management in Ilorin | ${SITE_NAME}`,
+  `${SITE_NAME} provides rental property management in Ilorin, including tenant coordination, rent collection, inspections, and maintenance coordination.`,
+  "/property-management",
+);
 
 const SERVICES = [
   {

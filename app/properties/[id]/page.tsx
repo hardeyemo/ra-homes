@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Bed, Bath, Square, Calendar, Car, MapPin, Ruler, ExternalLink, Building2, Phone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +12,8 @@ import { PropertyDetailActions } from "@/components/property/PropertyDetailActio
 import { ContinueBrowsing } from "@/components/property/ContinueBrowsing";
 import { prisma } from "@/lib/prisma";
 import { formatNewListingLabel, formatPrice, formatNumber, formatPropertyLocation, isValidObjectId } from "@/lib/utils";
-import { PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
+import { PUBLIC_PROPERTY_STATUSES, SITE_NAME } from "@/lib/constants";
+import { createPageMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -29,6 +31,31 @@ async function getProperty(idOrSlug: string) {
     return property ? JSON.parse(JSON.stringify(property)) : null;
   } catch {
     return null;
+  }
+}
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  try {
+    const property = await prisma.property.findFirst({
+      where: {
+        AND: [
+          isValidObjectId(params.id) ? { OR: [{ id: params.id }, { slug: params.id }] } : { slug: params.id },
+          { status: { in: [...PUBLIC_PROPERTY_STATUSES] } },
+        ],
+      },
+      select: { title: true, slug: true, description: true, address: true, neighborhood: true, city: true, state: true },
+    });
+    if (!property) return {};
+
+    const description = property.description.replace(/\s+/g, " ").trim();
+    const summary = description.length > 160 ? `${description.slice(0, 157).trimEnd()}…` : description;
+    return createPageMetadata(
+      `${property.title} | ${SITE_NAME}`,
+      summary,
+      `/properties/${encodeURIComponent(property.slug)}`,
+    );
+  } catch {
+    return {};
   }
 }
 
@@ -82,8 +109,8 @@ export default async function PropertyDetailPage({ params }: { params: { id: str
   const encodedMapQuery = encodeURIComponent(mapQuery);
   const mapEmbedUrl = `https://maps.google.com/maps?q=${encodedMapQuery}&output=embed`;
   const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodedMapQuery}`;
-  const agentName = property.agent?.name || "RAHomes Property";
-  const agentTitle = property.agent?.title || "RAHomes Property";
+  const agentName = property.agent?.name || SITE_NAME;
+  const agentTitle = property.agent?.title || SITE_NAME;
   const agentInitials = agentName.split(/\s+/).slice(0, 2).map((part: string) => part[0]).join("").toUpperCase();
   const agentPhone = property.agent?.phone?.replace(/[^\d+]/g, "");
 
@@ -95,7 +122,7 @@ export default async function PropertyDetailPage({ params }: { params: { id: str
       </div>
 
       <div className="mt-5 sm:mt-7">
-        <PropertyGallery images={galleryImages} title={property.title} instagramVideoUrl={instagramVideoUrl} instagramVideoThumbnailUrl={instagramVideoThumbnailUrl} />
+        <PropertyGallery images={galleryImages} title={property.title} location={location} instagramVideoUrl={instagramVideoUrl} instagramVideoThumbnailUrl={instagramVideoThumbnailUrl} />
       </div>
       <PropertyVideos videos={property.videos || []} title={property.title} />
 
