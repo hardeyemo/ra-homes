@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/images/brand/ra-homes-social.png",
+        destination: "/images/brand/ra-homes-social.jpg",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     // WebP is broadly supported and noticeably faster to generate than AVIF
     // on a first request, which keeps image-heavy listing pages responsive.
