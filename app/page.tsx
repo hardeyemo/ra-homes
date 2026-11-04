@@ -5,10 +5,39 @@ import { PropertyBrowseSections } from "@/components/property/PropertyBrowseSect
 import { prisma } from "@/lib/prisma";
 import { propertyCardSelect } from "@/lib/propertyCardSelect";
 import type { Property } from "@/types/property";
-import { SITE_DESCRIPTION, SITE_TITLE } from "@/lib/constants";
+import {
+  AGENCY_EMAIL,
+  AGENCY_PHONE_INTL,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
+  SOCIAL_LINKS,
+} from "@/lib/constants";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata = createPageMetadata(SITE_TITLE, SITE_DESCRIPTION, "/");
+
+const realEstateAgentJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "@id": `${SITE_URL}/#real-estate-agent`,
+  name: SITE_NAME,
+  alternateName: ["RA Homes", "RA Homes Properties", "Rahomes Properties"],
+  url: SITE_URL,
+  logo: `${SITE_URL}/images/brand/ra-homes-logo.jpg`,
+  image: `${SITE_URL}/images/brand/ra-homes-social.jpg`,
+  telephone: `+${AGENCY_PHONE_INTL}`,
+  email: AGENCY_EMAIL,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Space 12, City Plaza, Emir's Road",
+    addressLocality: "Ilorin",
+    addressRegion: "Kwara State",
+    addressCountry: "NG",
+  },
+  sameAs: Object.values(SOCIAL_LINKS),
+};
 
 export const revalidate = 60;
 const HOMEPAGE_PROPERTY_PAGE_SIZE = 6;
@@ -32,6 +61,10 @@ export default async function HomePage({ searchParams }: { searchParams?: { prop
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(realEstateAgentJsonLd).replace(/</g, "\\u003c") }}
+      />
       <Hero />
       <PropertyBrowseSections properties={properties} page={page} totalPages={totalPages} totalProperties={totalProperties} />
 

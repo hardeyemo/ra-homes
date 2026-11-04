@@ -8,14 +8,10 @@ import { CookieNotice } from "@/components/layout/CookieNotice";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
 import {
-  AGENCY_EMAIL,
-  AGENCY_OFFICE,
-  AGENCY_PHONE_INTL,
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_TITLE,
   SITE_URL,
-  SOCIAL_LINKS,
 } from "@/lib/constants";
 import "./globals.css";
 
@@ -57,33 +53,10 @@ export const metadata: Metadata = {
   },
 };
 
-const realEstateAgentJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "RealEstateAgent",
-  "@id": `${SITE_URL}/#real-estate-agent`,
-  name: SITE_NAME,
-  url: SITE_URL,
-  logo: `${SITE_URL}/images/brand/ra-homes-logo.jpg`,
-  email: AGENCY_EMAIL,
-  telephone: `+${AGENCY_PHONE_INTL}`,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: `${AGENCY_OFFICE.line1}, ${AGENCY_OFFICE.line2}`,
-    addressLocality: AGENCY_OFFICE.city,
-    addressRegion: AGENCY_OFFICE.state,
-    addressCountry: AGENCY_OFFICE.country,
-  },
-  sameAs: Object.values(SOCIAL_LINKS),
-};
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col bg-parchment text-ink font-sans antialiased">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(realEstateAgentJsonLd).replace(/</g, "\\u003c") }}
-        />
         <Providers>
           <IntroAnimation />
           <NetworkNotifier />

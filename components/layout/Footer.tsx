@@ -3,6 +3,7 @@ import { MapPin, Phone, Mail, MessageCircle } from "lucide-react";
 import {
   SITE_NAME,
   AGENCY_PHONE_LOCAL,
+  AGENCY_PHONE_INTL,
   AGENCY_EMAIL,
   AGENCY_OFFICE,
   whatsappLink,
@@ -44,7 +45,7 @@ export const Footer = () => (
         <p className="font-mono text-[11px] uppercase tracking-widest text-gold mb-2">Contact</p>
         <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-parchment/70 md:flex-col md:gap-1.5">
           <li>
-            <a href={`tel:+${AGENCY_PHONE_LOCAL.replace(/\D/g, "")}`} className="flex items-center gap-2 hover:text-parchment">
+            <a href={`tel:+${AGENCY_PHONE_INTL}`} className="flex items-center gap-2 hover:text-parchment">
               <Phone className="w-4 h-4 text-gold" /> {AGENCY_PHONE_LOCAL}
             </a>
           </li>
