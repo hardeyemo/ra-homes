@@ -32,6 +32,8 @@ export const Footer = () => (
         <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm text-parchment/70">
           <li><Link href="/properties?listingType=SALE" className="hover:text-parchment">Homes for Sale</Link></li>
           <li><Link href="/properties?listingType=RENT" className="hover:text-parchment">Homes for Rent</Link></li>
+          <li><Link href="/houses-for-sale-in-ilorin" className="hover:text-parchment">Houses in Ilorin</Link></li>
+          <li><Link href="/land-for-sale-in-ilorin" className="hover:text-parchment">Land in Ilorin</Link></li>
           <li className="hidden sm:list-item"><Link href="/sell" className="hover:text-parchment">List Your Property</Link></li>
           <li className="hidden sm:list-item"><Link href="/property-management" className="hover:text-parchment">Property Management</Link></li>
         </ul>

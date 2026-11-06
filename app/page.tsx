@@ -75,6 +75,10 @@ export default async function HomePage({ searchParams }: { searchParams?: { prop
             <h2 className="mt-3 max-w-md font-display text-2xl leading-tight sm:mt-4 sm:text-4xl">A better way to find your next address.</h2>
             <p className="mt-3 max-w-lg text-sm leading-relaxed text-parchment/65 sm:mt-4">Search by neighbourhood, compare the details, save the homes you love, and speak directly with Rahome and Properties when you are ready.</p>
             <Link href="/properties" className="mt-5 inline-flex h-10 items-center gap-2 rounded-lg bg-gold px-4 text-xs font-mono uppercase tracking-widest text-ink transition-colors hover:bg-parchment sm:mt-7 sm:h-11 sm:px-5"><Search className="h-4 w-4" /> Start exploring</Link>
+            <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm sm:mt-6">
+              <Link href="/houses-for-sale-in-ilorin" className="font-semibold text-parchment/80 underline decoration-gold/70 underline-offset-4 hover:text-gold">Houses for sale in Ilorin</Link>
+              <Link href="/land-for-sale-in-ilorin" className="font-semibold text-parchment/80 underline decoration-gold/70 underline-offset-4 hover:text-gold">Land for sale in Ilorin</Link>
+            </div>
           </div>
           <div className="border-t border-parchment/10 bg-parchment/5 p-6 sm:p-12 lg:border-l lg:border-t-0">
             <p className="font-display text-xl sm:text-2xl">Ready to sell?</p>

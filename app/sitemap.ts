@@ -9,6 +9,8 @@ export const dynamic = "force-dynamic";
 const STATIC_ROUTES = [
   "",
   "/properties",
+  "/houses-for-sale-in-ilorin",
+  "/land-for-sale-in-ilorin",
   "/about",
   "/agents",
   "/contact",
