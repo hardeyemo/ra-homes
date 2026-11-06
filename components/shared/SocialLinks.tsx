@@ -26,7 +26,7 @@ export function SocialLinks({ dark = false }: { dark?: boolean }) {
   return (
     <div className="flex items-center gap-2">
       {links.map((link) => (
-        <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`RA Homes and Properties on ${link.label}`} title={link.label} className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors ${buttonClass}`}>
+        <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`Rahome and Properties on ${link.label}`} title={link.label} className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors ${buttonClass}`}>
           <span className="h-4 w-4">{link.icon}</span>
         </a>
       ))}

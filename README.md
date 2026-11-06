@@ -1,6 +1,6 @@
-# RA Homes and Properties
+# Rahome and Properties
 
-Full-stack real estate site for RA Homes and Properties (Ilorin, Kwara State, Nigeria),
+Full-stack real estate site for Rahome and Properties (Ilorin, Kwara State, Nigeria),
 built with Next.js App Router, Prisma + MongoDB, Tailwind, Framer Motion, GSAP, and Resend.
 
 ## Stack

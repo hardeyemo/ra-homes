@@ -65,7 +65,7 @@ export async function sendInquiryConfirmation({
     subject: `We received your inquiry — ${propertyReference}`,
     html: wrap(`
       <p>Hi ${escapeHtml(toName)},</p>
-      <p>Thanks for your interest in <strong>${propertyTitle}</strong> (${propertyReference}). A RA Homes and Properties agent
+      <p>Thanks for your interest in <strong>${propertyTitle}</strong> (${propertyReference}). An agent at Rahome and Properties
       will follow up with you shortly by phone, WhatsApp, or email.</p>
       <p>If it's urgent, feel free to call or WhatsApp us at ${AGENCY_PHONE_LOCAL}.</p>
     `),
@@ -189,7 +189,7 @@ export async function sendSubmissionConfirmation({
     subject: "We received your property submission",
     html: wrap(`
       <p>Hi ${toName},</p>
-      <p>Thanks for submitting <strong>${address}</strong> to RA Homes and Properties. Our team will review
+      <p>Thanks for submitting <strong>${address}</strong> to Rahome and Properties. Our team will review
       the details and reach out using your preferred contact method.</p>
     `),
   });
@@ -230,7 +230,7 @@ export async function sendContactConfirmation({ email, name }: { email: string; 
     subject: "We received your message",
     html: wrap(`
       <p>Hi ${name},</p>
-      <p>Thanks for reaching out to RA Homes and Properties. We've received your message and will respond shortly.</p>
+      <p>Thanks for reaching out to Rahome and Properties. We've received your message and will respond shortly.</p>
     `),
   });
 }

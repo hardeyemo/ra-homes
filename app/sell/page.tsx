@@ -90,11 +90,11 @@ export default function SellPage() {
         <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-24 h-72 w-72 rounded-full border border-gold/20 sm:h-96 sm:w-96" />
         <div aria-hidden="true" className="pointer-events-none absolute -right-3 -top-10 h-52 w-52 rounded-full border border-gold/10 sm:h-72 sm:w-72" />
       <div className="relative max-w-3xl">
-      <p className="text-sm font-semibold text-gold-dark">Sell with RA Homes and Properties</p>
+      <p className="text-sm font-semibold text-gold-dark">Sell with Rahome and Properties</p>
       <h1 className="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-5xl">Let&apos;s get your property seen.</h1>
       <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/65 sm:text-base">
         Tell us about the property and an agent will follow up with a market valuation within one business day.
-        RA Homes and Properties handles viewings and the transaction from there — this form is just to get your listing started.
+        Rahome and Properties handles viewings and the transaction from there — this form is just to get your listing started.
       </p>
       </div>
       </section>

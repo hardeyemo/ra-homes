@@ -82,7 +82,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
     <div className="container max-w-6xl">
       <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-sm font-medium text-ink/55">RA Homes and Properties workspace</p>
+          <p className="text-sm font-medium text-ink/55">Rahome and Properties workspace</p>
           <h1 className="mt-1 text-3xl font-bold tracking-tight md:text-4xl">Welcome back, {agent.name.split(" ")[0]}</h1>
         </div>
         <div className="flex gap-3">

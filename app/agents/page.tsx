@@ -34,9 +34,9 @@ export default async function AgentsPage() {
         <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
           <div className="max-w-2xl">
       <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-gold"><Users className="h-3.5 w-3.5" /> Our team</p>
-      <h1 className="mt-4 font-display text-4xl leading-tight sm:text-5xl">Meet your RA Homes and Properties team.</h1>
+      <h1 className="mt-4 font-display text-4xl leading-tight sm:text-5xl">Meet your Rahome and Properties team.</h1>
       <p className="mt-4 max-w-xl text-sm leading-relaxed text-parchment/70 sm:text-base">
-        Every listing on this site is handled directly by a dedicated RA Homes and Properties specialist.
+        Every listing on this site is handled directly by a dedicated Rahome and Properties specialist.
       </p>
           </div>
           <div className="flex items-center gap-3 rounded-2xl border border-parchment/15 bg-parchment/10 px-5 py-4 backdrop-blur-sm">

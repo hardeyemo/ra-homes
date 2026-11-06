@@ -42,13 +42,13 @@ export const PropertyContactActions = ({
         rel="noopener noreferrer"
         className={`flex h-12 items-center justify-center gap-2 text-sm font-semibold transition-all duration-200 ${whatsappClassName}`}
       >
-        <MessageCircle className="w-4 h-4" /> WhatsApp RA Homes and Properties
+        <MessageCircle className="w-4 h-4" /> WhatsApp Rahome and Properties
       </a>
       <a
         href={`tel:+${AGENCY_PHONE_INTL}`}
         className={`flex h-12 items-center justify-center gap-2 text-sm font-semibold transition-all duration-200 ${callClassName}`}
       >
-        <Phone className="w-4 h-4" /> Call RA Homes and Properties
+        <Phone className="w-4 h-4" /> Call Rahome and Properties
       </a>
       {onScheduleClick ? (
         <button

@@ -106,7 +106,7 @@ export const IntroAnimation = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: REVEAL_SECONDS, ease: [0.16, 1, 0.3, 1] }}
             >
-              <Image src="/images/brand/ra-homes-logo.jpg" alt="RA Homes and Properties" width={1254} height={1254} className="h-full w-full object-cover" priority />
+              <Image src="/images/brand/ra-homes-logo.jpg" alt="Rahome and Properties" width={1254} height={1254} className="h-full w-full object-cover" priority />
             </motion.div>
             <motion.p
               className="mt-6 text-center font-sans text-xs font-semibold uppercase tracking-[0.28em] text-parchment sm:text-sm"
@@ -114,7 +114,7 @@ export const IntroAnimation = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             >
-              RA Homes and Properties
+              Rahome and Properties
             </motion.p>
           </motion.div>
         </motion.div>

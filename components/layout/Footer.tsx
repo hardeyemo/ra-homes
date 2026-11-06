@@ -36,7 +36,7 @@ export const Footer = () => (
           <li className="hidden sm:list-item"><Link href="/property-management" className="hover:text-parchment">Property Management</Link></li>
         </ul>
         <div className="mt-4">
-          <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-parchment/45">Follow RA Homes and Properties</p>
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-parchment/45">Follow Rahome and Properties</p>
           <SocialLinks dark />
         </div>
       </div>
@@ -51,7 +51,7 @@ export const Footer = () => (
           </li>
           <li>
             <a
-              href={whatsappLink("Hello RA Homes and Properties, I'd like to know more about your listings.")}
+              href={whatsappLink("Hello Rahome and Properties, I'd like to know more about your listings.")}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 hover:text-parchment"
