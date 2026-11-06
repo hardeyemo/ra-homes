@@ -1,5 +1,6 @@
 import { Resend } from "resend";
-import { AGENCY_EMAIL, AGENCY_PHONE_LOCAL, SITE_NAME } from "@/lib/constants";
+import { AGENCY_PHONE_LOCAL, SITE_NAME } from "@/lib/constants";
+import { AGENCY_INBOX_EMAIL } from "@/lib/agencyInbox";
 import { escapeHtml } from "@/lib/html";
 
 export const resend = new Resend(process.env.RESEND_API_KEY);
@@ -160,7 +161,7 @@ export async function sendSubmissionNotification({
 }) {
   return resend.emails.send({
     from: FROM,
-    to: AGENCY_EMAIL,
+    to: AGENCY_INBOX_EMAIL,
     replyTo: email,
     subject: `New property submission — ${address}, ${city}`,
     html: wrap(`
@@ -212,7 +213,7 @@ export async function sendContactNotification({
 }) {
   return resend.emails.send({
     from: FROM,
-    to: AGENCY_EMAIL,
+    to: AGENCY_INBOX_EMAIL,
     replyTo: email,
     subject: `New contact message${subject ? `: ${subject}` : ""}`,
     html: wrap(`

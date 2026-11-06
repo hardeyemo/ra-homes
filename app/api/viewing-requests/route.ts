@@ -5,7 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendViewingConfirmation, sendViewingAgentNotification } from "@/lib/resend";
 import { textOnlyPattern } from "@/lib/inputValidation";
-import { AGENCY_EMAIL } from "@/lib/constants";
+import { AGENCY_INBOX_EMAIL } from "@/lib/agencyInbox";
 import { rateLimit } from "@/lib/rateLimit";
 
 const validDate = z.string().refine((value) => !Number.isNaN(Date.parse(value)), "Enter a valid date and time");
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     sendViewingAgentNotification({
       // Viewing requests use the default RA admin inbox; an individual
       // listing agent's personal contact information is never used publicly.
-      agentEmail: AGENCY_EMAIL,
+      agentEmail: AGENCY_INBOX_EMAIL,
       propertyTitle: property.title,
       propertyReference: property.reference,
       name: data.name,

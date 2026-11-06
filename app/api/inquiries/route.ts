@@ -4,7 +4,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendInquiryNotification, sendInquiryConfirmation } from "@/lib/resend";
-import { AGENCY_EMAIL, PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
+import { PUBLIC_PROPERTY_STATUSES } from "@/lib/constants";
+import { AGENCY_INBOX_EMAIL } from "@/lib/agencyInbox";
 import { textOnlyPattern } from "@/lib/inputValidation";
 import { rateLimit } from "@/lib/rateLimit";
 
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
     sendInquiryNotification({
       // Public enquiries are always handled by the RA admin team, not by an
       // individual listing owner or agent.
-      agentEmail: AGENCY_EMAIL,
+      agentEmail: AGENCY_INBOX_EMAIL,
       propertyTitle: property.title,
       propertyReference: property.reference,
       name: data.name,

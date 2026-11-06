@@ -8,7 +8,7 @@ export const SITE_DESCRIPTION = `Buy, sell, rent, and manage property in Ilorin,
 // leading zero for tel: and wa.me links.
 export const AGENCY_PHONE_LOCAL = "08118495138";
 export const AGENCY_PHONE_INTL = "2348118495138";
-export const AGENCY_EMAIL = "rahomesproperties@gmail.com";
+export const AGENCY_EMAIL = "info@rahomesproperties.com";
 
 export const SOCIAL_LINKS = {
   instagram: "https://www.instagram.com/rahomesproperties/",
