@@ -19,10 +19,6 @@ export default function AboutPage() {
             <h1 className="font-display text-4xl leading-[1.05] tracking-tight sm:text-5xl md:text-7xl">
               Property. Purpose. <span className="text-gold">Possibility.</span>
             </h1>
-            <p className="mt-7 max-w-2xl text-base leading-relaxed text-parchment/75 md:text-lg">
-              At Rahome and Properties, we believe real estate is more than buying land or owning a building. It is about{" "}
-              <strong className="font-semibold text-parchment">creating security, building wealth, and shaping the future.</strong>
-            </p>
           </div>
         </div>
       </section>
@@ -35,7 +31,16 @@ export default function AboutPage() {
           </div>
           <div className="max-w-2xl rounded-2xl border border-line bg-surface p-6 shadow-sm sm:p-8 lg:col-span-7 lg:col-start-6">
             <p className="text-base leading-relaxed text-ink/75 md:text-lg">
-              We are a Nigerian real estate company focused on connecting individuals, families, and investors with genuine property opportunities. From land acquisition and property sales to investment opportunities and property marketing, we provide professional guidance to make the real estate journey simple, transparent, and rewarding.
+              RAHomes &amp; Properties is a proudly Ilorin-rooted real estate company with a strong understanding of the Kwara property market. Deeply connected to the local community and grounded in the realities of the Ilorin real estate landscape, we bring local knowledge, strong market connections and a commitment to excellence to every transaction.
+            </p>
+            <p className="mt-5 text-base leading-relaxed text-ink/75 md:text-lg">
+              Our strength lies in knowing the terrain, understanding the market and connecting people with genuine property opportunities. Whether you are looking to buy, sell, lease or invest in residential or commercial properties, we provide reliable guidance and professional real estate solutions you can trust.
+            </p>
+            <p className="mt-5 text-base leading-relaxed text-ink/75 md:text-lg">
+              At RA Homes &amp; Properties, we are not just operating in Ilorin; we understand Ilorin, we know its property market, and we are committed to being a trusted name in its real estate growth.
+            </p>
+            <p className="mt-5 text-base leading-relaxed text-ink/75 md:text-lg">
+              RA Homes &amp; Properties Your Trusted Local Real Estate Partner.
             </p>
           </div>
         </div>
