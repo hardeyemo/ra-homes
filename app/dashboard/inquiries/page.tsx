@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { Badge } from "@/components/ui/badge";
 import { InquiryStatusControl } from "@/components/dashboard/InquiryStatusControl";
 import { ViewingStatusControl } from "@/components/dashboard/ViewingStatusControl";
+import { DeleteRecordButton } from "@/components/dashboard/DeleteRecordButton";
 
 export default async function DashboardInquiriesPage() {
   const session = await getServerSession(authOptions);
@@ -55,6 +56,7 @@ export default async function DashboardInquiriesPage() {
                     <th className="p-4">From</th>
                     <th className="p-4">Message</th>
                     <th className="p-4">Status</th>
+                    {isAdmin && <th className="p-4">Actions</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -70,6 +72,7 @@ export default async function DashboardInquiriesPage() {
                       <td className="p-4">
                         <InquiryStatusControl inquiryId={i.id} status={i.status} />
                       </td>
+                      {isAdmin && <td className="p-4"><DeleteRecordButton endpoint={`/api/inquiries/${i.id}`} recordLabel="Inquiry" /></td>}
                     </tr>
                   ))}
                 </tbody>
@@ -93,6 +96,7 @@ export default async function DashboardInquiriesPage() {
                     <th className="p-4">From</th>
                     <th className="p-4">Preferred date</th>
                     <th className="p-4">Status</th>
+                    {isAdmin && <th className="p-4">Actions</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -108,6 +112,7 @@ export default async function DashboardInquiriesPage() {
                       <td className="p-4">
                         <ViewingStatusControl viewingId={v.id} status={v.status} />
                       </td>
+                      {isAdmin && <td className="p-4"><DeleteRecordButton endpoint={`/api/viewing-requests/${v.id}`} recordLabel="Viewing" /></td>}
                     </tr>
                   ))}
                 </tbody>
@@ -131,6 +136,7 @@ export default async function DashboardInquiriesPage() {
                     <th className="p-4">Subject</th>
                     <th className="p-4">Message</th>
                     <th className="p-4">Status</th>
+                    <th className="p-4">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -146,6 +152,7 @@ export default async function DashboardInquiriesPage() {
                       <td className="p-4">
                         <Badge variant={c.status === "NEW" ? "clay" : "outline"}>{c.status}</Badge>
                       </td>
+                      <td className="p-4"><DeleteRecordButton endpoint={`/api/contact/${c.id}`} recordLabel="Message" /></td>
                     </tr>
                   ))}
                 </tbody>

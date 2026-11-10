@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ArrowLeft, ArrowRight, Users } from "lucide-react";
+import { DeleteRecordButton } from "@/components/dashboard/DeleteRecordButton";
 
 const PAGE_SIZE = 25;
 
@@ -46,7 +47,7 @@ export default async function DashboardUsersPage({ searchParams }: { searchParam
         {users.length === 0 ? <p className="p-6 text-sm text-ink/55">No user accounts found.</p> : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[650px] text-left text-sm">
-              <thead><tr className="border-b border-line bg-parchment/60 text-xs uppercase tracking-wider text-ink/50"><th className="px-5 py-3 font-semibold">User</th><th className="px-5 py-3 font-semibold">Contact</th><th className="px-5 py-3 font-semibold">Agent access</th><th className="px-5 py-3 font-semibold">Joined</th></tr></thead>
+              <thead><tr className="border-b border-line bg-parchment/60 text-xs uppercase tracking-wider text-ink/50"><th className="px-5 py-3 font-semibold">User</th><th className="px-5 py-3 font-semibold">Contact</th><th className="px-5 py-3 font-semibold">Agent access</th><th className="px-5 py-3 font-semibold">Joined</th><th className="px-5 py-3 font-semibold">Actions</th></tr></thead>
               <tbody className="divide-y divide-line">
                 {users.map((user) => {
                   const displayName = user.name || "Rahome and Properties member";
@@ -56,6 +57,7 @@ export default async function DashboardUsersPage({ searchParams }: { searchParam
                     <td className="px-5 py-4"><span className="block">{user.email}</span><span className="mt-1 block text-xs text-ink/50">{user.phone || "No phone added"}</span></td>
                     <td className="px-5 py-4"><span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${user.agentRequestStatus === "PENDING" ? "bg-gold/15 text-gold-dark" : "bg-parchment text-ink/55"}`}>{user.agentRequestStatus === "PENDING" ? "Request pending" : user.agentRequestStatus === "REJECTED" ? "Previously declined" : user.agentRequestStatus === "APPROVED" ? "Approved" : "Member"}</span></td>
                     <td className="whitespace-nowrap px-5 py-4 text-xs text-ink/55">{new Date(user.createdAt).toLocaleDateString()}</td>
+                    <td className="px-5 py-4"><DeleteRecordButton endpoint={`/api/users/${user.id}`} recordLabel="User" /></td>
                   </tr>;
                 })}
               </tbody>

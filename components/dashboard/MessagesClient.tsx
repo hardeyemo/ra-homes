@@ -5,6 +5,7 @@ import { Send, Megaphone, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { DeleteRecordButton } from "@/components/dashboard/DeleteRecordButton";
 
 interface AgentSummary {
   id: string;
@@ -168,7 +169,7 @@ export const MessagesClient = ({ isAdmin, currentAgentId, agents }: Props) => {
                 messages.map((m) => {
                   const mine = m.senderId === currentAgentId;
                   return (
-                    <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
+                    <div key={m.id} className={`flex items-center gap-2 ${mine ? "justify-end" : "justify-start"}`}>
                       <div className={`max-w-[75%] ${mine ? "bg-ink text-parchment" : "bg-parchment border border-line"} px-4 py-2.5`}>
                         {!mine && <p className="text-xs font-medium text-clay mb-1">{m.senderName}</p>}
                         <p className="text-sm whitespace-pre-wrap">{m.body}</p>
@@ -176,6 +177,7 @@ export const MessagesClient = ({ isAdmin, currentAgentId, agents }: Props) => {
                           {new Date(m.createdAt).toLocaleString()}
                         </p>
                       </div>
+                      {isAdmin && <DeleteRecordButton endpoint={`/api/messages/${m.id}`} recordLabel="Message" onDeleted={() => setMessages((current) => current.filter((item) => item.id !== m.id))} />}
                     </div>
                   );
                 })
@@ -228,10 +230,11 @@ export const MessagesClient = ({ isAdmin, currentAgentId, agents }: Props) => {
             ) : (
               broadcasts.map((b) => (
                 <div key={b.id} className="border border-line bg-surface p-5">
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
                     <Badge variant="clay">Announcement</Badge>
                     <span className="text-sm font-medium">{b.senderName}</span>
                     <span className="text-xs text-ink/40">{new Date(b.createdAt).toLocaleString()}</span>
+                    {isAdmin && <DeleteRecordButton endpoint={`/api/messages/${b.id}`} recordLabel="Message" onDeleted={() => setBroadcasts((current) => current.filter((item) => item.id !== b.id))} />}
                   </div>
                   <p className="text-sm text-ink/80 whitespace-pre-wrap">{b.body}</p>
                 </div>

@@ -116,7 +116,6 @@ export const PropertyCard = ({ property, priority = false }: { property: Propert
               <span className="flex items-center gap-1.5"><Bath className="h-4 w-4 text-sage" />{property.bathrooms > 0 ? `${property.bathrooms} ba` : "— ba"}</span>
               {property.sqft > 0 && <span className="flex items-center gap-1.5"><Square className="h-4 w-4 text-sage" />{formatNumber(property.sqft)} sqft</span>}
             </>}
-            <span className="ml-auto inline-flex items-center gap-1 text-xs font-bold text-gold-dark transition-transform group-hover:translate-x-0.5">Details <ArrowRight className="h-3.5 w-3.5" /></span>
           </div>
         </div>
       </div>

@@ -9,6 +9,22 @@ const updateSchema = z.object({
   status: z.enum(["NEW", "CONTACTED", "CLOSED"]),
 });
 
+export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (session.user.role !== "ADMIN") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!isValidObjectId(params.id)) return NextResponse.json({ error: "Invalid inquiry ID" }, { status: 400 });
+
+  try {
+    const result = await prisma.inquiry.deleteMany({ where: { id: params.id } });
+    if (result.count === 0) return NextResponse.json({ error: "Inquiry not found" }, { status: 404 });
+    return NextResponse.json({ id: params.id });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Failed to delete inquiry" }, { status: 500 });
+  }
+}
+
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
