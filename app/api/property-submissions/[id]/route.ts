@@ -34,3 +34,27 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return NextResponse.json({ error: "Failed to update submission" }, { status: 500 });
   }
 }
+
+export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Only the RA team can delete submissions" }, { status: 403 });
+  }
+  if (!isValidObjectId(params.id)) {
+    return NextResponse.json({ error: "Invalid submission ID" }, { status: 400 });
+  }
+
+  try {
+    const result = await prisma.propertySubmission.deleteMany({ where: { id: params.id } });
+    if (result.count === 0) {
+      return NextResponse.json({ error: "Submission not found" }, { status: 404 });
+    }
+    return NextResponse.json({ id: params.id });
+  } catch (error) {
+    console.error("Failed to delete property submission:", error);
+    return NextResponse.json({ error: "Failed to delete submission" }, { status: 500 });
+  }
+}

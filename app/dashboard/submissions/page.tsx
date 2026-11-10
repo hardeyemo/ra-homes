@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Badge } from "@/components/ui/badge";
 import { SubmissionStatusControl } from "@/components/dashboard/SubmissionStatusControl";
+import { DeleteRecordButton } from "@/components/dashboard/DeleteRecordButton";
 
 export default async function SubmissionsPage() {
   const session = await getServerSession(authOptions);
@@ -57,8 +58,9 @@ export default async function SubmissionsPage() {
                     </div>
                   )}
                 </div>
-                <div className="self-start">
+                <div className="self-start flex flex-col items-end gap-2">
                   <SubmissionStatusControl submissionId={s.id} status={s.status} isAdmin={agent.role === "ADMIN"} />
+                  <DeleteRecordButton endpoint={`/api/property-submissions/${s.id}`} recordLabel="Property submission" />
                 </div>
               </div>
             ))}
