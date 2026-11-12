@@ -10,6 +10,7 @@ import { InquiryForm } from "@/components/property/InquiryForm";
 import { HomeHighlights } from "@/components/property/HomeHighlights";
 import { PropertyDetailActions } from "@/components/property/PropertyDetailActions";
 import { ContinueBrowsing } from "@/components/property/ContinueBrowsing";
+import { PropertyViewTracker } from "@/components/property/PropertyViewTracker";
 import { prisma } from "@/lib/prisma";
 import { formatNewListingLabel, formatPrice, formatNumber, formatPropertyLocation, isValidObjectId } from "@/lib/utils";
 import { PUBLIC_PROPERTY_STATUSES, SITE_NAME } from "@/lib/constants";
@@ -115,6 +116,7 @@ export default async function PropertyDetailPage({ params }: { params: { id: str
   const agentPhone = property.agent?.phone?.replace(/[^\d+]/g, "");
 
   return <div className="min-h-screen bg-parchment pb-16">
+    <PropertyViewTracker propertyId={property.id} propertyType={property.propertyType} listingType={property.listingType} city={property.city} />
     <div className="container py-5 sm:py-7">
       <div className="flex items-center justify-between gap-4">
         <Link href="/properties" className="inline-flex items-center gap-2 text-sm font-semibold text-ink/65 transition hover:text-gold-dark"><ArrowLeft className="h-4 w-4" /> Back to properties</Link>

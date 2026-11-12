@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { textOnly } from "@/lib/inputValidation";
+import { trackEvent } from "@/lib/analytics";
 
 export const InquiryForm = ({ propertyId, propertyTitle }: { propertyId: string; propertyTitle: string }) => {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -26,6 +27,7 @@ export const InquiryForm = ({ propertyId, propertyTitle }: { propertyId: string;
         body: JSON.stringify({ propertyId, ...form }),
       });
       if (!res.ok) throw new Error();
+      trackEvent("enquiry_submit", { property_id: propertyId });
       setStatus("sent");
     } catch {
       setStatus("error");

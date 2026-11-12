@@ -8,6 +8,7 @@ import { ArrowLeft, ArrowRight, Check, ChevronDown, KeyRound, Search, SlidersHor
 import { PropertyCard } from "@/components/property/PropertyCard";
 import { PropertyFilters } from "@/components/property/PropertyFilters";
 import type { Property, PropertyFilters as FiltersType } from "@/types/property";
+import { trackEvent } from "@/lib/analytics";
 
 const MAX_PRICE = 100_000_000;
 const PAGE_SIZE = 6;
@@ -119,6 +120,15 @@ export default function PropertiesPage() {
       setProperties(data.properties || []);
       setTotal(data.total || 0);
       setTotalPages(data.totalPages || 1);
+      if (debouncedSearch || filters.listingType || filters.city || filters.propertyTypes.length || filters.minBedrooms || filters.minBathrooms || filters.priceRange[1] < MAX_PRICE) {
+        trackEvent("property_search", {
+          search_type: debouncedSearch ? "keyword_and_filters" : "filters",
+          listing_type: filters.listingType,
+          property_types: filters.propertyTypes.join(","),
+          bedrooms_min: filters.minBedrooms,
+          bathrooms_min: filters.minBathrooms,
+        });
+      }
       if (data.totalPages && page > data.totalPages) setPage(data.totalPages);
     } catch (error) {
       if ((error as Error).name === "AbortError") return;

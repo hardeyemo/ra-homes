@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { textOnly } from "@/lib/inputValidation";
+import { trackEvent } from "@/lib/analytics";
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
@@ -24,6 +25,7 @@ export default function ContactPage() {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error();
+      trackEvent("enquiry_submit", { form_type: "general_contact" });
       setStatus("sent");
     } catch {
       setStatus("error");

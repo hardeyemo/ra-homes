@@ -95,8 +95,8 @@ export default function TermsAndConditionsPage() {
               <p>You must not use our listings, contact channels, or forms to send spam, harassment, unsolicited promotions, or content unrelated to genuine property enquiries and services.</p>
             </TermsSection>
             <TermsSection id="privacy" number="06" title="Privacy and cookies">
-              <p>We use the information you provide to operate the website features you request, including managing accounts, responding to enquiries, arranging viewing requests, and reviewing property submissions. We use essential cookies for functions such as keeping you signed in and protecting account sessions. These cookies are needed for the requested service to work.</p>
-              <p>We do not currently use cookies for advertising or optional analytics. You can clear cookies through your browser settings; doing so may sign you out or affect account features. This website may also store functional preferences in your browser.</p>
+              <p>We use essential cookies for functions such as keeping you signed in and protecting account sessions. If you choose to allow analytics cookies, Google Analytics 4 may collect website usage information, including page visits, property views, property searches, and contact actions, to help us understand how the site is used. Analytics is not loaded before you give consent.</p>
+              <p>You can accept all cookies, reject non-essential cookies, or choose your preferences using Cookie Settings at any time. Advertising cookies are not currently active; the preference is included so future advertising tools can respect your choice. You can also clear cookies through your browser settings, which may sign you out or affect account features.</p>
               <p>Do not include sensitive personal or financial information in free-text forms unless our team has specifically asked for it through an appropriate channel.</p>
             </TermsSection>
             <TermsSection id="disclaimers" number="07" title="Disclaimers">

@@ -5,6 +5,7 @@ import { NetworkNotifier } from "@/components/layout/NetworkNotifier";
 import { AdminActivityNotifier } from "@/components/dashboard/AdminActivityNotifier";
 import { MessageNotifier } from "@/components/dashboard/MessageNotifier";
 import { CookieNotice } from "@/components/layout/CookieNotice";
+import { AnalyticsTracker } from "@/components/layout/AnalyticsTracker";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
 import {
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <AdminActivityNotifier />
           <MessageNotifier />
           <CookieNotice />
+          <AnalyticsTracker />
           <Toaster
             position="top-right"
             closeButton

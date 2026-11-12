@@ -10,6 +10,7 @@ import {
 } from "@/lib/constants";
 import { SocialLinks } from "@/components/shared/SocialLinks";
 import { Logo } from "@/components/layout/Logo";
+import { CookieSettingsButton } from "@/components/layout/CookieSettingsButton";
 
 export const Footer = () => (
   <footer className="mt-8 bg-ink text-parchment md:mt-12">
@@ -76,6 +77,7 @@ export const Footer = () => (
           <Link href="/terms-and-conditions" className="text-parchment/60 transition-colors hover:text-gold">
             Terms &amp; Conditions
           </Link>
+          <CookieSettingsButton />
           <span className="hidden sm:inline">Real Estate in Ilorin, Kwara State</span>
         </div>
       </div>
